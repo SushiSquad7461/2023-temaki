@@ -67,4 +67,9 @@ public class Conversions {
         return wheelVelocity;
     }
 
+    public static double falconToM(double distance, double circumference, double gearRatio) {
+        double rotations = distance / 2048.0;
+        double axleRotations = rotations / gearRatio;
+        return axleRotations * circumference;
+    }
 }
