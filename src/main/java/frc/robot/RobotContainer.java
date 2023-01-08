@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import java.util.Set;
+
 import SushiFrcLib.Constants.SushiConstants;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kOI;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
@@ -17,6 +22,8 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
     Swerve swerve;
     XboxController driveController;
+    private final SendableChooser<SequentialCommandGroup> autoChooser;
+    private final AutoCommands autos;
 
     /**
      * Instaite subsystems and commands.
@@ -24,6 +31,19 @@ public class RobotContainer {
     public RobotContainer() {
         driveController = new XboxController(SushiConstants.OI.DRIVER_PORT); 
         swerve = Swerve.getInstance();
+        autos = new AutoCommands(swerve);
+        autoChooser = new SendableChooser<>();
+
+        Set<String> keys = autos.autos.keySet();
+        autoChooser.setDefaultOption((String) keys.toArray()[0], autos.autos.get(keys.toArray()[0]));
+        keys.remove((String) keys.toArray()[0]);
+    
+        for (String i : autos.autos.keySet()) {
+            autoChooser.addOption(i, autos.autos.get(i));
+        }
+    
+        SmartDashboard.putData("Auto Selector", autoChooser);
+
         configureButtonBindings();
     }
 
@@ -42,6 +62,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return null;
+        SmartDashboard.putData("Auto Selector", autoChooser);
+        return autoChooser.getSelected();
     }
 }

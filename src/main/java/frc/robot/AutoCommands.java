@@ -33,6 +33,11 @@ public class AutoCommands {
         autos.put("nothing", new SequentialCommandGroup(new InstantCommand(() -> {
             System.out.println("YOUR A CLOWN");
         })));
+
+        autos.put("R2CubeLZ", new SequentialCommandGroup(
+         getCommand("R_CubeToGridLZ", true),
+         getCommand("R_GridToCubeLZ", false)   
+        ));
     }
 
     private Command getCommand(String pathName, boolean isFirstPath) {
