@@ -43,7 +43,7 @@ public class AutoCommands {
     private Command getCommand(String pathName, boolean isFirstPath) {
         PathPlannerTrajectory path = PathPlanner.loadPath(
                 pathName,
-                kSwerve.MAX_ANGULAR_VELOCITY,
+                kSwerve.MAX_SPEED,
                 kSwerve.MAX_ACCELERATION);
 
         Consumer<SwerveModuleState[]> display = s -> swerve.setModuleStates(s);
