@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kPorts;
 import frc.robot.Constants.kSwerve;
 import frc.robot.util.SwerveModule;
+import frc.robot.util.gyro.Pigeon;
 
 /**
  * Class that controls falcon swerve drivetrain.
@@ -22,7 +22,7 @@ import frc.robot.util.SwerveModule;
 public class Swerve extends SubsystemBase {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] swerveMods;
-    private final Pigeon2 gyro;
+    private final Pigeon gyro;
     private final Field2d field;
 
     private static Swerve instance;
@@ -38,9 +38,8 @@ public class Swerve extends SubsystemBase {
     }
 
     private Swerve() {
-        gyro = new Pigeon2(kPorts.PIGEON_ID);
-        gyro.configFactoryDefault();
-        zeroGyro();
+        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION);
+        gyro.zeroGyro();
 
         field = new Field2d();
 
@@ -71,7 +70,7 @@ public class Swerve extends SubsystemBase {
                 translation.getX(),
                 translation.getY(),
                 rotation,
-                getYaw()
+                gyro.getAngle()
             ) : new ChassisSpeeds(
                 translation.getX(),
                 translation.getY(),
@@ -102,7 +101,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        gyro.setYaw(pose.getRotation().getDegrees());
+        gyro.setAngle(pose.getRotation());
         swerveOdometry.resetPosition(pose.getRotation(), getPositions(), pose);
     }
 
@@ -132,27 +131,13 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
-    public void zeroGyro() {
-        gyro.setYaw(0);
-    }
-
-    /**
-     *  Gets the current rotation of the robot based on gyro.
-     */
-    public Rotation2d getYaw() {
-        double yaw = gyro.getYaw();
-
-        return kSwerve.GYRO_INVERSION 
-            ? Rotation2d.fromDegrees(360 - yaw)
-            : Rotation2d.fromDegrees(yaw);
-    }
 
     @Override
     public void periodic() {
-        swerveOdometry.update(getYaw(), getPositions());
+        swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getPoseMeters());
 
-        SmartDashboard.putNumber("gyro", getYaw().getDegrees());
+        SmartDashboard.putNumber("gyro", gyro.getAngle().getDegrees());
 
         for (SwerveModule mod : swerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", 
