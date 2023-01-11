@@ -39,7 +39,10 @@ public final class Constants {
         public static final boolean OPEN_LOOP = false;
         public static final boolean FEILD_RELATIVE = false;
 
-        public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean YAW_INVERSION = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean PITCH_INVERSION = false;
+        public static final boolean ROLL_INVERSION = false;
+
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(21.73);

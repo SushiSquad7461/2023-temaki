@@ -130,7 +130,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        gyro.setYaw(0);
+        gyro.setYaw(0); //TODO: pitch and role are absolute position??
     }
 
     /**
@@ -139,9 +139,25 @@ public class Swerve extends SubsystemBase {
     public Rotation2d getYaw() {
         double yaw = gyro.getYaw();
 
-        return kSwerve.GYRO_INVERSION 
+        return kSwerve.YAW_INVERSION 
             ? Rotation2d.fromDegrees(360 - yaw)
             : Rotation2d.fromDegrees(yaw);
+    }
+
+    public Rotation2d getPitch() {
+        double pitch = gyro.getPitch();
+
+        return kSwerve.PITCH_INVERSION 
+            ? Rotation2d.fromDegrees(360 - pitch)
+            : Rotation2d.fromDegrees(pitch);
+    }
+
+    public Rotation2d getRoll() {
+        double roll = gyro.getRoll();
+
+        return kSwerve.PITCH_INVERSION 
+            ? Rotation2d.fromDegrees(360 - roll)
+            : Rotation2d.fromDegrees(roll);
     }
 
     @Override
