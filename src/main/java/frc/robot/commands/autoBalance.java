@@ -23,7 +23,7 @@ public class autoBalance extends CommandBase {
 
   public autoBalance() {
     swerve = Swerve.getInstance();
-    inputSensitivity = 1/360;
+    inputSensitivity = 1/360; // TODO: make constant or function or smth idrc
     controlEffort = Constants.kSwerve.MAX_SPEED;
 
     pitch = getPitch();
@@ -52,12 +52,14 @@ public class autoBalance extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    //TODO: cross wheels
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(pitch)<2 && Math.abs(roll)<2);
+    return (Math.abs(pitch)<2 && Math.abs(roll)<2); //TODO: make constants
   }
 
   private double getRoll() {
