@@ -20,7 +20,6 @@ import java.util.Set;
  */
 public class RobotContainer {
     Swerve swerve;
-    XboxController driveController;
     private final SendableChooser<SequentialCommandGroup> autoChooser;
     private final AutoCommands autos;
 
@@ -28,7 +27,6 @@ public class RobotContainer {
      * Instaite subsystems and commands.
      */
     public RobotContainer() {
-        driveController = new XboxController(0); 
         swerve = Swerve.getInstance();
         autos = new AutoCommands(swerve);
         autoChooser = new SendableChooser<>();
@@ -51,15 +49,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
-            new TeleopSwerveDrive(
-                swerve,
-                driveController,
-                kOI.DRIVE_TRANSLATION_Y,
-                kOI.DRIVE_TRANSLATION_X,
-                kOI.DRIVE_ROTATE,
-                true,
-                false
-            )
+            new TeleopSwerveDrive(swerve,true,false)
         );
     }
 

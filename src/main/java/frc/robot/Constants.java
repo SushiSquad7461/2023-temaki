@@ -151,5 +151,7 @@ public final class Constants {
         public static final int DRIVE_ROTATE = XboxController.Axis.kRightX.value;
 
         public static final int UPDATE_ENCODER = XboxController.Button.kY.value;
+
+        public static final int DRIVE_PORT = 0;
     }
 }
