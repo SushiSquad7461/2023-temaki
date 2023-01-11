@@ -3,6 +3,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kOI;
 
+/** 
+ * Handels xbox controllers.
+*/
 public class OI {
     private CommandXboxController driverController;
 
