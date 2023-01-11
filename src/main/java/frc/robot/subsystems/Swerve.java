@@ -119,6 +119,9 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    /**
+     * Get Swerve Module Positions in meters.
+     */
     public SwerveModulePosition[] getPositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
 

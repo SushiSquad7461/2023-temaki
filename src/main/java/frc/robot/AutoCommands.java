@@ -35,8 +35,8 @@ public class AutoCommands {
         })));
 
         autos.put("R2CubeLZ", new SequentialCommandGroup(
-         getCommand("R_CubeToGridLZ", true),
-         getCommand("R_GridToCubeLZ", false)   
+            getCommand("R_CubeToGridLZ", true),
+            getCommand("R_GridToCubeLZ", false)   
         ));
     }
 
@@ -73,6 +73,7 @@ public class AutoCommands {
     private Pose2d getInitialPose(PathPlannerTrajectory path) {
         return new Pose2d(
                 path.getInitialPose().getTranslation(),
-                path.getInitialState().holonomicRotation);
+                path.getInitialState().holonomicRotation
+        );
     }
 }

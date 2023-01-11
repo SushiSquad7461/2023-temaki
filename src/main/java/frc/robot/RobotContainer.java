@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import java.util.Set;
-
-import SushiFrcLib.Constants.SushiConstants;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kOI;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
+import java.util.Set;
+
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -29,13 +28,16 @@ public class RobotContainer {
      * Instaite subsystems and commands.
      */
     public RobotContainer() {
-        driveController = new XboxController(SushiConstants.OI.DRIVER_PORT); 
+        driveController = new XboxController(0); 
         swerve = Swerve.getInstance();
         autos = new AutoCommands(swerve);
         autoChooser = new SendableChooser<>();
 
         Set<String> keys = autos.autos.keySet();
-        autoChooser.setDefaultOption((String) keys.toArray()[0], autos.autos.get(keys.toArray()[0]));
+        autoChooser.setDefaultOption(
+            (String) keys.toArray()[0], 
+            autos.autos.get(keys.toArray()[0])
+        );
         keys.remove((String) keys.toArray()[0]);
     
         for (String i : autos.autos.keySet()) {
