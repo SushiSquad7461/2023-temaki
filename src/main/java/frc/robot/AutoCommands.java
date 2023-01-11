@@ -35,8 +35,19 @@ public class AutoCommands {
         })));
 
         autos.put("R2CubeLZ", new SequentialCommandGroup(
-         getCommand("R_CubeToGridLZ", true),
-         getCommand("R_GridToCubeLZ", false)   
+            getCommand("R_CubeToGridLZ", true),
+            getCommand("R_GridToCubeLZ", false),
+            getCommand("R_GridToCube2LZ", false)   
+        ));
+
+        autos.put("R2.5CubeLZ", new SequentialCommandGroup(
+            getCommand("R_CubeToGridLZ", true),
+            getCommand("R_GridToCubeLZ", false),
+            getCommand("R_GridToChargeLZ", false)
+        ));
+
+        autos.put("RCharge", new SequentialCommandGroup(
+           getCommand("R_StartToCharge", true) 
         ));
     }
 
