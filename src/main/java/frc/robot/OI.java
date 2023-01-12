@@ -26,14 +26,18 @@ public class OI {
     }
 
     public double getDriveTrainRotation() {
-        return driverController.getHID().getRawAxis(kOI.DRIVE_ROTATE) * -1;
+        return getRawAxis(kOI.DRIVE_ROTATE);
     }
 
     public double getDriveTrainTranslationY() {
-        return driverController.getHID().getRawAxis(kOI.DRIVE_TRANSLATION_Y) * -1;
+        return getRawAxis(kOI.DRIVE_TRANSLATION_Y);
     }
 
     public double getDriveTrainTranslationX() {
-        return driverController.getHID().getRawAxis(kOI.DRIVE_TRANSLATION_X) * -1;
+        return getRawAxis(kOI.DRIVE_TRANSLATION_X);
+    }
+
+    private double getRawAxis(int id) {
+        return driverController.getHID().getRawAxis(id) * -1;
     }
 }
