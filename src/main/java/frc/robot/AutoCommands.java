@@ -13,9 +13,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Swerve;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -23,8 +20,6 @@ import java.util.function.Consumer;
  */
 public class AutoCommands {
     private final Swerve swerve;
-    public final Map<String, SequentialCommandGroup> autos;
-
     private final SendableChooser<SequentialCommandGroup> autoChooser;
 
     /**
@@ -33,14 +28,13 @@ public class AutoCommands {
     public AutoCommands(Swerve swerve) {
         this.swerve = swerve;
 
-        autos = new HashMap<String, SequentialCommandGroup>();
         autoChooser = new SendableChooser<>();
 
-        autos.put("nothing", new SequentialCommandGroup(new InstantCommand(() -> {
+        autoChooser.addOption("nothing", new SequentialCommandGroup(new InstantCommand(() -> {
             System.out.println("YOUR A CLOWN");
         })));
 
-        autos.put("R2CubeLZ", new SequentialCommandGroup(
+        autoChooser.addOption("R2CubeLZ", new SequentialCommandGroup(
             getCommand("R_CubeToGridLZ", true),
             getCommand("R_GridToCubeLZ", false)   
         ));
@@ -49,17 +43,6 @@ public class AutoCommands {
     }
 
     private void putAutoChooser() {
-        Set<String> keys = autos.keySet();
-        autoChooser.setDefaultOption(
-            (String) keys.toArray()[0], 
-            autos.get(keys.toArray()[0])
-        );
-        keys.remove((String) keys.toArray()[0]);
-    
-        for (String i : autos.keySet()) {
-            autoChooser.addOption(i, autos.get(i));
-        }
-    
         SmartDashboard.putData("Auto Selector", autoChooser); 
     }
 
