@@ -118,7 +118,7 @@ public class SwerveModule {
         } else {
             double velocity = Conversion.MPSToFalcon(
                 desiredState.speedMetersPerSecond, 
-                kSwerve.WHEEL_CIRCUMFRANCE,
+                kSwerve.WHEEL_CIRCUMFERENCE,
                 kSwerve.DRIVE_GEAR_RATIO
             );
             driveMotor.set(ControlMode.Velocity, velocity);
@@ -168,7 +168,7 @@ public class SwerveModule {
      */
     public SwerveModuleState getState() {
         double velocity = Conversion.falconToMPS(
-            driveMotor.getSelectedSensorVelocity(), kSwerve.WHEEL_CIRCUMFRANCE,
+            driveMotor.getSelectedSensorVelocity(), kSwerve.WHEEL_CIRCUMFERENCE,
             kSwerve.DRIVE_GEAR_RATIO
         );
 
@@ -186,7 +186,7 @@ public class SwerveModule {
      */
     public SwerveModulePosition getPosition() {
         double distance = Conversion.falconToM(
-            driveMotor.getSelectedSensorPosition(), kSwerve.WHEEL_CIRCUMFRANCE,
+            driveMotor.getSelectedSensorPosition(), kSwerve.WHEEL_CIRCUMFERENCE,
             kSwerve.DRIVE_GEAR_RATIO
         );
         Rotation2d angle = Rotation2d.fromDegrees(
