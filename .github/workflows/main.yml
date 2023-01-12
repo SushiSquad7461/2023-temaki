@@ -12,4 +12,3 @@ jobs:
           reporter: github-pr-review
           level: warning
           checkstyle_config: "checkstyle.xml"
-          checkstyle_version: 10.6
