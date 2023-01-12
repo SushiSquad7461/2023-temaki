@@ -12,7 +12,8 @@ import frc.robot.subsystems.Swerve;
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
  */
 public class RobotContainer {
-    Swerve swerve;
+    private final Swerve swerve;
+    private final OI oi;
     private final AutoCommands autos;
 
     /**
@@ -20,6 +21,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve = Swerve.getInstance();
+        oi = OI.getInstance();
         autos = new AutoCommands(swerve);
 
         configureButtonBindings();
@@ -27,7 +29,14 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
-            new TeleopSwerveDrive(swerve, true, false)
+            new TeleopSwerveDrive(
+                swerve, 
+                () -> oi.getDriveTrainTranslationX(),
+                () -> oi.getDriveTrainTranslationX(),
+                () -> oi.getDriveTrainRotation(),
+                true, 
+                false
+            )
         );
     }
 
