@@ -37,7 +37,7 @@ public class Pigeon extends Gyro {
             : Rotation2d.fromDegrees(yaw);
     }
 
-    public double getYaw() {
+    private double getYaw() {
         return gyro.getYaw();
     }
 
