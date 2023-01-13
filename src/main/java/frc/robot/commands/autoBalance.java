@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.spline.PoseWithCurvature;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -23,8 +25,8 @@ public class autoBalance extends CommandBase {
 
   public autoBalance() {
     swerve = Swerve.getInstance();
-    inputSensitivity = 1/360; // TODO: make constant or function or smth idrc
-    controlEffort = Constants.kSwerve.MAX_SPEED;
+    inputSensitivity = 1; // TODO: make constant or function or smth idrc
+    controlEffort = - Constants.kSwerve.MAX_SPEED * 0.007;
 
     pitch = getPitch();
     roll = getRoll();
@@ -45,9 +47,14 @@ public class autoBalance extends CommandBase {
     pitch = getPitch();
     roll = getRoll();
 
-    Translation2d movement = new Translation2d(pitch, roll).times(controlEffort); // TODO: switch them?? 
+    Translation2d movement = new Translation2d(roll, pitch).times(controlEffort); // TODO: switch them?? 
 
     swerve.drive(movement, 0, true, false);
+
+    SmartDashboard.putNumber("IN AUTO BALANCE", 1);
+    SmartDashboard.putNumber("Pitch", pitch);
+
+    SmartDashboard.putNumber("Roll", roll);
   }
 
   // Called once the command ends or is interrupted.
