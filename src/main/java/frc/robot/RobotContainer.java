@@ -6,7 +6,6 @@ package frc.robot;
 
 import java.util.Set;
 
-import SushiFrcLib.Constants.SushiConstants;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,7 +28,7 @@ public class RobotContainer {
      * Instaite subsystems and commands.
      */
     public RobotContainer() {
-        driveController = new XboxController(SushiConstants.OI.DRIVER_PORT); 
+        driveController = new XboxController(0); 
         swerve = Swerve.getInstance();
         autos = new AutoCommands(swerve);
         autoChooser = new SendableChooser<>();
