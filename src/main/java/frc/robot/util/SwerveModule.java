@@ -138,7 +138,7 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getPosition() {
-        double distance = Conversions.falconToMPS(driveMotor.getSelectedSensorPosition(), kSwerve.WHEEL_CIRCUMFRANCE,
+        double distance = Conversions.falconToM(driveMotor.getSelectedSensorPosition(), kSwerve.WHEEL_CIRCUMFRANCE,
         kSwerve.DRIVE_GEAR_RATIO);
         Rotation2d angle = Rotation2d.fromDegrees(
             Conversions.falconToDegrees(angleMotor.getSelectedSensorPosition(), kSwerve.ANGLE_GEAR_RATIO));

@@ -40,8 +40,8 @@ public class TeleopSwerveDrive extends CommandBase {
 
     @Override
     public void execute() {
-        double forwardBack = -controller.getRawAxis(translationAxis);
-        double leftRight = -controller.getRawAxis(strafeAxis);
+        double forwardBack = controller.getRawAxis(translationAxis);
+        double leftRight = controller.getRawAxis(strafeAxis);
         double rot = -controller.getRawAxis(rotationsAxis);
 
         forwardBack = Normalization.cube(
