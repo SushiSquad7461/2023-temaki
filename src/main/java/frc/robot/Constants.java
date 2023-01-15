@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -151,5 +153,26 @@ public final class Constants {
         public static final int DRIVE_ROTATE = XboxController.Axis.kRightX.value;
 
         public static final int UPDATE_ENCODER = XboxController.Button.kY.value;
+    }
+
+    /*
+     * Arm values.
+     */
+    public static final class kArm {
+        public static final double GEAR_RATIO = 202.50;
+        public static final int LEFT_MOTOR_ID = 0;
+        public static final int RIGHT_MOTOR_ID = 1;
+        public static final int ENCODER_CHANNEL = 3;
+        public static final boolean LEFT_INVERSION = false;
+        public static final boolean RIGHT_INVERSION = false;
+        public static final int LEFT_CURRENT_LIMIT = 20;
+        public static final int RIGHT_CURRENT_LIMIT = 20;
+        public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+        public static final double ERROR = 1.0;
     }
 }
