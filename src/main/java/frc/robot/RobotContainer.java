@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.kOI;
 import frc.robot.commands.TeleopSwerveDrive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -20,6 +22,7 @@ import frc.robot.subsystems.Swerve;
  */
 public class RobotContainer {
     Swerve swerve;
+    Intake intake;
     XboxController driveController;
     private final SendableChooser<SequentialCommandGroup> autoChooser;
     private final AutoCommands autos;
@@ -32,6 +35,8 @@ public class RobotContainer {
         swerve = Swerve.getInstance();
         autos = new AutoCommands(swerve);
         autoChooser = new SendableChooser<>();
+
+        intake = Intake.getInstance();
 
         Set<String> keys = autos.autos.keySet();
         autoChooser.setDefaultOption((String) keys.toArray()[0], autos.autos.get(keys.toArray()[0]));
@@ -58,6 +63,9 @@ public class RobotContainer {
                 false
             )
         );
+
+        new JoystickButton(driveController, XboxController.Button.kX.value).onTrue(intake.extendIntake());
+        new JoystickButton(driveController, XboxController.Button.kB.value).onTrue(intake.retrakeIntake());
     }
 
     public Command getAutonomousCommand() {

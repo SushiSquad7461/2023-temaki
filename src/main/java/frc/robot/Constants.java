@@ -30,6 +30,17 @@ public final class Constants {
     public static class kPorts {
         public static final String CANIVORE_NAME = "Sussy Squad";
         public static final int PIGEON_ID = 13;
+
+        public static final int INTAKE_MOTOR_ID = 21;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 0;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 2;
+
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 1;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 3;
+    }
+
+    public static class kIntake {
+        public static final double MOTOR_SPEED = 0.8;
     }
     
     /**
