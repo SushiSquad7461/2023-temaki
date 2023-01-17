@@ -159,7 +159,7 @@ public final class Constants {
      * Arm values.
      */
     public static final class kArm {
-        public static final double GEAR_RATIO = 202.50;
+        public static final double GEAR_RATIO = 72.00;
         public static final int LEFT_MOTOR_ID = 0;
         public static final int RIGHT_MOTOR_ID = 1;
         public static final int ENCODER_CHANNEL = 3;

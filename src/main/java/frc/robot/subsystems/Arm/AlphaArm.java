@@ -48,11 +48,6 @@ public class AlphaArm extends Arm {
         encoder = new DutyCycleEncoder(kArm.ENCODER_CHANNEL);
 
         leftMotorPid = leftMotor.getPIDController();
-        leftMotorPid.setP(armP.get());
-        leftMotorPid.setI(armI.get());
-        leftMotorPid.setD(armD.get());
-        leftMotorPid.setFF(armF.get());
-
         rightMotor.follow(leftMotor, true);
 
         resetArm();
@@ -96,15 +91,23 @@ public class AlphaArm extends Arm {
         leftMotor.getEncoder().setPosition(encoder.get() * kArm.GEAR_RATIO);
     }
     
+    
+    // update arm PIDF values
     public void update() {
-        SmartDashboard.putNumber("Absolute Encoder Pos", getPosition());
-        SmartDashboard.putNumber("Motor velocity", getLeftMotorVelocity());
-        SmartDashboard.putNumber("Right Motor Velocity", getRightMotorVelocity());
-        SmartDashboard.putNumber("Arm Error", getError());
+        leftMotorPid.setP(armP.get());
+        leftMotorPid.setI(armI.get());
+        leftMotorPid.setD(armD.get());
+        leftMotorPid.setFF(armF.get());
+        setPosition(targetPos.get());
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Absolute Encoder Pos", getPosition());
+        SmartDashboard.putNumber("Left Motor velocity", getLeftMotorVelocity());
+        SmartDashboard.putNumber("Right Motor Velocity", getRightMotorVelocity());
+        SmartDashboard.putNumber("Arm Target Pose", targetPos.get());
+        SmartDashboard.putNumber("Arm Error", getError());
         update();
     }
 }
