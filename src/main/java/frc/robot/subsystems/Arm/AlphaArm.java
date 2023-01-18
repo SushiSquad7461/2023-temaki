@@ -1,12 +1,9 @@
 package frc.robot.subsystems.Arm;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
-import SushiFrcLib.Math.Conversion;
 import SushiFrcLib.Motor.MotorHelper;
 import SushiFrcLib.SmartDashboard.TunableNumber;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -42,9 +39,9 @@ public class AlphaArm extends Arm {
         targetPos = new TunableNumber("Target Pos", 0, Constants.TUNING_MODE);
 
         leftMotor = MotorHelper.createSparkMax(kArm.LEFT_MOTOR_ID, MotorType.kBrushless, kArm.LEFT_INVERSION,
-                    kArm.LEFT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE);
+                    kArm.LEFT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE, armP.get(), armI.get(), armD.get(), armF.get());
         rightMotor = MotorHelper.createSparkMax(kArm.RIGHT_MOTOR_ID, MotorType.kBrushless, kArm.RIGHT_INVERSION, 
-                     kArm.RIGHT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE);
+                     kArm.RIGHT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE, armP.get(), armI.get(), armD.get(), armF.get());
         encoder = new DutyCycleEncoder(kArm.ENCODER_CHANNEL);
 
         leftMotorPid = leftMotor.getPIDController();
@@ -79,6 +76,10 @@ public class AlphaArm extends Arm {
     }
 
     public void setPosition(double degrees) {
+        if (degrees < 0 || degrees > kArm.MAX_POSITION) {
+            throw new IllegalArgumentException("Position input should be between 0 and " + kArm.MAX_POSITION + " degrees.");
+        }
+
         double rotation = (degrees / 360.0) * kArm.GEAR_RATIO;
         leftMotorPid.setReference(rotation, CANSparkMax.ControlType.kPosition);
     }
