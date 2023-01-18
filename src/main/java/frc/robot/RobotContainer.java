@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kOI;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Arm.AlphaArm;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
  */
 public class RobotContainer {
     Swerve swerve;
+    AlphaArm arm;
     XboxController driveController;
 
     /**
@@ -24,6 +26,7 @@ public class RobotContainer {
     public RobotContainer() {
         driveController = new XboxController(SushiConstants.OI.DRIVER_PORT); 
         swerve = Swerve.getInstance();
+        arm = AlphaArm.getInstance();
         configureButtonBindings();
     }
 
