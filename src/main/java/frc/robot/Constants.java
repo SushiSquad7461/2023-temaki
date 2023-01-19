@@ -161,8 +161,8 @@ public final class Constants {
     public static final class kArm {
         public static final double GEAR_RATIO = 72.00;
 
-        public static final int LEFT_MOTOR_ID = 0;
-        public static final int RIGHT_MOTOR_ID = 1;
+        public static final int LEFT_MOTOR_ID = 23;
+        public static final int RIGHT_MOTOR_ID = 22;
         public static final int ENCODER_CHANNEL = 3;
 
         public static final boolean LEFT_INVERSION = false;
@@ -179,7 +179,7 @@ public final class Constants {
         public static final double kD = 0.0;
         public static final double kF = 0.0;
 
-        public static final double ERROR = 1.0;
+        public static final double ERROR = 1.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
     }
 }

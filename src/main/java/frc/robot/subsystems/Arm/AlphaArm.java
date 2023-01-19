@@ -75,13 +75,16 @@ public class AlphaArm extends Arm {
         leftMotor.set(0);
     }
 
-    public void setPosition(double degrees) {
-        if (degrees < 0 || degrees > kArm.MAX_POSITION) {
-            throw new IllegalArgumentException("Position input should be between 0 and " + kArm.MAX_POSITION + " degrees.");
+    public void setPosition(double degree) {
+        if (degree < 0 || degree > kArm.MAX_POSITION) {
+            double rotation = degreeToRotation(degree);
+            leftMotorPid.setReference(rotation, CANSparkMax.ControlType.kPosition);
         }
+    }
 
-        double rotation = (degrees / 360.0) * kArm.GEAR_RATIO;
-        leftMotorPid.setReference(rotation, CANSparkMax.ControlType.kPosition);
+    public double degreeToRotation(double degree) {
+        double rotation = (degree / 360.0) * kArm.GEAR_RATIO;
+        return rotation;
     }
 
     public boolean isAtPos() {
@@ -95,11 +98,21 @@ public class AlphaArm extends Arm {
     
     // update arm PIDF values
     public void update() {
-        leftMotorPid.setP(armP.get());
-        leftMotorPid.setI(armI.get());
-        leftMotorPid.setD(armD.get());
-        leftMotorPid.setFF(armF.get());
-        setPosition(targetPos.get());
+        if (armP.hasChanged()) {
+            leftMotorPid.setP(armP.get());
+        }
+        if (armI.hasChanged()) {
+            leftMotorPid.setI(armI.get());
+        }
+        if (armD.hasChanged()) {
+            leftMotorPid.setD(armD.get());
+        }
+        if (armF.hasChanged()) {
+            leftMotorPid.setFF(armF.get());
+        }
+        if (targetPos.hasChanged()) {
+            setPosition(targetPos.get());
+        }
     }
 
     @Override
