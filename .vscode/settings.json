@@ -25,5 +25,7 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "java.checkstyle.configuration": "${workspaceFolder}/src/main/java/SushiFrcLib/checkstyle.xml",
+  "java.checkstyle.version": "10.6.0"
 }

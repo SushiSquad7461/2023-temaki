@@ -6,13 +6,13 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Swerve;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  */
 public class AutoCommands {
     private final Swerve swerve;
-    public final Map<String, SequentialCommandGroup> autos;
+    private final SendableChooser<SequentialCommandGroup> autoChooser;
 
     /**
      * Define all auto commands.
@@ -28,9 +28,9 @@ public class AutoCommands {
     public AutoCommands(Swerve swerve) {
         this.swerve = swerve;
 
-        autos = new HashMap<String, SequentialCommandGroup>();
+        autoChooser = new SendableChooser<>();
 
-        autos.put("nothing", new SequentialCommandGroup(new InstantCommand(() -> {
+        autoChooser.addOption("nothing", new SequentialCommandGroup(new InstantCommand(() -> {
             System.out.println("YOUR A CLOWN");
         })));
 
@@ -49,6 +49,19 @@ public class AutoCommands {
         autos.put("RCharge", new SequentialCommandGroup(
            getCommand("R_StartToCharge", true) 
         ));
+
+        putAutoChooser();
+    }
+
+    private void putAutoChooser() {
+        SmartDashboard.putData("Auto Selector", autoChooser); 
+    }
+
+    /**
+     * Get currently selected auto.
+     */
+    public SequentialCommandGroup getAuto() {
+        return autoChooser.getSelected();
     }
 
     private Command getCommand(String pathName, boolean isFirstPath) {
@@ -84,6 +97,7 @@ public class AutoCommands {
     private Pose2d getInitialPose(PathPlannerTrajectory path) {
         return new Pose2d(
                 path.getInitialPose().getTranslation(),
-                path.getInitialState().holonomicRotation);
+                path.getInitialState().holonomicRotation
+        );
     }
 }
