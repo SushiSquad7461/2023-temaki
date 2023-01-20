@@ -43,7 +43,7 @@ public class autoBalance extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO: cross wheels
+    swerve.drive(new Translation2d(0, 0), 0.01, true, false);
   }
 
   // Returns true when the command should end.
