@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import SushiFrcLib.Motor.MotorHelper;
 import SushiFrcLib.SmartDashboard.TunableNumber;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -20,6 +21,7 @@ public class AlphaArm extends Arm {
     private final TunableNumber armD;
     private final TunableNumber armF;
     private final TunableNumber targetPos;
+    // TunableNumber leftMotorVelocity;
     private static AlphaArm instance;
 
     private SparkMaxPIDController leftMotorPid;
@@ -36,6 +38,7 @@ public class AlphaArm extends Arm {
         armI = new TunableNumber("Arm I", kArm.kI, Constants.TUNING_MODE);
         armD = new TunableNumber("Arm D", kArm.kD, Constants.TUNING_MODE);
         armF = new TunableNumber("Arm F", kArm.kF, Constants.TUNING_MODE);
+        // leftMotorVelocity = new TunableNumber("Left Motor Velocity", 0, Constants.TUNING_MODE);
         targetPos = new TunableNumber("Target Pos", 0, Constants.TUNING_MODE);
 
         leftMotor = MotorHelper.createSparkMax(kArm.LEFT_MOTOR_ID, MotorType.kBrushless, kArm.LEFT_INVERSION,
@@ -45,6 +48,9 @@ public class AlphaArm extends Arm {
         encoder = new DutyCycleEncoder(kArm.ENCODER_CHANNEL);
 
         leftMotorPid = leftMotor.getPIDController();
+        leftMotor.getEncoder().setPositionConversionFactor(360 / Constants.kArm.GEAR_RATIO);
+        leftMotor.getEncoder().setVelocityConversionFactor((360 / Constants.kArm.GEAR_RATIO) / 60);
+
         rightMotor.follow(leftMotor, true);
 
         resetArm();
@@ -76,15 +82,9 @@ public class AlphaArm extends Arm {
     }
 
     public void setPosition(double degree) {
-        if (degree < 0 || degree > kArm.MAX_POSITION) {
-            double rotation = degreeToRotation(degree);
-            leftMotorPid.setReference(rotation, CANSparkMax.ControlType.kPosition);
-        }
-    }
-
-    public double degreeToRotation(double degree) {
-        double rotation = (degree / 360.0) * kArm.GEAR_RATIO;
-        return rotation;
+        //if (degree < 0 || degree > kArm.MAX_POSITION) {
+            leftMotorPid.setReference(degree, CANSparkMax.ControlType.kPosition);
+        //}
     }
 
     public boolean isAtPos() {
@@ -113,6 +113,9 @@ public class AlphaArm extends Arm {
         if (targetPos.hasChanged()) {
             setPosition(targetPos.get());
         }
+        // if (leftMotorVelocity.hasChanged()) {
+        //     runArm(leftMotorVelocity.get());
+        // }
     }
 
     @Override

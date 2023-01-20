@@ -23,7 +23,7 @@ import frc.robot.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean TUNING_MODE = false;
+    public static final boolean TUNING_MODE = true;
     public static final double STICK_DEADBAND = 0.1;
 
     /**
@@ -163,13 +163,13 @@ public final class Constants {
 
         public static final int LEFT_MOTOR_ID = 23;
         public static final int RIGHT_MOTOR_ID = 22;
-        public static final int ENCODER_CHANNEL = 3;
+        public static final int ENCODER_CHANNEL = 0;
 
-        public static final boolean LEFT_INVERSION = false;
-        public static final boolean RIGHT_INVERSION = false;
+        public static final boolean LEFT_INVERSION = true;
+        public static final boolean RIGHT_INVERSION = true;
 
-        public static final int LEFT_CURRENT_LIMIT = 20;
-        public static final int RIGHT_CURRENT_LIMIT = 20;
+        public static final int LEFT_CURRENT_LIMIT = 40;
+        public static final int RIGHT_CURRENT_LIMIT = 40;
 
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
