@@ -16,21 +16,11 @@ public class autoBalance extends CommandBase {
   /** Creates a new autoBalance. */
 
   Swerve swerve;
-
-  double inputSensitivity;
-  double controlEffort;
-  double pitch;
-  double roll;
+  Translation2d tilt;
   
 
   public autoBalance() {
     swerve = Swerve.getInstance();
-    inputSensitivity = 1; // TODO: make constant or function or smth idrc
-    controlEffort = - Constants.kSwerve.MAX_SPEED * 0.007;
-
-    pitch = getPitch();
-    roll = getRoll();
-
 
     // Use addRequirements() here to declare subsystem dependencies.
 
@@ -44,17 +34,10 @@ public class autoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pitch = getPitch();
-    roll = getRoll();
 
-    Translation2d movement = new Translation2d(roll, pitch).times(controlEffort); // TODO: switch them?? 
+    tilt = new Translation2d(getRoll(), getPitch()); // TODO: switch them?? 
 
-    swerve.drive(movement, 0, true, false);
-
-    SmartDashboard.putNumber("IN AUTO BALANCE", 1);
-    SmartDashboard.putNumber("Pitch", pitch);
-
-    SmartDashboard.putNumber("Roll", roll);
+    swerve.drive(tilt.times(Constants.kAutoBalance.MAX_SPEED), 0, true, false);
   }
 
   // Called once the command ends or is interrupted.
@@ -66,15 +49,15 @@ public class autoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(pitch)<2 && Math.abs(roll)<2); //TODO: make constants
+    return (tilt.getNorm()<2); //TODO: make constants
   }
 
   private double getRoll() {
-    return swerve.getRoll().getDegrees() * inputSensitivity;
+    return swerve.getRoll().getDegrees();
   }
 
   private double getPitch() {
-    return swerve.getPitch().getDegrees() * inputSensitivity;
+    return swerve.getPitch().getDegrees();
   }
 
 

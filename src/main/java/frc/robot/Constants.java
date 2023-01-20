@@ -24,6 +24,12 @@ public final class Constants {
     public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
 
+    public static class kAutoBalance {
+        public static final double FLATNESS_THRESHOLD_DEGREES = 2;
+        public static final double MAX_SPEED = -1 * Constants.kSwerve.MAX_SPEED * 0.007;
+
+    }
+
     /**
      * Defines port values.
      */
