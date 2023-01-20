@@ -34,20 +34,20 @@ public class AutoCommands {
             System.out.println("YOUR A CLOWN");
         })));
 
-        autos.put("R2.5CubeLZ", new SequentialCommandGroup(
+        autoChooser.addOption("R2.5CubeLZ", new SequentialCommandGroup(
             getCommand("R_GridToCubeLZ", true),
             getCommand("R_CubeToGridLZ", false),
             getCommand("R_GridToCube2LZ", false)   
         ));
 
-        autos.put("R2Cube+ChargeLZ", new SequentialCommandGroup(
+        autoChooser.addOption("R2Cube+ChargeLZ", new SequentialCommandGroup(
             getCommand("R_GridToCubeLZ", true),
             getCommand("R_CubeToGridLZ", false),
             getCommand("R_GridToChargeLZ", false)
         ));
 
-        autos.put("RCharge", new SequentialCommandGroup(
-           getCommand("R_StartToCharge", true) 
+        autoChooser.addOption("RCharge", new SequentialCommandGroup(
+            getCommand("R_StartToCharge", true) 
         ));
 
         putAutoChooser();
