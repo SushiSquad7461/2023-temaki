@@ -56,7 +56,7 @@ public final class Constants {
         public static final double TRACK_WIDTH = Units.inchesToMeters(21.73);
         public static final double WHEEL_BASE = Units.inchesToMeters(21.73);
         public static final double WHEEL_DIAMATER = Units.inchesToMeters(4);
-        public static final double WHEEL_CIRCUMFRANCE = WHEEL_DIAMATER * Math.PI;
+        public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMATER * Math.PI;
 
         public static final double OPEN_LOOP_RAMP = 0.25;
 
@@ -162,5 +162,7 @@ public final class Constants {
         public static final int DRIVE_ROTATE = XboxController.Axis.kRightX.value;
 
         public static final int UPDATE_ENCODER = XboxController.Button.kY.value;
+
+        public static final int DRIVE_PORT = 0;
     }
 }
