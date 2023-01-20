@@ -28,12 +28,12 @@ public class Intake extends SubsystemBase {
 
 
     private Intake() {
-        // motorIntake = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
+        motorIntake = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
         solenoidLeft = new DoubleSolenoid(PneumaticsModuleType.REVPH, kPorts.PNEUMATIC_FORWARD_CHANNEL_LEFT, kPorts.PNEUMATIC_REVERSE_CHANNEL_LEFT);
         solenoidRight = new DoubleSolenoid(PneumaticsModuleType.REVPH, kPorts.PNEUMATIC_FORWARD_CHANNEL_RIGHT, kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT);
 
-        solenoidLeft.set(Value.kForward);
-        solenoidRight.set(Value.kForward);
+        solenoidLeft.set(Value.kReverse);
+        solenoidRight.set(Value.kReverse);
     }
 
     public Command extendIntake() {
@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
             solenoidRight.toggle();
 
             SmartDashboard.putString("In sdakj", "IN");
-            // motorIntake.set(kIntake.MOTOR_SPEED);
+            motorIntake.set(kIntake.MOTOR_SPEED * -1);
         });
     }
 
@@ -51,7 +51,7 @@ public class Intake extends SubsystemBase {
             SmartDashboard.putString("In sdakj", "OUT");
             solenoidLeft.toggle();
             solenoidRight.toggle();
-            // motorIntake.set(kIntake.MOTOR_SPEED * -1);
+            motorIntake.set(0);
         });
     }
 }
