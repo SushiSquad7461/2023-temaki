@@ -13,8 +13,8 @@ import frc.robot.subsystems.Swerve;
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
  */
 public class RobotContainer {
-    private final Intake intake;
     private final Swerve swerve;
+    private final Intake intake;
     private final OI oi;
     private final AutoCommands autos;
 
@@ -23,6 +23,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve = Swerve.getInstance();
+        intake = Intake.getInstance();
         oi = OI.getInstance();
         autos = new AutoCommands(swerve);
 
@@ -41,8 +42,8 @@ public class RobotContainer {
             )
         );
 
-        new JoystickButton(driveController, XboxController.Button.kX.value).onTrue(intake.extendIntake());
-        new JoystickButton(driveController, XboxController.Button.kB.value).onTrue(intake.retrakeIntake());
+        oi.getDriverController().x().onTrue(intake.extendAndRunIntake());
+        oi.getDriverController().b().onTrue(intake.retrakeAndStopIntake());
     }
 
     public Command getAutonomousCommand() {

@@ -39,8 +39,11 @@ public final class Constants {
         public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 2;
     }
 
+    /**
+     * Constants for intake.
+     */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.8;
+        public static final double MOTOR_SPEED = -0.8;
     }
     
     /**
