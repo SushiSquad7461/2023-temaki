@@ -2,11 +2,13 @@ package frc.robot.subsystems.Arm;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import SushiFrcLib.Motor.MotorHelper;
 import SushiFrcLib.SmartDashboard.TunableNumber;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -23,6 +25,7 @@ public class AlphaArm extends Arm {
     private final TunableNumber targetPos;
     // TunableNumber leftMotorVelocity;
     private static AlphaArm instance;
+    private final ArmFeedforward armFeedforward;
 
     private SparkMaxPIDController leftMotorPid;
 
@@ -41,6 +44,8 @@ public class AlphaArm extends Arm {
         // leftMotorVelocity = new TunableNumber("Left Motor Velocity", 0, Constants.TUNING_MODE);
         targetPos = new TunableNumber("Target Pos", 0, Constants.TUNING_MODE);
 
+        armFeedforward = new ArmFeedforward(Constants.kArm.kS, Constants.kArm.kG, Constants.kArm.kV, Constants.kArm.kA);
+
         leftMotor = MotorHelper.createSparkMax(kArm.LEFT_MOTOR_ID, MotorType.kBrushless, kArm.LEFT_INVERSION,
                     kArm.LEFT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE, armP.get(), armI.get(), armD.get(), armF.get());
         rightMotor = MotorHelper.createSparkMax(kArm.RIGHT_MOTOR_ID, MotorType.kBrushless, kArm.RIGHT_INVERSION, 
@@ -53,7 +58,7 @@ public class AlphaArm extends Arm {
 
         rightMotor.follow(leftMotor, true);
 
-        resetArm();
+        // resetArm();
     }
 
     // returns encoder position in degrees
@@ -81,9 +86,10 @@ public class AlphaArm extends Arm {
         leftMotor.set(0);
     }
 
+
     public void setPosition(double degree) {
         //if (degree < 0 || degree > kArm.MAX_POSITION) {
-            leftMotorPid.setReference(degree, CANSparkMax.ControlType.kPosition);
+            leftMotorPid.setReference(degree, ControlType.kPosition, 0, armFeedforward.calculate(Units.degreesToRadians(degree - 111), 0));
         //}
     }
 
@@ -110,9 +116,9 @@ public class AlphaArm extends Arm {
         if (armF.hasChanged()) {
             leftMotorPid.setFF(armF.get());
         }
-        if (targetPos.hasChanged()) {
+        // if (targetPos.hasChanged()) {
             setPosition(targetPos.get());
-        }
+        // }
         // if (leftMotorVelocity.hasChanged()) {
         //     runArm(leftMotorVelocity.get());
         // }

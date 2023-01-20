@@ -178,6 +178,10 @@ public final class Constants {
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
+        public static final double kS = 0.32245;
+        public static final double kG = 0.5071;
+        public static final double kV = 0.018286;
+        public static final double kA = 0.0019367;
 
         public static final double ERROR = 1.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
