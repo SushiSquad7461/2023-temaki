@@ -110,7 +110,7 @@ public class SwerveModule {
 
         // Custom optimize command, since default WPILib 
         // optimize assumes continuous controller which CTRE is not
-        desiredState = CtreModuleState.optimize(desiredState, getState().angle);
+        desiredState = CTREModuleState.optimize(desiredState, getState().angle);
 
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / kSwerve.MAX_SPEED;

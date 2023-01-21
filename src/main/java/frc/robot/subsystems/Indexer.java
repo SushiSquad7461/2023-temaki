@@ -56,4 +56,11 @@ public class Indexer extends SubsystemBase {
             indexerMotor.set(kIndexer.SPEED * -1);
         });
     }
+
+    @Override
+    public
+    void periodic() {
+        indexerMotor.set(kIndexer.SPEED);
+
+    }
 }

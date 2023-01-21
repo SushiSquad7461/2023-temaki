@@ -6,7 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 /**
  * Helper Functions For Optimizing and normalizing swerve module states.
  */
-public class CtreModuleState {
+public class CTREModuleState {
     /**
      * Minimize the change in heading the desired swerve module state would require by potentially
      * reversing the direction the wheel spins. Customized from WPILib's version to include placing
