@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class Arm extends SubsystemBase{
     
     /**
-     * Gets through bore enocder position
+     * Gets through bore encoder position
      * @return position in degrees
      */
-    public abstract double getPosition();
+    public abstract double getAbsolutePosition();
 
     /**
      * Gets left arm motor velocity
