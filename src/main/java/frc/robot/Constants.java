@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -21,7 +23,7 @@ import frc.robot.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean TUNING_MODE = false;
+    public static final boolean TUNING_MODE = true;
     public static final double STICK_DEADBAND = 0.1;
 
     /**
@@ -167,5 +169,40 @@ public final class Constants {
         public static final int UPDATE_ENCODER = XboxController.Button.kY.value;
 
         public static final int DRIVE_PORT = 0;
+    }
+
+    /*
+     * Arm values.
+     */
+    public static final class kArm {
+        public static final double GEAR_RATIO = 72.00;
+
+        public static final int LEFT_MOTOR_ID = 23;
+        public static final int RIGHT_MOTOR_ID = 22;
+        public static final int ENCODER_CHANNEL = 0;
+
+        public static final boolean LEFT_INVERSION = true;
+        public static final boolean RIGHT_INVERSION = true;
+
+        public static final int LEFT_CURRENT_LIMIT = 40;
+        public static final int RIGHT_CURRENT_LIMIT = 40;
+
+        public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
+
+        public static final double kP = 0.015000;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+        public static final double kS = 0.32245;
+        public static final double kG = 0.42; //0.42
+        public static final double kV = 0.018286;
+        public static final double kA = 0.0019367;
+
+        public static final double ERROR = 1.0; // degrees
+        public static final double MAX_POSITION = 110.00; // in degrees
+
+        public static final double ENCODER_ANGLE_OFFSET = 233.6;
+        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
     }
 }
