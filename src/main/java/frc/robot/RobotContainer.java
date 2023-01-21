@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Arm.AlphaArm;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -21,6 +22,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve = Swerve.getInstance();
+        arm = AlphaArm.getInstance();
         oi = OI.getInstance();
         autos = new AutoCommands(swerve);
 
