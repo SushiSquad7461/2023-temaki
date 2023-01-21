@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TeleopSwerveDrive;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Arm.AlphaArm;
@@ -28,6 +29,7 @@ public class RobotContainer {
         arm = AlphaArm.getInstance();
         oi = OI.getInstance();
         autos = new AutoCommands(swerve);
+        Indexer.getInstance();
 
         configureButtonBindings();
     }

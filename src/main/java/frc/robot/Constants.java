@@ -32,7 +32,15 @@ public final class Constants {
     public static class kPorts {
         public static final String CANIVORE_NAME = "Sussy Squad";
         public static final int PIGEON_ID = 13;
+        public static final int INDEXER_MOTOR = 21;
+    }
 
+    /**
+     * Constants for indexer.
+     */
+    public static class kIndexer {
+        public static final double SPEED = 0.7;
+        
         public static final int INTAKE_MOTOR_ID = 20;
         public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 0;
         public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 3;
