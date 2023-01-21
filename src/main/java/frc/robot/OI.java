@@ -40,4 +40,8 @@ public class OI {
     private double getRawAxis(int id) {
         return driverController.getHID().getRawAxis(id) * -1;
     }
+
+    public CommandXboxController getDriverController() {
+        return driverController;
+    }
 }

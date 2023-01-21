@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TeleopSwerveDrive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Arm.AlphaArm;
 
@@ -14,6 +15,7 @@ import frc.robot.subsystems.Arm.AlphaArm;
  */
 public class RobotContainer {
     private final Swerve swerve;
+    private final Intake intake;
     private final OI oi;
     private final AutoCommands autos;
 
@@ -22,6 +24,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve = Swerve.getInstance();
+        intake = Intake.getInstance();
         arm = AlphaArm.getInstance();
         oi = OI.getInstance();
         autos = new AutoCommands(swerve);
@@ -40,6 +43,9 @@ public class RobotContainer {
                 false
             )
         );
+
+        oi.getDriverController().x().onTrue(intake.extendAndRunIntake());
+        oi.getDriverController().b().onTrue(intake.retrakeAndStopIntake());
     }
 
     public Command getAutonomousCommand() {
