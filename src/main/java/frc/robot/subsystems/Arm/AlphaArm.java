@@ -10,8 +10,10 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
+import frc.robot.Constants.kPorts;
 
 public class AlphaArm extends Arm {
     private final CANSparkMax leftMotor;
@@ -43,11 +45,11 @@ public class AlphaArm extends Arm {
 
         armFeedforward = new ArmFeedforward(Constants.kArm.kS, Constants.kArm.kG, Constants.kArm.kV, Constants.kArm.kA);
 
-        leftMotor = MotorHelper.createSparkMax(kArm.LEFT_MOTOR_ID, MotorType.kBrushless, kArm.LEFT_INVERSION,
+        leftMotor = MotorHelper.createSparkMax(kPorts.LEFT_MOTOR_ID, MotorType.kBrushless, kArm.LEFT_INVERSION,
                     kArm.LEFT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE, armP.get(), armI.get(), armD.get(), armF.get());
-        rightMotor = MotorHelper.createSparkMax(kArm.RIGHT_MOTOR_ID, MotorType.kBrushless, kArm.RIGHT_INVERSION, 
+        rightMotor = MotorHelper.createSparkMax(kPorts.RIGHT_MOTOR_ID, MotorType.kBrushless, kArm.RIGHT_INVERSION, 
                      kArm.RIGHT_CURRENT_LIMIT, kArm.LEFT_IDLE_MODE, armP.get(), armI.get(), armD.get(), armF.get());
-        encoder = new DutyCycleEncoder(kArm.ENCODER_CHANNEL);
+        encoder = new DutyCycleEncoder(kPorts.ENCODER_CHANNEL);
 
         leftMotorPid = leftMotor.getPIDController();
         leftMotor.getEncoder().setPositionConversionFactor(360.0 / Constants.kArm.GEAR_RATIO); // degrees
@@ -113,33 +115,45 @@ public class AlphaArm extends Arm {
     
     // update arm PIDF values
     public void update() {
-        if (armP.hasChanged()) {
-            leftMotorPid.setP(armP.get());
-        }
-        if (armI.hasChanged()) {
-            leftMotorPid.setI(armI.get());
-        }
-        if (armD.hasChanged()) {
-            leftMotorPid.setD(armD.get());
-        }
-        if (armF.hasChanged()) {
-            leftMotorPid.setFF(armF.get());
-        }
+        // if (armP.hasChanged()) {
+        //     leftMotorPid.setP(armP.get());
+        // }
+        // if (armI.hasChanged()) {
+        //     leftMotorPid.setI(armI.get());
+        // }
+        // if (armD.hasChanged()) {
+        //     leftMotorPid.setD(armD.get());
+        // }
+        // if (armF.hasChanged()) {
+        //     leftMotorPid.setFF(armF.get());
+        // }
 
         if (targetPos.hasChanged()) {
                 setPosition(targetPos.get());
         }
     }
 
+    public Command raiseArm() {
+        return run(() -> {
+            setPosition(90);
+        }).until(() -> { return getError() < kArm.ERROR; });
+    }
+
+    public Command lowerArm() {
+        return run(() -> {
+            setPosition(0);
+        }).until(() -> { return getError() < kArm.ERROR; });
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Absolute Encoder Pos", getAbsolutePosition());
         SmartDashboard.putNumber("Relative Encoder Pos", leftMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("Left Motor velocity", getLeftMotorVelocity());
-        SmartDashboard.putNumber("Right Motor Velocity", getRightMotorVelocity());
-        SmartDashboard.putNumber("Arm Target Pose", targetPos.get());
-        SmartDashboard.putNumber("Arm Error", getError());
-        SmartDashboard.putNumber("Feed Forward Gain", armFeedforward.calculate(Units.degreesToRadians(targetPos.get() - kArm.FEEDFORWARD_ANGLE_OFFSET),0));
+        // SmartDashboard.putNumber("Left Motor velocity", getLeftMotorVelocity());
+        // SmartDashboard.putNumber("Right Motor Velocity", getRightMotorVelocity());
+        // SmartDashboard.putNumber("Arm Target Pose", targetPos.get());
+        // SmartDashboard.putNumber("Arm Error", getError());
+        // SmartDashboard.putNumber("Feed Forward Gain", armFeedforward.calculate(Units.degreesToRadians(targetPos.get() - kArm.FEEDFORWARD_ANGLE_OFFSET),0));
         update();
     }
 }

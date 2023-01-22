@@ -33,27 +33,32 @@ public final class Constants {
         public static final String CANIVORE_NAME = "Sussy Squad";
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
+        public static final int INTAKE_MOTOR_ID = 20;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 3;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0;
+
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;
+
+        public static final int MANIPULATOR_MOTOR_ID = 24;
+
+        public static final int LEFT_MOTOR_ID = 23;
+        public static final int RIGHT_MOTOR_ID = 22;
+        public static final int ENCODER_CHANNEL = 0;
     }
 
     /**
      * Constants for indexer.
      */
     public static class kIndexer {
-        public static final double SPEED = 0.7;
-        
-        public static final int INTAKE_MOTOR_ID = 20;
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 0;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 3;
-
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 1;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 2;
+        public static final double SPEED = 0.8;
     }
 
     /**
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = -0.8;
+        public static final double MOTOR_SPEED = -0.6;
     }
     
     /**
@@ -185,10 +190,6 @@ public final class Constants {
     public static final class kArm {
         public static final double GEAR_RATIO = 72.00;
 
-        public static final int LEFT_MOTOR_ID = 23;
-        public static final int RIGHT_MOTOR_ID = 22;
-        public static final int ENCODER_CHANNEL = 0;
-
         public static final boolean LEFT_INVERSION = true;
         public static final boolean RIGHT_INVERSION = true;
 
@@ -207,10 +208,14 @@ public final class Constants {
         public static final double kV = 0.018286;
         public static final double kA = 0.0019367;
 
-        public static final double ERROR = 1.0; // degrees
+        public static final double ERROR = 2.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
+    }
+
+    public static final class kManipulator {
+        public static final double SPEED = 1.0;
     }
 }

@@ -61,10 +61,18 @@ public class Intake extends SubsystemBase {
         });
     }
 
+    public Command extendIntake() {
+        return runOnce(() -> {
+            if (solenoidLeft.get() == Value.kReverse) {
+                toggleIntake();
+            }
+        });
+    }
+
     /**
      * Makes sure intake is retracted and turns of motor. 
      */
-    public Command retrakeAndStopIntake() {
+    public Command retractAndStopIntake() {
         return runOnce(() -> {
             if (solenoidLeft.get() == Value.kForward) {
                 toggleIntake();

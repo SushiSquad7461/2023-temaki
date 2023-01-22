@@ -5,9 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Arm.AlphaArm;
 
@@ -19,6 +23,10 @@ public class RobotContainer {
     private final Intake intake;
     private final OI oi;
     private final AutoCommands autos;
+    private final AlphaArm arm;
+    private final Indexer indexer;
+    private final Manipulator manipulator;
+
 
     /**
      * Instaite subsystems and commands.
@@ -28,8 +36,10 @@ public class RobotContainer {
         intake = Intake.getInstance();
         arm = AlphaArm.getInstance();
         oi = OI.getInstance();
+        indexer = Indexer.getInstance();
+        manipulator = Manipulator.getInstance();
+
         autos = new AutoCommands(swerve);
-        Indexer.getInstance();
 
         configureButtonBindings();
     }
@@ -39,15 +49,17 @@ public class RobotContainer {
             new TeleopSwerveDrive(
                 swerve, 
                 () -> oi.getDriveTrainTranslationX(),
-                () -> oi.getDriveTrainTranslationX(),
+                () -> oi.getDriveTrainTranslationY(),
                 () -> oi.getDriveTrainRotation(),
                 true, 
                 false
             )
         );
 
-        oi.getDriverController().x().onTrue(intake.extendAndRunIntake());
-        oi.getDriverController().b().onTrue(intake.retrakeAndStopIntake());
+        oi.getDriverController().x().onTrue(new ParallelCommandGroup(intake.extendAndRunIntake()));
+        oi.getDriverController().b().onTrue(new SequentialCommandGroup(intake.retractAndStopIntake(), new ParallelCommandGroup(indexer.runIndexer(), manipulator.run()), new WaitCommand(2), indexer.stopIndexer()));
+        oi.getDriverController().a().onTrue(new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(1.5), arm.raiseArm(), manipulator.reverse(), new WaitCommand(2), manipulator.stop(), arm.lowerArm(), new WaitCommand(2.5), intake.retractAndStopIntake()));
+
     }
 
     public Command getAutonomousCommand() {
