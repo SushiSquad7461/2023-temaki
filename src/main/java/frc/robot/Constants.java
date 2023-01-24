@@ -23,7 +23,7 @@ import frc.robot.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean TUNING_MODE = true;
+    public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
 
     /**
@@ -199,7 +199,7 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double kP = 0.015000;
+        public static final double kP = 0.0055000; // 0.015
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
@@ -208,7 +208,7 @@ public final class Constants {
         public static final double kV = 0.018286;
         public static final double kA = 0.0019367;
 
-        public static final double ERROR = 2.0; // degrees
+        public static final double ERROR = 1.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
@@ -216,6 +216,6 @@ public final class Constants {
     }
 
     public static final class kManipulator {
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 0.9;
     }
 }

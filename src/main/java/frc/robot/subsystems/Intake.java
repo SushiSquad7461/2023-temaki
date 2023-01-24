@@ -81,6 +81,14 @@ public class Intake extends SubsystemBase {
         });
     }
 
+    public Command retractIntake() {
+        return runOnce(() -> {
+            if (solenoidLeft.get() == Value.kForward) {
+                toggleIntake();
+            }
+        });
+    }
+
     private void toggleIntake() {
         solenoidLeft.toggle();
         solenoidRight.toggle();

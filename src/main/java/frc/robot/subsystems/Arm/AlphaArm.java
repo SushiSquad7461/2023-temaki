@@ -125,11 +125,13 @@ public class AlphaArm extends Arm {
 
 
     public void setPosition(double degree) {
-        if (targetPos.get() < 0) {
+        if (degree < 0) {
             degree = 0;
-        } else if (targetPos.get() > kArm.MAX_POSITION) {
+        } else if (degree > kArm.MAX_POSITION) {
             degree = kArm.MAX_POSITION;
         }
+
+        targetPos.setDefault(degree);
 
         leftMotorPid.setReference(
             degree, 
@@ -172,8 +174,12 @@ public class AlphaArm extends Arm {
         }
     }
 
-    public Command raiseArm() {
-        return moveArm(90);
+    public Command raiseArmToScore() {
+        return moveArm(75);
+    }
+
+    public Command raiseArmPickupCone() {
+        return moveArm(100);
     }
 
     public Command lowerArm() {
@@ -183,12 +189,14 @@ public class AlphaArm extends Arm {
     private Command moveArm(double degrees) {
         return run(() -> {
             setPosition(degrees);
-        }).until(this::isAtPos);
+        });
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Relative Encoder Pos", leftMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Absolute Encoder Pos", getAbsolutePosition());
+
         SmartDashboard.putNumber("Arm Target Pose", targetPos.get());
         update();
     }
