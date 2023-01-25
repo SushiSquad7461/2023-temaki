@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Arm;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -111,8 +113,8 @@ public class AlphaArm extends Arm {
         return leftMotor.getEncoder().getVelocity();
     }
 
-    public double getError() {
-        return targetPos.get() - getAbsolutePosition();
+    public double getError(double target) {
+        return target - getAbsolutePosition();
     }
 
     public void runArm(double speed) {
@@ -144,8 +146,8 @@ public class AlphaArm extends Arm {
         );
     }
 
-    private boolean isAtPos() {
-        return Math.abs(getError()) < kArm.ERROR;
+    private boolean isAtPos(double degrees) {
+        return Math.abs(getError(degrees)) < kArm.ERROR;
     }
 
     public void resetArm() {
@@ -189,7 +191,7 @@ public class AlphaArm extends Arm {
     private Command moveArm(double degrees) {
         return run(() -> {
             setPosition(degrees);
-        });
+        }).until(() -> isAtPos(degrees));
     }
 
     @Override

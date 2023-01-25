@@ -38,7 +38,7 @@ public final class Constants {
         public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0;
 
         public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -208,7 +208,7 @@ public final class Constants {
         public static final double kV = 0.018286;
         public static final double kA = 0.0019367;
 
-        public static final double ERROR = 1.0; // degrees
+        public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
         public static final double ENCODER_ANGLE_OFFSET = 233.6;

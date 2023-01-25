@@ -51,17 +51,19 @@ public class RobotContainer {
                 () -> oi.getDriveTrainTranslationX(),
                 () -> oi.getDriveTrainTranslationY(),
                 () -> oi.getDriveTrainRotation(),
+
                 true, 
                 false
             )
+
         );
 
         oi.getDriverController().x().onTrue(new ParallelCommandGroup(intake.extendAndRunIntake()));
         oi.getDriverController().b().onTrue(new SequentialCommandGroup(intake.retractAndStopIntake(), new ParallelCommandGroup(indexer.runIndexer(), manipulator.run()), new WaitCommand(1), indexer.stopIndexer()));
         oi.getDriverController().a().onTrue(new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(1.5), arm.raiseArmToScore(), manipulator.reverse(), new WaitCommand(2), manipulator.stop(), arm.lowerArm(), new WaitCommand(1), intake.retractAndStopIntake()));
-
-        oi.getDriverController().leftTrigger().onTrue(new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(0.5), arm.raiseArmPickupCone(), manipulator.reverse()));
-        oi.getDriverController().leftBumper().onTrue(new SequentialCommandGroup(arm.raiseArmToScore(), new WaitCommand(1), arm.raiseArmPickupCone()));
+        oi.getDriverController().leftTrigger().onTrue(new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(0.5), arm.raiseArmPickupCone(), manipulator.run())); // cone placement
+        oi.getDriverController().leftBumper().onTrue(new SequentialCommandGroup(arm.raiseArmToScore(), new 
+        WaitCommand(1), arm.raiseArmPickupCone()));
         oi.getDriverController().rightTrigger().onTrue(new SequentialCommandGroup(intake.extendIntake(), arm.lowerArm(), new WaitCommand(0.2), intake.retractAndStopIntake()));
 
 

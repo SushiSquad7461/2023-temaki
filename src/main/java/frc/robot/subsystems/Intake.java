@@ -45,8 +45,8 @@ public class Intake extends SubsystemBase {
             kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT
         );
 
-        solenoidLeft.set(Value.kReverse);
-        solenoidRight.set(Value.kReverse);
+        solenoidLeft.set(Value.kForward);
+        solenoidRight.set(Value.kForward);
     }
 
     /**
