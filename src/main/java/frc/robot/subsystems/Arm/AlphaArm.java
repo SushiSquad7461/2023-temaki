@@ -88,9 +88,6 @@ public class AlphaArm extends Arm {
         ); //degrees per second
 
         rightMotor.follow(leftMotor, true);
-
-        leftMotor.burnFlash();
-        rightMotor.burnFlash();
         resetArm();
     }
 

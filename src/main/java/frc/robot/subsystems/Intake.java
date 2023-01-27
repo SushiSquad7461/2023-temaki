@@ -47,18 +47,15 @@ public class Intake extends SubsystemBase {
             kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT
         );
 
-        solenoidLeft.set(Value.kForward);
-        solenoidRight.set(Value.kForward);
+        solenoidLeft.set(Value.kReverse);
+        solenoidRight.set(Value.kReverse);
     }
 
     /**
      * Makes sure intake is extended and turns on motor.
      */
-    public Command extendAndRunIntake() {
+    public Command runIntake() {
         return runOnce(() -> {
-            if (solenoidLeft.get() == Value.kReverse) {
-                toggleIntake();
-            }
             motorIntake.set(kIntake.MOTOR_SPEED);
         });
     }
@@ -74,11 +71,8 @@ public class Intake extends SubsystemBase {
     /**
      * Makes sure intake is retracted and turns of motor. 
      */
-    public Command retractAndStopIntake() {
+    public Command stopIntake() {
         return runOnce(() -> {
-            if (solenoidLeft.get() == Value.kForward) {
-                toggleIntake();
-            }
             motorIntake.set(0);
         });
     }
@@ -88,6 +82,12 @@ public class Intake extends SubsystemBase {
             if (solenoidLeft.get() == Value.kForward) {
                 toggleIntake();
             }
+        });
+    }
+
+    public Command reverseIntake() {
+        return runOnce(() -> {
+            motorIntake.set(-kIntake.MOTOR_SPEED);
         });
     }
 

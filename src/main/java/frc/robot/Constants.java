@@ -216,6 +216,6 @@ public final class Constants {
     }
 
     public static final class kManipulator {
-        public static final double SPEED = 0.9;
+        public static final double SPEED = 0.4;
     }
 }

@@ -40,6 +40,12 @@ public class Manipulator extends SubsystemBase {
         });
     }
 
+    public Command coneReverse() {
+        return runOnce(() -> {
+            motor.set(-kManipulator.SPEED);
+        });
+    }
+
     /**
      * Reverse the indexer.
      */
@@ -49,12 +55,24 @@ public class Manipulator extends SubsystemBase {
         });
     }
 
+    public Command cubeReverse() {
+        return runOnce(() -> {
+            motor.set(kManipulator.SPEED);
+        });
+    }
+
     /**
      * Stops indexer.
      */
     public Command stop() {
         return runOnce(() -> {
             motor.set(0);
+        });
+    }
+
+    public Command holdCube() {
+        return runOnce(() -> {
+            motor.set(-0.01);
         });
     }
 
