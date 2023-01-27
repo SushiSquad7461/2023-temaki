@@ -89,6 +89,8 @@ public class AlphaArm extends Arm {
 
         rightMotor.follow(leftMotor, true);
 
+        leftMotor.burnFlash();
+        rightMotor.burnFlash();
         resetArm();
     }
 
@@ -151,6 +153,13 @@ public class AlphaArm extends Arm {
     }
 
     public void resetArm() {
+        leftMotor.getEncoder().setPositionConversionFactor(
+            360.0 / Constants.kArm.GEAR_RATIO
+        ); // degrees
+
+        leftMotor.getEncoder().setVelocityConversionFactor(
+            (360.0 / Constants.kArm.GEAR_RATIO) / 60.0
+        );
         leftMotor.getEncoder().setPosition(getAbsolutePosition());
     }
     

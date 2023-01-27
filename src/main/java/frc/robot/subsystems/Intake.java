@@ -33,6 +33,8 @@ public class Intake extends SubsystemBase {
 
     private Intake() {
         motorIntake = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
+        motorIntake.setInverted(true);
+        motorIntake.burnFlash();
 
         solenoidLeft = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 

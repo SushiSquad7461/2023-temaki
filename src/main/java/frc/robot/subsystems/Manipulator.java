@@ -34,7 +34,7 @@ public class Manipulator extends SubsystemBase {
     /**
      * Runs indexer in positive direction.
      */
-    public Command run() {
+    public Command cone() {
         return runOnce(() -> {
             motor.set(kManipulator.SPEED);
         });
@@ -43,7 +43,7 @@ public class Manipulator extends SubsystemBase {
     /**
      * Reverse the indexer.
      */
-    public Command reverse() {
+    public Command cube() {
         return runOnce(() -> {
             motor.set(kManipulator.SPEED * -1);
         });

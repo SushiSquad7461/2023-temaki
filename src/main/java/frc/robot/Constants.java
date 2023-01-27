@@ -58,7 +58,7 @@ public final class Constants {
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = -0.6;
+        public static final double MOTOR_SPEED = 0.4;
     }
     
     /**
