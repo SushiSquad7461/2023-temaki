@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -96,16 +97,16 @@ public class RobotContainer {
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(0.7),
-            arm.lowerArm(),
+            arm.moveArm(ArmPos.LOWERED),
             new WaitCommand(0.7),
             intake.retractIntake()
         ));
 
-        // Raise arm to score
+        // Raise arm to score at L2
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(0.7),
-            arm.raiseArmToScore(),
+            arm.moveArm(ArmPos.L2_SCORING),
             new WaitCommand(0.7),
             intake.retractIntake()
         ));
@@ -128,7 +129,7 @@ public class RobotContainer {
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(0.7),
-            arm.raiseArmPickupCone(),
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             new WaitCommand(0.7),
             intake.retractIntake()
         ));
@@ -136,9 +137,9 @@ public class RobotContainer {
         // pickup cone
         oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
             manipulator.cone(),
-            arm.raiseArmToScore(),
+            arm.moveArm(ArmPos.CONE_PICKUP_LOWERED),
             new WaitCommand(1),
-            arm.raiseArmPickupCone(),
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.stop()
         ));
     }
