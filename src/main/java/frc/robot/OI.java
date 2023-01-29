@@ -8,7 +8,7 @@ import frc.robot.Constants.kOI;
 */
 public class OI {
     private CommandXboxController driverController;
-
+    private CommandXboxController operatorController;
     private static OI instance;
 
     /**
@@ -23,6 +23,8 @@ public class OI {
 
     private OI() {
         driverController = new CommandXboxController(kOI.DRIVE_PORT);
+        operatorController = new CommandXboxController(kOI.OPERATOR_PORT);
+
     }
 
     public double getDriveTrainRotation() {
@@ -43,5 +45,9 @@ public class OI {
 
     public CommandXboxController getDriverController() {
         return driverController;
+    }
+
+    public CommandXboxController getOperatorController() {
+        return operatorController;
     }
 }

@@ -183,7 +183,7 @@ public class AlphaArm extends Arm {
     }
 
     public Command raiseArmToScore() {
-        return moveArm(75);
+        return moveArm(75); // 75 L2
     }
 
     public Command raiseArmPickupCone() {
@@ -204,8 +204,9 @@ public class AlphaArm extends Arm {
     public void periodic() {
         SmartDashboard.putNumber("Relative Encoder Pos", leftMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Absolute Encoder Pos", getAbsolutePosition());
-
         SmartDashboard.putNumber("Arm Target Pose", targetPos.get());
+        SmartDashboard.putNumber("Left Motor Voltage", leftMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Right Motor Voltage", rightMotor.getOutputCurrent());
         update();
     }
 }

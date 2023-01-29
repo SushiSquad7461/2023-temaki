@@ -51,14 +51,14 @@ public final class Constants {
      * Constants for indexer.
      */
     public static class kIndexer {
-        public static final double SPEED = 0.8;
+        public static final double SPEED = 0.7;
     }
 
     /**
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.4;
+        public static final double MOTOR_SPEED = 0.5;
     }
     
     /**
@@ -182,6 +182,7 @@ public final class Constants {
         public static final int UPDATE_ENCODER = XboxController.Button.kY.value;
 
         public static final int DRIVE_PORT = 0;
+        public static final int OPERATOR_PORT = 1;
     }
 
     /*
@@ -199,7 +200,7 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double kP = 0.0055000; // 0.015
+        public static final double kP = 0.0150000; // 0.015
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
@@ -216,6 +217,6 @@ public final class Constants {
     }
 
     public static final class kManipulator {
-        public static final double SPEED = 0.4;
+        public static final double SPEED = 1.0;
     }
 }

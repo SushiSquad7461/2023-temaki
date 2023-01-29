@@ -46,22 +46,22 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    public Command toggleIntake() {
+    public void toggleIntake() {
         intakeToggled = !intakeToggled;
         if(intakeToggled) {
-            return new SequentialCommandGroup(intake.extendIntake(), intake.runIntake());
+            (new SequentialCommandGroup(intake.extendIntake(), intake.runIntake())).schedule();
         } else {
-            return new SequentialCommandGroup(intake.retractIntake(), new ParallelCommandGroup(indexer.runIndexer(), manipulator.cube()), new WaitCommand(1.0), new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), manipulator.holdCube()));
+            (new SequentialCommandGroup(intake.retractIntake(), new ParallelCommandGroup(indexer.runIndexer(), manipulator.cube()), new WaitCommand(1.0), new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), manipulator.holdCube()))).schedule();
         }
     }
 
-    public Command evacuateIntake(Command command, boolean ignoreCurrentPosition) {
-        if(arm.getReletivePosition() < 30 || ignoreCurrentPosition) {
-            return new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(1), command, new WaitCommand(1), intake.retractIntake());
-        } else {
-            return command;
-        }
-    }
+    // public Command evacuateIntake(Command command, boolean ignoreCurrentPosition) {
+    //     if(arm.getReletivePosition() < 30 || ignoreCurrentPosition) {
+    //         return new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(1), command, new WaitCommand(1), intake.retractIntake());
+    //     } else {
+    //         return command;
+    //     }
+    // }
 
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
@@ -77,11 +77,66 @@ public class RobotContainer {
 
         );
 
-        oi.getDriverController().leftBumper().onTrue(toggleIntake());
-        oi.getDriverController().x().onTrue(evacuateIntake(new SequentialCommandGroup(arm.raiseArmPickupCone()), true));
-        oi.getDriverController().y().onTrue(evacuateIntake(new SequentialCommandGroup(new ParallelCommandGroup(arm.raiseArmToScore(), manipulator.cone()), new WaitCommand(0.5), new ParallelCommandGroup(arm.raiseArmPickupCone(), manipulator.stop())), false));
-        oi.getDriverController().a().onTrue(evacuateIntake(new SequentialCommandGroup(arm.lowerArm()), true));
-        oi.getDriverController().b().onTrue(evacuateIntake(new SequentialCommandGroup(arm.raiseArmToScore(), manipulator.coneReverse(), arm.raiseArmPickupCone(), manipulator.stop()), false));
+
+        oi.getDriverController().leftBumper().onTrue(new InstantCommand(() -> {
+            toggleIntake();
+        }));
+
+        // Lower arm
+        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            new WaitCommand(0.7),
+            arm.lowerArm(),
+            new WaitCommand(0.7),
+            intake.retractIntake()
+        ));
+
+        // Raise arm to score
+        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            new WaitCommand(0.7),
+            arm.raiseArmToScore(),
+            new WaitCommand(0.7),
+            intake.retractIntake()
+        ));
+
+        // Score item to relese cube
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            manipulator.cubeReverse(),
+            new WaitCommand(1),
+            manipulator.stop()
+        ));
+
+        // Score item to relese cone
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(1.5),
+            manipulator.stop()
+        ));
+
+        // raise arm for cone
+        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            new WaitCommand(0.7),
+            arm.raiseArmPickupCone(),
+            new WaitCommand(0.7),
+            intake.retractIntake()
+        ));
+
+        // pickup cone
+        oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
+            manipulator.cone(),
+            arm.raiseArmToScore(),
+            new WaitCommand(1),
+            arm.raiseArmPickupCone(),
+            manipulator.stop()
+        ));
+        
+        // oi.getDriverController().x().onTrue(evacuateIntake(new SequentialCommandGroup(arm.raiseArmPickupCone()), true));
+        // oi.getDriverController().y().onTrue(evacuateIntake(new SequentialCommandGroup(new ParallelCommandGroup(arm.raiseArmToScore(), manipulator.cone()), new WaitCommand(1), new ParallelCommandGroup(arm.raiseArmPickupCone(), manipulator.stop())), false));
+        // oi.getDriverController().a().onTrue(evacuateIntake(new SequentialCommandGroup(arm.lowerArm()), 
+        // true));
+        // oi.getDriverController().b().onTrue(evacuateIntake(new SequentialCommandGroup(arm.raiseArmToScore(), manipulator.coneReverse(), new WaitCommand(1), arm.raiseArmPickupCone(), manipulator.stop()), false));
     }
 
     public Command getAutonomousCommand() {

@@ -36,13 +36,13 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cone() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED);
+            motor.set(kManipulator.SPEED * -1.0);
         });
     }
 
     public Command coneReverse() {
         return runOnce(() -> {
-            motor.set(-kManipulator.SPEED);
+            motor.set(kManipulator.SPEED);
         });
     }
 
@@ -51,13 +51,13 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cube() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * -1);
+            motor.set(kManipulator.SPEED);
         });
     }
 
     public Command cubeReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED);
+            motor.set(kManipulator.SPEED * -1.0);
         });
     }
 
