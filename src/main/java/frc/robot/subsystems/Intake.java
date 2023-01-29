@@ -33,6 +33,8 @@ public class Intake extends SubsystemBase {
 
     private Intake() {
         motorIntake = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
+        motorIntake.setInverted(true);
+        motorIntake.burnFlash();
 
         solenoidLeft = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
@@ -52,24 +54,49 @@ public class Intake extends SubsystemBase {
     /**
      * Makes sure intake is extended and turns on motor.
      */
-    public Command extendAndRunIntake() {
+    public Command runIntake() {
+        return runOnce(() -> {
+            motorIntake.set(kIntake.MOTOR_SPEED);
+        });
+    }
+
+    /**
+     * Extends intake.
+     */
+    public Command extendIntake() {
         return runOnce(() -> {
             if (solenoidLeft.get() == Value.kReverse) {
                 toggleIntake();
             }
-            motorIntake.set(kIntake.MOTOR_SPEED);
         });
     }
 
     /**
      * Makes sure intake is retracted and turns of motor. 
      */
-    public Command retrakeAndStopIntake() {
+    public Command stopIntake() {
+        return runOnce(() -> {
+            motorIntake.set(0);
+        });
+    }
+
+    /**
+     * Retracts intake.
+     */
+    public Command retractIntake() {
         return runOnce(() -> {
             if (solenoidLeft.get() == Value.kForward) {
                 toggleIntake();
             }
-            motorIntake.set(0);
+        });
+    }
+
+    /**
+     * Reverses intake.
+     */
+    public Command reverseIntake() {
+        return runOnce(() -> {
+            motorIntake.set(-kIntake.MOTOR_SPEED);
         });
     }
 

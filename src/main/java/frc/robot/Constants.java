@@ -23,7 +23,7 @@ import frc.robot.util.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean TUNING_MODE = true;
+    public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
 
     /**
@@ -33,6 +33,18 @@ public final class Constants {
         public static final String CANIVORE_NAME = "Sussy Squad";
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
+        public static final int INTAKE_MOTOR_ID = 20;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 3;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0;
+
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
+
+        public static final int MANIPULATOR_MOTOR_ID = 24;
+
+        public static final int LEFT_MOTOR_ID = 23;
+        public static final int RIGHT_MOTOR_ID = 22;
+        public static final int ENCODER_CHANNEL = 0;
     }
 
     /**
@@ -40,20 +52,13 @@ public final class Constants {
      */
     public static class kIndexer {
         public static final double SPEED = 0.7;
-        
-        public static final int INTAKE_MOTOR_ID = 20;
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 0;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 3;
-
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 1;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 2;
     }
 
     /**
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = -0.8;
+        public static final double MOTOR_SPEED = 0.5;
     }
     
     /**
@@ -177,6 +182,7 @@ public final class Constants {
         public static final int UPDATE_ENCODER = XboxController.Button.kY.value;
 
         public static final int DRIVE_PORT = 0;
+        public static final int OPERATOR_PORT = 1;
     }
 
     /*
@@ -184,10 +190,6 @@ public final class Constants {
      */
     public static final class kArm {
         public static final double GEAR_RATIO = 72.00;
-
-        public static final int LEFT_MOTOR_ID = 23;
-        public static final int RIGHT_MOTOR_ID = 22;
-        public static final int ENCODER_CHANNEL = 0;
 
         public static final boolean LEFT_INVERSION = true;
         public static final boolean RIGHT_INVERSION = true;
@@ -198,7 +200,7 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double kP = 0.015000;
+        public static final double kP = 0.0150000; // 0.015
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
@@ -207,10 +209,17 @@ public final class Constants {
         public static final double kV = 0.018286;
         public static final double kA = 0.0019367;
 
-        public static final double ERROR = 1.0; // degrees
+        public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
+    }
+
+    /**
+     * Constants for manipulator.
+     */
+    public static final class kManipulator {
+        public static final double SPEED = 1.0;
     }
 }

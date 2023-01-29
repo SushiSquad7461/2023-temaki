@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.arm.AlphaArm;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,10 +19,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
-
+    private AlphaArm arm;
     private RobotContainer robotContainer;
+    private Swerve swerve;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -29,7 +33,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-
+        arm = AlphaArm.getInstance();
+        swerve = Swerve.getInstance();
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
 
@@ -49,10 +54,15 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+
+    }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        arm.resetArm();
+        swerve.updateEncoders();
+    }
 
     @Override
     public void autonomousInit() {
