@@ -8,7 +8,6 @@ import java.io.IOException;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -204,7 +203,7 @@ public final class Constants {
         public static final int OPERATOR_PORT = 1;
     }
 
-    /*
+    /**
      * Arm values.
      */
     public static final class kArm {
@@ -233,6 +232,24 @@ public final class Constants {
 
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
+
+        public enum ArmPos {
+            LOWERED(0),
+            CONE_PICKUP_ALLIGMENT(100),
+            CONE_PICKUP_LOWERED(75),
+            L2_SCORING(75),
+            L3_SCORING(0);
+
+            private double angle;
+
+            private ArmPos(double angle) {
+                this.angle = angle;
+            }
+
+            public double getAngle() {
+                return angle;
+            }
+        }
     }
 
     /**

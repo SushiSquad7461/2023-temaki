@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kPorts;
+import frc.robot.Constants.kArm.ArmPos;
 
 /**
  * Implements arm ABC for alpha robot.
@@ -164,16 +165,8 @@ public class AlphaArm extends Arm {
         }
     }
 
-    public Command raiseArmToScore() {
-        return moveArm(75);
-    }
-
-    public Command raiseArmPickupCone() {
-        return moveArm(100);
-    }
-
-    public Command lowerArm() {
-        return moveArm(0);
+    public Command moveArm(ArmPos angle) {
+        return moveArm(angle.getAngle());
     }
 
     private Command moveArm(double degrees) {
