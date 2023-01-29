@@ -1,13 +1,10 @@
-package frc.robot.subsystems.Arm;
-
-import java.util.function.BooleanSupplier;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+package frc.robot.subsystems.arm;
 
 import SushiFrcLib.Motor.MotorHelper;
 import SushiFrcLib.SmartDashboard.TunableNumber;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -17,6 +14,9 @@ import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kPorts;
 
+/**
+ * Implements arm ABC for alpha robot.
+ */
 public class AlphaArm extends Arm {
     private final CANSparkMax leftMotor;
     private final CANSparkMax rightMotor;
@@ -91,25 +91,8 @@ public class AlphaArm extends Arm {
         resetArm();
     }
 
-    // returns encoder position in degrees
-    public double getReletivePosition() {
-        return leftMotor.getEncoder().getPosition() * 5;
-    }
-
-    public double getReletiveVelocity() {
-        return leftMotor.getEncoder().getPosition() * 5;
-    }
-
     public double getAbsolutePosition() {
         return (encoder.get() * 360.0) - kArm.ENCODER_ANGLE_OFFSET;
-    }
-
-    private double getLeftMotorVelocity() {
-        return leftMotor.getEncoder().getVelocity();
-    }
-
-    private double getRightMotorVelocity() {
-        return leftMotor.getEncoder().getVelocity();
     }
 
     public double getError(double target) {
@@ -123,7 +106,6 @@ public class AlphaArm extends Arm {
     public void stopArm() {
         leftMotor.set(0);
     }
-
 
     public void setPosition(double degree) {
         if (degree < 0) {
@@ -183,7 +165,7 @@ public class AlphaArm extends Arm {
     }
 
     public Command raiseArmToScore() {
-        return moveArm(75); // 75 L2
+        return moveArm(75);
     }
 
     public Command raiseArmPickupCone() {
@@ -207,6 +189,7 @@ public class AlphaArm extends Arm {
         SmartDashboard.putNumber("Arm Target Pose", targetPos.get());
         SmartDashboard.putNumber("Left Motor Voltage", leftMotor.getOutputCurrent());
         SmartDashboard.putNumber("Right Motor Voltage", rightMotor.getOutputCurrent());
+
         update();
     }
 }

@@ -40,6 +40,9 @@ public class Manipulator extends SubsystemBase {
         });
     }
 
+    /**
+     * Reverse cone out of claw.
+     */
     public Command coneReverse() {
         return runOnce(() -> {
             motor.set(kManipulator.SPEED);
@@ -55,6 +58,9 @@ public class Manipulator extends SubsystemBase {
         });
     }
 
+    /**
+     * Reverse cube out of claw.
+     */
     public Command cubeReverse() {
         return runOnce(() -> {
             motor.set(kManipulator.SPEED * -1.0);

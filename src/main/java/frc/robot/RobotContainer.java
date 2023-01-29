@@ -14,7 +14,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Arm.AlphaArm;
+import frc.robot.subsystems.arm.AlphaArm;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -46,22 +46,33 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    public void toggleIntake() {
+    private void toggleIntake() {
         intakeToggled = !intakeToggled;
-        if(intakeToggled) {
-            (new SequentialCommandGroup(intake.extendIntake(), intake.runIntake())).schedule();
+        if (intakeToggled) {
+            (
+                new SequentialCommandGroup(
+                    intake.extendIntake(), 
+                    intake.runIntake()
+                )
+            ).schedule();
         } else {
-            (new SequentialCommandGroup(intake.retractIntake(), new ParallelCommandGroup(indexer.runIndexer(), manipulator.cube()), new WaitCommand(1.0), new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), manipulator.holdCube()))).schedule();
+            (
+                new SequentialCommandGroup(
+                    intake.retractIntake(), 
+                    new ParallelCommandGroup(
+                        indexer.runIndexer(), 
+                        manipulator.cube()
+                    ), 
+                    new WaitCommand(1.0), 
+                    new ParallelCommandGroup(
+                        intake.stopIntake(), 
+                        indexer.stopIndexer(), 
+                        manipulator.holdCube()
+                    )
+                )
+            ).schedule();
         }
     }
-
-    // public Command evacuateIntake(Command command, boolean ignoreCurrentPosition) {
-    //     if(arm.getReletivePosition() < 30 || ignoreCurrentPosition) {
-    //         return new SequentialCommandGroup(intake.extendIntake(), new WaitCommand(1), command, new WaitCommand(1), intake.retractIntake());
-    //     } else {
-    //         return command;
-    //     }
-    // }
 
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
@@ -70,14 +81,13 @@ public class RobotContainer {
                 () -> oi.getDriveTrainTranslationX(),
                 () -> oi.getDriveTrainTranslationY(),
                 () -> oi.getDriveTrainRotation(),
-
                 true, 
                 false
             )
 
         );
 
-
+        // Toggle intake
         oi.getDriverController().leftBumper().onTrue(new InstantCommand(() -> {
             toggleIntake();
         }));
@@ -131,17 +141,9 @@ public class RobotContainer {
             arm.raiseArmPickupCone(),
             manipulator.stop()
         ));
-        
-        // oi.getDriverController().x().onTrue(evacuateIntake(new SequentialCommandGroup(arm.raiseArmPickupCone()), true));
-        // oi.getDriverController().y().onTrue(evacuateIntake(new SequentialCommandGroup(new ParallelCommandGroup(arm.raiseArmToScore(), manipulator.cone()), new WaitCommand(1), new ParallelCommandGroup(arm.raiseArmPickupCone(), manipulator.stop())), false));
-        // oi.getDriverController().a().onTrue(evacuateIntake(new SequentialCommandGroup(arm.lowerArm()), 
-        // true));
-        // oi.getDriverController().b().onTrue(evacuateIntake(new SequentialCommandGroup(arm.raiseArmToScore(), manipulator.coneReverse(), new WaitCommand(1), arm.raiseArmPickupCone(), manipulator.stop()), false));
     }
 
     public Command getAutonomousCommand() {
-        return autos.getAuto(
-
-        );
+        return autos.getAuto();
     }
 }

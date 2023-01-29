@@ -216,6 +216,9 @@ public final class Constants {
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
     }
 
+    /**
+     * Constants for manipulator.
+     */
     public static final class kManipulator {
         public static final double SPEED = 1.0;
     }

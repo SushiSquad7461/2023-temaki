@@ -60,6 +60,9 @@ public class Intake extends SubsystemBase {
         });
     }
 
+    /**
+     * Extends intake.
+     */
     public Command extendIntake() {
         return runOnce(() -> {
             if (solenoidLeft.get() == Value.kReverse) {
@@ -77,6 +80,9 @@ public class Intake extends SubsystemBase {
         });
     }
 
+    /**
+     * Retracts intake.
+     */
     public Command retractIntake() {
         return runOnce(() -> {
             if (solenoidLeft.get() == Value.kForward) {
@@ -85,6 +91,9 @@ public class Intake extends SubsystemBase {
         });
     }
 
+    /**
+     * Reverses intake.
+     */
     public Command reverseIntake() {
         return runOnce(() -> {
             motorIntake.set(-kIntake.MOTOR_SPEED);

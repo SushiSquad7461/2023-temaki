@@ -1,8 +1,11 @@
-package frc.robot.subsystems.Arm;
+package frc.robot.subsystems.arm;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * Defines arm ABC for 2023 robots.
+ */
 public abstract class Arm extends SubsystemBase{
-    
     /**
      * Gets through bore encoder position.
      * 
