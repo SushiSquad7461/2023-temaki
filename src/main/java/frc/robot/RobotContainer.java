@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -34,6 +35,8 @@ public class RobotContainer {
      * Instaite subsystems and commands.
      */
     public RobotContainer() {
+        SmartDashboard.putString("Robot Name", Constants.ROBOT_NAME.toString());
+
         swerve = Swerve.getInstance();
         intake = Intake.getInstance();
         arm = AlphaArm.getInstance();
