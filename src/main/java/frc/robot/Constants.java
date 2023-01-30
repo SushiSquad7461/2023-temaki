@@ -44,9 +44,9 @@ public final class Constants {
         BETA
     }
 
-    static {
-        final RobotNames ROBOT_NAME;
+    public static final RobotNames ROBOT_NAME;
 
+    static {
         switch (RobotName.getInstance().getName()) {
           case "alpha":
               ROBOT_NAME = RobotNames.ALPHA;
