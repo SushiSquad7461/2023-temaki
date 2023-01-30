@@ -6,8 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
-
 import SushiFrcLib.Swerve.SwerveModuleConstants;
+import SushiFrcLib.DependencyInjection.RobotName;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -25,6 +25,24 @@ import edu.wpi.first.wpilibj.XboxController;
 public final class Constants {
     public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
+
+    enum RobotNames {
+        ALPHA,
+        BETA
+    }
+
+    public static final RobotNames ROBOT_NAME;
+
+    static {
+        switch (RobotName.getInstance().getName()) {
+          case "alpha":
+              ROBOT_NAME = RobotNames.ALPHA;
+              break;
+          default:
+              ROBOT_NAME = RobotNames.BETA;
+              break;
+        }
+    }
 
     /**
      * Defines port values.
