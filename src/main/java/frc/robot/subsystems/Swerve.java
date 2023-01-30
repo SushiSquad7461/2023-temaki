@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,17 +15,21 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.kPorts;
 import frc.robot.Constants.kSwerve;
 import frc.robot.util.SwerveModule;
+import frc.robot.util.Vision;
+import frc.robot.util.VisionMeasurement;
 import frc.robot.util.gyro.Pigeon;
 
 /**
  * Class that controls falcon swerve drivetrain.
  */
 public class Swerve extends SubsystemBase {
-    private final SwerveDriveOdometry swerveOdometry;
+    private final SwerveDrivePoseEstimator swerveOdometry;
     private final SwerveModule[] swerveMods;
     private final Pigeon gyro;
     private final Field2d field;
@@ -50,13 +59,86 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, kSwerve.Mod3.CONSTANTS)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(
+        swerveOdometry = new SwerveDrivePoseEstimator(
             kSwerve.SWERVE_KINEMATICS, 
             Rotation2d.fromDegrees(0),
-            getPositions()
+            getPositions(),
+            new Pose2d(),
+            kSwerve.STATE_STANDARD_DEVIATION,
+            kSwerve.VISION_STANDARD_DEVIATION
         );
-
         SmartDashboard.putData("Field", field);
+    }
+
+    /**
+     * Returns a command that will drive 1 meter in front of the nearest April
+     * Tag.
+     */
+    public Command moveToNearestAprilTag() {
+        return moveToNearestAprilTag(new Translation2d(1, 0));
+    }
+
+    /**
+     * Returns a command that will drive the specified offset from the nearest 
+     * April Tag.
+     * 
+     * @param tagOffset The offset of the tag in tag space (x+ away from
+     * tag, y+ left from tag)
+     */
+    public Command moveToNearestAprilTag(Translation2d tagOffset) {
+        // TODO: Consider creating whole-robot PID constants
+        PIDController yPid = new PIDController(10, 0, 0);
+        PIDController xPid = new PIDController(10, 0, 0);
+        PIDController thetaPid = new PIDController(12, 0, 0);
+
+        thetaPid.enableContinuousInput(0, 2 * Math.PI);
+
+        // TODO: tune this tolerance
+        xPid.setTolerance(0.03);
+        yPid.setTolerance(0.03);
+        thetaPid.setTolerance(0.03);
+
+
+        // Get closest tag
+        Translation2d currentTranslation = swerveOdometry.getEstimatedPosition().getTranslation(); 
+        double minDistance = Double.MAX_VALUE;
+        AprilTag closestTag = null;
+        for (AprilTag tag : Constants.kVision.APRIL_TAG_FIELD_LAYOUT.getTags()) {
+            Translation2d tagTranslation = tag.pose.getTranslation().toTranslation2d();
+            double distanceToTag = currentTranslation.getDistance(tagTranslation);
+            if (distanceToTag < minDistance) {
+                minDistance = distanceToTag;
+                closestTag = tag;
+            }
+        }
+
+        // Get forward vector of tag
+        Rotation2d tagRot = closestTag.pose.getRotation().toRotation2d();
+        tagOffset = tagOffset.rotateBy(tagRot);
+        Translation2d tagTranslation = closestTag.pose.getTranslation().toTranslation2d();
+        Translation2d inFrontOfTag = tagTranslation.plus(tagOffset);
+        field.getObject("target").setPose(new Pose2d(inFrontOfTag, tagRot.unaryMinus()));
+
+        // Set pid setpoints
+        xPid.setSetpoint(inFrontOfTag.getX());
+        yPid.setSetpoint(inFrontOfTag.getY());
+        thetaPid.setSetpoint(tagRot.unaryMinus().getRadians());
+
+        return run(() -> {
+            Pose2d currentPose = swerveOdometry.getEstimatedPosition();
+
+            SmartDashboard.putNumber("x tolerance", xPid.getPositionError());
+            SmartDashboard.putNumber("y tolerance", yPid.getPositionError());
+            SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
+
+            drive(
+                new Translation2d(
+                    xPid.calculate(currentPose.getX()),
+                    yPid.calculate(currentPose.getY())),
+                thetaPid.calculate(currentPose.getRotation().getRadians()),
+                true, false);
+        }).until(() -> xPid.atSetpoint() && yPid.atSetpoint() && thetaPid.atSetpoint())
+        .andThen(() -> { xPid.close(); yPid.close(); thetaPid.close(); });
     }
 
     /**
@@ -97,7 +179,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return swerveOdometry.getEstimatedPosition();
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -135,19 +217,22 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(gyro.getAngle(), getPositions());
-        field.setRobotPose(swerveOdometry.getPoseMeters());
+        field.setRobotPose(swerveOdometry.getEstimatedPosition());
 
-        SmartDashboard.putNumber("gyro", gyro.getAngle().getDegrees());
-
-        for (SwerveModule mod : swerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", 
-                mod.getCanCoder().getDegrees()
-            );
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getAngle());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated",
-                mod.getState().angle.getDegrees()
-            );
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getDriveSpeed());
+        // Loop through all measurements and add it to pose estimator
+        List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
+        if (measurements != null) {
+            for (VisionMeasurement measurement : measurements) {
+                // Skip measurement if it's more than a meter away
+                if (measurement.robotPose.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) > 1.0) {
+                    continue;
+                }
+        
+                swerveOdometry.addVisionMeasurement(
+                    measurement.robotPose,
+                    measurement.timestampSeconds,
+                    kSwerve.VISION_STANDARD_DEVIATION);//.times(measurement.ambiguity + 0.9)); 
+            }
         }
     }
 
