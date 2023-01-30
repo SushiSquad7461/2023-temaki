@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.io.IOException;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -13,9 +11,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import SushiFrcLib.Swerve.SwerveModuleConstants;
 import SushiFrcLib.DependencyInjection.RobotName;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -28,6 +23,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import java.io.IOException;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
