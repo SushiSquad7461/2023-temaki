@@ -6,12 +6,13 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import SushiFrcLib.Swerve.SwerveModuleConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.util.SwerveModuleConstants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -214,6 +215,9 @@ public final class Constants {
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
 
+        /**
+         * Enum for arm angles.
+         */
         public enum ArmPos {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(100),
@@ -239,6 +243,7 @@ public final class Constants {
      */
     public static final class kCommandTimmings {
         public static final double PNEUMATIC_WAIT_TIME = 0.7;
+        public static final double MANIPULATOR_WAIT_TIME = 1;
     }
 
     /**
