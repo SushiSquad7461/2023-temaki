@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.Constants.kCommandTimmings;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -91,57 +93,61 @@ public class RobotContainer {
         );
 
         // Toggle intake
-        oi.getDriverController().leftBumper().onTrue(new InstantCommand(() -> {
-            toggleIntake();
-        }));
+        oi.getDriverController().leftBumper().onTrue(
+            new InstantCommand(
+                () -> {
+                    toggleIntake();
+                }
+            )
+        );
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
-            new WaitCommand(0.7),
-            arm.lowerArm(),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            arm.moveArm(ArmPos.LOWERED),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
         ));
 
-        // Raise arm to score
+        // Raise arm to score at L2
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
-            new WaitCommand(0.7),
-            arm.raiseArmToScore(),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            arm.moveArm(ArmPos.L2_SCORING),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
         ));
 
         // Score item to relese cube
         oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
             manipulator.cubeReverse(),
-            new WaitCommand(1),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
             manipulator.stop()
         ));
 
         // Score item to relese cone
         oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
             manipulator.coneReverse(),
-            new WaitCommand(1.5),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
             manipulator.stop()
         ));
 
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
-            new WaitCommand(0.7),
-            arm.raiseArmPickupCone(),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
         ));
 
         // pickup cone
         oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
             manipulator.cone(),
-            arm.raiseArmToScore(),
-            new WaitCommand(1),
-            arm.raiseArmPickupCone(),
+            arm.moveArm(ArmPos.CONE_PICKUP_LOWERED),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.stop()
         ));
     }

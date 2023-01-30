@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import SushiFrcLib.Sensors.gyro.Pigeon;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kPorts;
 import frc.robot.Constants.kSwerve;
 import frc.robot.util.SwerveModule;
-import frc.robot.util.gyro.Pigeon;
 
 /**
  * Class that controls falcon swerve drivetrain.
