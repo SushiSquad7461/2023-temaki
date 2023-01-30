@@ -8,7 +8,15 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 =======
 import SushiFrcLib.Sensors.gyro.Pigeon;
+<<<<<<< HEAD
 >>>>>>> f8b65c4 (move stuff to lib, fix style changes)
+=======
+import java.util.List;
+
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+>>>>>>> 8eaf504 (rebase with main)
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,11 +34,17 @@ import frc.robot.Constants.kPorts;
 import frc.robot.Constants.kSwerve;
 import frc.robot.util.SwerveModule;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import frc.robot.util.Vision;
 import frc.robot.util.VisionMeasurement;
 import frc.robot.util.gyro.Pigeon;
 =======
 >>>>>>> f8b65c4 (move stuff to lib, fix style changes)
+=======
+import frc.robot.util.Vision;
+import frc.robot.util.VisionMeasurement;
+import frc.robot.util.gyro.Pigeon;
+>>>>>>> 8eaf504 (rebase with main)
 
 /**
  * Class that controls falcon swerve drivetrain.
