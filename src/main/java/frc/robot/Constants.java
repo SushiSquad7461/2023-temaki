@@ -13,6 +13,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 
 import SushiFrcLib.Swerve.SwerveModuleConstants;
+import SushiFrcLib.DependencyInjection.RobotName;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -37,6 +38,24 @@ import edu.wpi.first.wpilibj.XboxController;
 public final class Constants {
     public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
+
+    enum RobotNames {
+        ALPHA,
+        BETA
+    }
+
+    static {
+        final RobotNames ROBOT_NAME;
+
+        switch (RobotName.getInstance().getName()) {
+          case "alpha":
+              ROBOT_NAME = RobotNames.ALPHA;
+              break;
+          default:
+              ROBOT_NAME = RobotNames.BETA;
+              break;
+        }
+    }
 
     /**
      * Defines port values.
