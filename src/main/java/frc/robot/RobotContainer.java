@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Indexer;
@@ -96,18 +97,18 @@ public class RobotContainer {
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
         ));
 
         // Raise arm to score at L2
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.L2_SCORING),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
         ));
 
@@ -128,9 +129,9 @@ public class RobotContainer {
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            new WaitCommand(0.7),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
         ));
 
