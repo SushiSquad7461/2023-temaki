@@ -234,6 +234,14 @@ public final class Constants {
     }
 
     /**
+     * Class that defines constants for wait command timmings in between commands. 
+     * Times are in seconds.
+     */
+    public static final class kCommandTimmings {
+        public static final double PNEUMATIC_WAIT_TIME = 0.7;
+    }
+
+    /**
      * Constants for manipulator.
      */
     public static final class kManipulator {
