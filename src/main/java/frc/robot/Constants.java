@@ -11,6 +11,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+
+import SushiFrcLib.Swerve.SwerveModuleConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -23,7 +25,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.util.SwerveModuleConstants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -233,6 +234,9 @@ public final class Constants {
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
 
+        /**
+         * Enum for arm angles.
+         */
         public enum ArmPos {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(100),
@@ -258,6 +262,7 @@ public final class Constants {
      */
     public static final class kCommandTimmings {
         public static final double PNEUMATIC_WAIT_TIME = 0.7;
+        public static final double MANIPULATOR_WAIT_TIME = 1;
     }
 
     /**

@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.Constants.kCommandTimmings;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -90,9 +90,13 @@ public class RobotContainer {
         );
 
         // Toggle intake
-        oi.getDriverController().leftBumper().onTrue(new InstantCommand(() -> {
-            toggleIntake();
-        }));
+        oi.getDriverController().leftBumper().onTrue(
+            new InstantCommand(
+                () -> {
+                    toggleIntake();
+                }
+            )
+        );
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
@@ -115,14 +119,14 @@ public class RobotContainer {
         // Score item to relese cube
         oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
             manipulator.cubeReverse(),
-            new WaitCommand(1),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
             manipulator.stop()
         ));
 
         // Score item to relese cone
         oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
             manipulator.coneReverse(),
-            new WaitCommand(1.5),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
             manipulator.stop()
         ));
 
@@ -139,7 +143,7 @@ public class RobotContainer {
         oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
             manipulator.cone(),
             arm.moveArm(ArmPos.CONE_PICKUP_LOWERED),
-            new WaitCommand(1),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.stop()
         ));
