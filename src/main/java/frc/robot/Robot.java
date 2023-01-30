@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
         arm = AlphaArm.getInstance();
         swerve = Swerve.getInstance();
+
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
-
         LiveWindow.disableAllTelemetry();
     }
 
