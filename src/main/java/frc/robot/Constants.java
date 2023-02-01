@@ -165,6 +165,16 @@ public final class Constants {
         public static final double Y_AUTO_ALIGN_TOLLERENCE = 0.03;
         public static final double THETA_AUTO_ALIGN_TOLLERENCE = 0.03;
 
+        public static final double AUTO_ALIGN_Y_kP = 10.0;
+        public static final double AUTO_ALIGN_Y_kI = 0.0;
+        public static final double AUTO_ALIGN_Y_kD = 0.0;
+        public static final double AUTO_ALIGN_X_kP = 10.0;
+        public static final double AUTO_ALIGN_X_kI = 0.0;
+        public static final double AUTO_ALIGN_X_kD = 0.0;
+        public static final double AUTO_ALIGN_THETA_kP = 12.0;
+        public static final double AUTO_ALIGN_THETA_kI = 0.0;
+        public static final double AUTO_ALIGN_THETA_kD = 0.0;
+
         public static final Translation2d DEFUALT_ALLIGMENT_OFFSET = new Translation2d(1, 0);
 
         /* Module Specific Constants */

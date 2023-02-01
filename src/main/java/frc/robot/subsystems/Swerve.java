@@ -139,16 +139,28 @@ public class Swerve extends SubsystemBase {
      *      the target.
      */
     public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d offset) {
-        // TODO: Consider creating whole-robot PID constants
-        PIDController yPid = new PIDController(10, 0, 0);
-        PIDController xPid = new PIDController(10, 0, 0);
-        PIDController thetaPid = new PIDController(12, 0, 0);
+        PIDController yaxisPid = new PIDController(
+            kSwerve.AUTO_ALIGN_Y_kP, 
+            kSwerve.AUTO_ALIGN_Y_kI, 
+            kSwerve.AUTO_ALIGN_Y_kD
+        );
+
+        PIDController xaxisPid = new PIDController(
+            kSwerve.AUTO_ALIGN_X_kP, 
+            kSwerve.AUTO_ALIGN_X_kI, 
+            kSwerve.AUTO_ALIGN_X_kD
+        );
+
+        PIDController thetaPid = new PIDController(
+            kSwerve.AUTO_ALIGN_THETA_kP, 
+            kSwerve.AUTO_ALIGN_THETA_kI, 
+            kSwerve.AUTO_ALIGN_THETA_kD
+        );
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
-        // TODO: tune this tolerance
-        xPid.setTolerance(kSwerve.X_AUTO_ALIGN_TOLLERENCE);
-        yPid.setTolerance(kSwerve.Y_AUTO_ALIGN_TOLLERENCE);
+        xaxisPid.setTolerance(kSwerve.X_AUTO_ALIGN_TOLLERENCE);
+        yaxisPid.setTolerance(kSwerve.Y_AUTO_ALIGN_TOLLERENCE);
         thetaPid.setTolerance(kSwerve.THETA_AUTO_ALIGN_TOLLERENCE);
 
         // Give offset a default value
@@ -164,22 +176,22 @@ public class Swerve extends SubsystemBase {
         Translation2d offsetTarget = targetTrans.plus(offset);
 
         // Set pid setpoints
-        xPid.setSetpoint(offsetTarget.getX());
-        yPid.setSetpoint(offsetTarget.getY());
+        xaxisPid.setSetpoint(offsetTarget.getX());
+        yaxisPid.setSetpoint(offsetTarget.getY());
 
         // Invert theta to ensure we're facing towards the target
         thetaPid.setSetpoint(targetRot.rotateBy(Rotation2d.fromDegrees(180)).getRadians());
 
         return run(
             () -> {
-                SmartDashboard.putNumber("x tolerance", xPid.getPositionError());
-                SmartDashboard.putNumber("y tolerance", yPid.getPositionError());
+                SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());
+                SmartDashboard.putNumber("y tolerance", yaxisPid.getPositionError());
                 SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
 
                 drive(
                     new Translation2d(
-                        xPid.calculate(swerveOdometry.getEstimatedPosition().getX()),
-                        yPid.calculate(swerveOdometry.getEstimatedPosition().getY())
+                        xaxisPid.calculate(swerveOdometry.getEstimatedPosition().getX()),
+                        yaxisPid.calculate(swerveOdometry.getEstimatedPosition().getY())
                     ),
                     thetaPid.calculate(
                         swerveOdometry.getEstimatedPosition().getRotation().getRadians()
@@ -189,11 +201,11 @@ public class Swerve extends SubsystemBase {
                 );
             }
         ).until(
-            () -> xPid.atSetpoint() && yPid.atSetpoint() && thetaPid.atSetpoint()
+            () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
         ).andThen(
             () -> { 
-                xPid.close(); 
-                yPid.close(); 
+                xaxisPid.close(); 
+                yaxisPid.close(); 
                 thetaPid.close(); 
             }
         );
@@ -240,11 +252,14 @@ public class Swerve extends SubsystemBase {
         return swerveOdometry.getEstimatedPosition();
     }
 
+    /**
+     * Resets the odom.
+     */
     public Command resetOdometryToBestAprilTag() {
         return runOnce(() -> {
-            Pose2d pose = Vision.getVision().getBestMeasurement().robotPose;
+            VisionMeasurement pose = Vision.getVision().getBestMeasurement();
             if (pose != null) {
-                this.resetOdometry(pose);
+                this.resetOdometry(pose.robotPose);
             }
         });
     }
