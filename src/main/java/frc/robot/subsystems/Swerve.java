@@ -151,14 +151,12 @@ public class Swerve extends SubsystemBase {
         offset = offset.rotateBy(targetRot);
         Translation2d targetTrans = pose.getTranslation();
         Translation2d offsetTarget = targetTrans.plus(offset);
-        field.getObject("target").setPose(new Pose2d(offsetTarget, targetRot.unaryMinus()));
-        field.getObject("thingy").setPose(Vision.getVision().getBestMeasurement().robotPose);
 
         // Set pid setpoints
         xPid.setSetpoint(offsetTarget.getX());
         yPid.setSetpoint(offsetTarget.getY());
         // Invert theta to ensure we're facing towards the target
-        thetaPid.setSetpoint(targetRot.unaryMinus().getRadians());
+        thetaPid.setSetpoint(targetRot.rotateBy(Rotation2d.fromDegrees(180)).getRadians());
 
         return run(() -> {
             Pose2d currentPose = swerveOdometry.getEstimatedPosition();
