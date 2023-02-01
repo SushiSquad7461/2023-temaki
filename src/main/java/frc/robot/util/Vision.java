@@ -98,10 +98,10 @@ public class Vision {
             bestMeasurement = new VisionMeasurement(
                 bestTarget,
                 new Pose2d(
-                bestPose.getX(),
-                bestPose.getY(),
-                new Rotation2d(bestPose.getRotation().getZ())), 
-                res.getLatencyMillis(),
+                    bestPose.getX(),
+                    bestPose.getY(),
+                    new Rotation2d(bestPose.getRotation().getZ())), 
+                res.getTimestampSeconds(),
                 bestTarget.getPoseAmbiguity()); 
         }
 
@@ -123,9 +123,9 @@ public class Vision {
             measurements.add(new VisionMeasurement(
                 target,
                 new Pose2d(
-                estRobotPose.getX(),
-                estRobotPose.getY(),
-                new Rotation2d(estRobotPose.getRotation().getZ())), 
+                    estRobotPose.getX(),
+                    estRobotPose.getY(),
+                    new Rotation2d(estRobotPose.getRotation().getZ())), 
                 res.getTimestampSeconds(),
                 target.getPoseAmbiguity())); 
         }
