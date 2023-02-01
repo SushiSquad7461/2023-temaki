@@ -4,13 +4,13 @@
 
 package frc.robot;
 
+import SushiFrcLib.DependencyInjection.RobotName;
+import SushiFrcLib.Swerve.SwerveModuleConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import SushiFrcLib.Swerve.SwerveModuleConstants;
-import SushiFrcLib.DependencyInjection.RobotName;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -159,6 +159,14 @@ public final class Constants {
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
             VecBuilder.fill(0.9, 0.9, 0.9);
 
+
+        /** Auto Align Pid Values */
+        public static final double X_AUTO_ALIGN_TOLLERENCE= 0.03;
+        public static final double Y_AUTO_ALIGN_TOLLERENCE = 0.03;
+        public static final double THETA_AUTO_ALIGN_TOLLERENCE = 0.03;
+
+        public static final Translation2d DEFUALT_ALLIGMENT_OFFSET = new Translation2d(1, 0);
+
         /* Module Specific Constants */
 
         /** Front Left Module - Module 0. */
@@ -289,16 +297,22 @@ public final class Constants {
         public static final double SPEED = 1.0;
     }
 
-     /** Vision constants. */
-     public static class kVision {
+    /** Vision constants. */
+    public static class kVision {
+
         public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
+
         /**
          * Since the april tag field layout constructor throws something, we need
          * create a method to handle it.
          */ 
         private static AprilTagFieldLayout createFieldLayout() {
             try {
-                return new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("april-tag-layout.json"));
+                return new AprilTagFieldLayout(Filesystem
+                    .getDeployDirectory()
+                    .toPath()
+                    .resolve("april-tag-layout.json")
+                );
             } catch (IOException e) {
                 throw new Error(e);
             }
@@ -308,10 +322,14 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(.5), 
             Units.inchesToMeters(-7),
-            Units.inchesToMeters(22.5));
+            Units.inchesToMeters(22.5)
+        );
+
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(180, 0, 0);
+
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
             new Pose3d(CAMERA_POS_METERS, CAMERA_ANGLE_DEGREES), 
-            new Pose3d()); 
+            new Pose3d()
+        ); 
     }
 }
