@@ -101,6 +101,16 @@ public class RobotContainer {
             )
         );
 
+        // Move to april tag id 2
+        oi.getDriverController().rightBumper().onTrue(
+            swerve.moveToAprilTag(2, null)
+        );
+
+        // Reset odo
+        oi.getDriverController().povLeft().onTrue(
+            swerve.resetOdometryToBestAprilTag()
+        );
+
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),

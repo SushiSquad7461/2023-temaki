@@ -6,13 +6,24 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import SushiFrcLib.Swerve.SwerveModuleConstants;
 import SushiFrcLib.DependencyInjection.RobotName;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import java.io.IOException;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -122,13 +133,13 @@ public final class Constants {
         public static final double DRIVE_F = 0.046;
 
         /* Swerve Profiling Values */
-        public static final double MAX_ACCELERATION = 3; // 2
-        public static final double MAX_SPEED = 5; // 4.5 meters per second
+        public static final double MAX_ACCELERATION = 2; // 2
+        public static final double MAX_SPEED = 4; // 4.5 meters per second
         public static final double MAX_ANGULAR_VELOCITY = 20; // 11.5
 
-        public static final PIDController X_CONTROLLER = new PIDController(2, 0, 0);
-        public static final PIDController Y_CONTROLLER = new PIDController(2, 0, 0);
-        public static final PIDController ANGLE_CONTROLLER = new PIDController(4, 0, 0);
+        public static final PIDController X_CONTROLLER = new PIDController(1, 0, 0);
+        public static final PIDController Y_CONTROLLER = new PIDController(1, 0, 0);
+        public static final PIDController ANGLE_CONTROLLER = new PIDController(2, 0, 0);
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -140,6 +151,13 @@ public final class Constants {
 
         /* Angle Encoder Invert */
         public static final boolean CANCODER_INVERSION = true;
+
+        /** Pose estimation standard deviations. */
+        public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
+            VecBuilder.fill(0.1, 0.1, 0.1);
+
+        public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
+            VecBuilder.fill(0.9, 0.9, 0.9);
 
         /* Module Specific Constants */
 
@@ -269,5 +287,31 @@ public final class Constants {
      */
     public static final class kManipulator {
         public static final double SPEED = 1.0;
+    }
+
+     /** Vision constants. */
+     public static class kVision {
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
+        /**
+         * Since the april tag field layout constructor throws something, we need
+         * create a method to handle it.
+         */ 
+        private static AprilTagFieldLayout createFieldLayout() {
+            try {
+                return new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("april-tag-layout.json"));
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
+        
+        // X is forward, Y is left, Z is up.
+        public static final Translation3d CAMERA_POS_METERS = new Translation3d(
+            Units.inchesToMeters(.5), 
+            Units.inchesToMeters(-7),
+            Units.inchesToMeters(22.5));
+        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(180, 0, 0);
+        public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
+            new Pose3d(CAMERA_POS_METERS, CAMERA_ANGLE_DEGREES), 
+            new Pose3d()); 
     }
 }
