@@ -134,7 +134,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         public static final double MAX_ACCELERATION = 3; // 2
-        public static final double MAX_SPEED = 1; // 4.5 meters per second
+        public static final double MAX_SPEED = 4; // 4.5 meters per second
         public static final double MAX_ANGULAR_VELOCITY = 20; // 11.5
 
         public static final PIDController X_CONTROLLER = new PIDController(2, 0, 0);
@@ -306,9 +306,9 @@ public final class Constants {
         
         // X is forward, Y is left, Z is up.
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
-            Units.inchesToMeters(0), 
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(0));
+            Units.inchesToMeters(.5), 
+            Units.inchesToMeters(-7),
+            Units.inchesToMeters(22.5));
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(180, 0, 0);
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
             new Pose3d(CAMERA_POS_METERS, CAMERA_ANGLE_DEGREES), 
