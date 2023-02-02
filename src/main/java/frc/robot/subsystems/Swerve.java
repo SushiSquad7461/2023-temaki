@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import SushiFrcLib.Sensors.gyro.Pigeon;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,8 +22,6 @@ import frc.robot.Constants.kVision;
 import frc.robot.util.SwerveModule;
 import frc.robot.util.Vision;
 import frc.robot.util.VisionMeasurement;
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.math.controller.PIDController;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -54,7 +53,13 @@ public class Swerve extends SubsystemBase {
         gyro.zeroGyro();
         
         field = new Field2d();
-        field.getObject("thing").setPoses(kVision.APRIL_TAG_FIELD_LAYOUT.getTags().stream().map((tag) -> tag.pose.toPose2d()).collect(Collectors.toList()));
+
+        field.getObject("April Tag Layout").setPoses(
+            kVision.APRIL_TAG_FIELD_LAYOUT.getTags().stream().map(
+                (tag) -> tag.pose.toPose2d()
+            )
+            .collect(Collectors.toList())
+        );
 
         swerveMods = new SwerveModule[] {
             new SwerveModule(0, kSwerve.Mod0.CONSTANTS),
@@ -78,10 +83,10 @@ public class Swerve extends SubsystemBase {
     /**
      * Returns a command that will drive the specified offset from the given 
      * April Tag.
-     * 
+     *
      * @param tagOffset The offset of the tag in tag space (x+ away from
-     * tag, y+ left from tag). A null value will default to 1 meter in front of
-     * the target.
+     *      tag, y+ left from tag). A null value will default to 1 meter in front of
+     *      the target.
      */
     public Command moveToAprilTag(int tagID, Translation2d tagOffset) {
         return moveToPose(
@@ -93,56 +98,74 @@ public class Swerve extends SubsystemBase {
     /**
      * Returns a command that will drive the specified offset from the nearest 
      * April Tag.
-     * 
+     *
      * @param tagOffset The offset of the tag in tag space (x+ away from
-     * tag, y+ left from tag). A null value will default to 1 meter in front of
-     * the target.
+     *      tag, y+ left from tag). A null value will default to 1 meter in front of
+     *      the target.
      */
     public Command moveToNearestAprilTag(Translation2d tagOffset) {
-        return moveToPose(() -> {
-            // Get closest tag
-            Translation2d currentTranslation = swerveOdometry.getEstimatedPosition().getTranslation(); 
-            double minDistance = Double.MAX_VALUE;
-            AprilTag closestTag = null;
-            for (AprilTag tag : Constants.kVision.APRIL_TAG_FIELD_LAYOUT.getTags()) {
-                Translation2d tagTranslation = tag.pose.getTranslation().toTranslation2d();
-                double distanceToTag = currentTranslation.getDistance(tagTranslation);
-                if (distanceToTag < minDistance) {
-                    minDistance = distanceToTag;
-                    closestTag = tag;
-                }
-            }
+        return moveToPose(() -> getClosestAprilTag(), tagOffset);
+    }
 
-            return closestTag.pose.toPose2d();
-        }, tagOffset);
+    private Pose2d getClosestAprilTag() {
+        Translation2d currentTranslation = swerveOdometry
+            .getEstimatedPosition()
+            .getTranslation(); 
+
+        double minDistance = Double.MAX_VALUE;
+        AprilTag closestTag = null;
+
+        for (AprilTag tag : Constants.kVision.APRIL_TAG_FIELD_LAYOUT.getTags()) {
+            Translation2d tagTranslation = tag.pose.getTranslation().toTranslation2d();
+            double distanceToTag = currentTranslation.getDistance(tagTranslation);
+
+            if (distanceToTag < minDistance) {
+                minDistance = distanceToTag;
+                closestTag = tag;
+            }
+        }
+
+        return closestTag.pose.toPose2d(); 
     }
 
     /**
      * Returns a command that will drive the specified offset from the given
      * pose.
-     * 
+     *
      * @param poseSupplier A Supplier that returns the field relative pose to 
-     * drive to.
+     *      drive to.
      * @param offset The offset of the tag in tag space (x+ away from
-     * tag, y+ left from tag). A null value will default to 1 meter in front of
-     * the target.
+     *      tag, y+ left from tag). A null value will default to 1 meter in front of
+     *      the target.
      */
     public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d offset) {
-        // TODO: Consider creating whole-robot PID constants
-        PIDController yPid = new PIDController(10, 0, 0);
-        PIDController xPid = new PIDController(10, 0, 0);
-        PIDController thetaPid = new PIDController(12, 0, 0);
+        PIDController yaxisPid = new PIDController(
+            kSwerve.AUTO_ALIGN_Y_kP, 
+            kSwerve.AUTO_ALIGN_Y_kI, 
+            kSwerve.AUTO_ALIGN_Y_kD
+        );
+
+        PIDController xaxisPid = new PIDController(
+            kSwerve.AUTO_ALIGN_X_kP, 
+            kSwerve.AUTO_ALIGN_X_kI, 
+            kSwerve.AUTO_ALIGN_X_kD
+        );
+
+        PIDController thetaPid = new PIDController(
+            kSwerve.AUTO_ALIGN_THETA_kP, 
+            kSwerve.AUTO_ALIGN_THETA_kI, 
+            kSwerve.AUTO_ALIGN_THETA_kD
+        );
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
-        // TODO: tune this tolerance
-        xPid.setTolerance(0.03);
-        yPid.setTolerance(0.03);
-        thetaPid.setTolerance(0.03);
+        xaxisPid.setTolerance(kSwerve.X_AUTO_ALIGN_TOLLERENCE);
+        yaxisPid.setTolerance(kSwerve.Y_AUTO_ALIGN_TOLLERENCE);
+        thetaPid.setTolerance(kSwerve.THETA_AUTO_ALIGN_TOLLERENCE);
 
         // Give offset a default value
         if (offset == null) {
-            offset = new Translation2d(1, 0);
+            offset = kSwerve.DEFUALT_ALLIGMENT_OFFSET;
         }
 
         // Get forward vector of pose and add it to offset
@@ -153,26 +176,39 @@ public class Swerve extends SubsystemBase {
         Translation2d offsetTarget = targetTrans.plus(offset);
 
         // Set pid setpoints
-        xPid.setSetpoint(offsetTarget.getX());
-        yPid.setSetpoint(offsetTarget.getY());
+        xaxisPid.setSetpoint(offsetTarget.getX());
+        yaxisPid.setSetpoint(offsetTarget.getY());
+
         // Invert theta to ensure we're facing towards the target
         thetaPid.setSetpoint(targetRot.rotateBy(Rotation2d.fromDegrees(180)).getRadians());
 
-        return run(() -> {
-            Pose2d currentPose = swerveOdometry.getEstimatedPosition();
+        return run(
+            () -> {
+                SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());
+                SmartDashboard.putNumber("y tolerance", yaxisPid.getPositionError());
+                SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
 
-            SmartDashboard.putNumber("x tolerance", xPid.getPositionError());
-            SmartDashboard.putNumber("y tolerance", yPid.getPositionError());
-            SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
-
-            drive(
-                new Translation2d(
-                    xPid.calculate(currentPose.getX()),
-                    yPid.calculate(currentPose.getY())),
-                thetaPid.calculate(currentPose.getRotation().getRadians()),
-                true, false);
-        }).until(() -> xPid.atSetpoint() && yPid.atSetpoint() && thetaPid.atSetpoint())
-        .andThen(() -> { xPid.close(); yPid.close(); thetaPid.close(); });
+                drive(
+                    new Translation2d(
+                        xaxisPid.calculate(swerveOdometry.getEstimatedPosition().getX()),
+                        yaxisPid.calculate(swerveOdometry.getEstimatedPosition().getY())
+                    ),
+                    thetaPid.calculate(
+                        swerveOdometry.getEstimatedPosition().getRotation().getRadians()
+                    ),
+                    true, 
+                    false
+                );
+            }
+        ).until(
+            () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
+        ).andThen(
+            () -> { 
+                xaxisPid.close(); 
+                yaxisPid.close(); 
+                thetaPid.close(); 
+            }
+        );
     }
 
     /**
@@ -216,11 +252,14 @@ public class Swerve extends SubsystemBase {
         return swerveOdometry.getEstimatedPosition();
     }
 
+    /**
+     * Resets the odom.
+     */
     public Command resetOdometryToBestAprilTag() {
         return runOnce(() -> {
-            Pose2d pose = Vision.getVision().getBestMeasurement().robotPose;
+            VisionMeasurement pose = Vision.getVision().getBestMeasurement();
             if (pose != null) {
-                this.resetOdometry(pose);
+                this.resetOdometry(pose.robotPose);
             }
         });
     }
@@ -274,7 +313,8 @@ public class Swerve extends SubsystemBase {
                 swerveOdometry.addVisionMeasurement(
                     measurement.robotPose,
                     measurement.timestampSeconds,
-                    kSwerve.VISION_STANDARD_DEVIATION);//.times(measurement.ambiguity + 0.9)); 
+                    kSwerve.VISION_STANDARD_DEVIATION
+                );
             }
         }
     }
