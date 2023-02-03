@@ -68,11 +68,12 @@ public class RobotContainer {
                         indexer.runIndexer(), 
                         manipulator.cube()
                     ), 
-                    new WaitCommand(1.0), 
+                    new WaitCommand(1.5), 
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
                         indexer.stopIndexer(), 
                         manipulator.holdCube()
+
                     )
                 )
             ).schedule();
