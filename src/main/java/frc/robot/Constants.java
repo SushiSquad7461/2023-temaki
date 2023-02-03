@@ -12,7 +12,6 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -161,21 +160,21 @@ public final class Constants {
 
 
         /** Auto Align Pid Values */
-        public static final double X_AUTO_ALIGN_TOLLERENCE= 0.03;
+        public static final double X_AUTO_ALIGN_TOLLERENCE = 0.03;
         public static final double Y_AUTO_ALIGN_TOLLERENCE = 0.03;
         public static final double THETA_AUTO_ALIGN_TOLLERENCE = 0.03;
 
         public static final double AUTO_ALIGN_Y_kP = 10.0;
         public static final double AUTO_ALIGN_Y_kI = 0.0;
-        public static final double AUTO_ALIGN_Y_kD = 0.0;
+        public static final double AUTO_ALIGN_Y_kD = 0.75;
         public static final double AUTO_ALIGN_X_kP = 10.0;
         public static final double AUTO_ALIGN_X_kI = 0.0;
-        public static final double AUTO_ALIGN_X_kD = 0.0;
+        public static final double AUTO_ALIGN_X_kD = 0.75;
         public static final double AUTO_ALIGN_THETA_kP = 12.0;
         public static final double AUTO_ALIGN_THETA_kI = 0.0;
-        public static final double AUTO_ALIGN_THETA_kD = 0.0;
+        public static final double AUTO_ALIGN_THETA_kD = 0.9;
 
-        public static final Translation2d DEFUALT_ALLIGMENT_OFFSET = new Translation2d(1, 0);
+        public static final Translation2d DEFUALT_ALLIGMENT_OFFSET = new Translation2d(0.85, 0);
 
         /* Module Specific Constants */
 
@@ -248,8 +247,8 @@ public final class Constants {
         public static final boolean LEFT_INVERSION = true;
         public static final boolean RIGHT_INVERSION = true;
 
-        public static final int LEFT_CURRENT_LIMIT = 40;
-        public static final int RIGHT_CURRENT_LIMIT = 40;
+        public static final int LEFT_CURRENT_LIMIT = 25;
+        public static final int RIGHT_CURRENT_LIMIT = 25;
 
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
@@ -328,18 +327,18 @@ public final class Constants {
             }
         }
         
-        // X is forward, Y is left, Z is up.
+        // X is forward, Y is left.
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(.5), 
-            Units.inchesToMeters(-7),
-            Units.inchesToMeters(22.5)
+            Units.inchesToMeters(7),
+            0 // Keep z zero, it seems to mess with the calculations.
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(180, 0, 0);
 
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
-            new Pose3d(CAMERA_POS_METERS, CAMERA_ANGLE_DEGREES), 
-            new Pose3d()
+            CAMERA_POS_METERS, 
+            CAMERA_ANGLE_DEGREES
         ); 
     }
 }

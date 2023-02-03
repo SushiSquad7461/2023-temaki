@@ -174,6 +174,7 @@ public class Swerve extends SubsystemBase {
         offset = offset.rotateBy(targetRot);
         Translation2d targetTrans = pose.getTranslation();
         Translation2d offsetTarget = targetTrans.plus(offset);
+        field.getObject("target").setPose(new Pose2d(offsetTarget, targetRot));
 
         // Set pid setpoints
         xaxisPid.setSetpoint(offsetTarget.getX());
@@ -257,9 +258,9 @@ public class Swerve extends SubsystemBase {
      */
     public Command resetOdometryToBestAprilTag() {
         return runOnce(() -> {
-            VisionMeasurement pose = Vision.getVision().getBestMeasurement();
-            if (pose != null) {
-                this.resetOdometry(pose.robotPose);
+            VisionMeasurement measurement = Vision.getVision().getBestMeasurement();
+            if (measurement != null) {
+                this.resetOdometry(measurement.robotPose);
             }
         });
     }
@@ -303,6 +304,9 @@ public class Swerve extends SubsystemBase {
         
         // Loop through all measurements and add it to pose estimator
         List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
+
+        field.getObject("best").setPoses(measurements.stream().map((measurement) -> measurement.robotPose).collect(Collectors.toList()));
+
         if (measurements != null) {
             for (VisionMeasurement measurement : measurements) {
                 // Skip measurement if it's more than a meter away
