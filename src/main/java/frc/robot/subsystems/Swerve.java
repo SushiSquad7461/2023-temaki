@@ -268,20 +268,15 @@ public class Swerve extends SubsystemBase {
             VisionMeasurement measurement = Vision.getVision().getBestMeasurement();
             SmartDashboard.putBoolean("Running", measurement == null);
             if (measurement != null) {
-                this.resetOdometryWithGyroInversion(measurement.robotPose);
+                this.resetOdometryAndGyro(measurement.robotPose);
             }
         });
     }
 
     public void resetOdometryAndGyro(Pose2d pose) {
+        gyro.setAngle(pose.getRotation());
         swerveOdometry.resetPosition(pose.getRotation(), getPositions(), pose);
     }
-
-    public void resetOdometryWithGyroInversion(Pose2d pose) {
-        gyro.setAngle(pose.getRotation().unaryMinus());
-        swerveOdometry.resetPosition(pose.getRotation().unaryMinus(), getPositions(), pose);
-    }
-
 
     /**
      * Returns current swerve module states.
