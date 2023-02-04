@@ -75,18 +75,25 @@ public class Vision {
   
     private void update() {
         // Return if no new data is ready
-        if (lastUpdateTimeMicro == rawBytesEntry.getLastChange()) {
-            return;
-        } else {
-            lastUpdateTimeMicro = rawBytesEntry.getLastChange();
-        }
+        // if (lastUpdateTimeMicro == rawBytesEntry.getLastChange()) {
+        //     SmartDashboard.putBoolean("No last time updated", true);
+        //     return;
+        // } else {
+        //     lastUpdateTimeMicro = rawBytesEntry.getLastChange();
+        //     SmartDashboard.putBoolean("No last time updated", false);
+        // }
             PhotonPipelineResult res = camera.getLatestResult();
         if (!res.hasTargets()) {
+            SmartDashboard.putBoolean("No targets", true);
             measurements.clear();
             bestTarget = null;
             bestMeasurement = null;
             return;
         }
+
+        SmartDashboard.putBoolean("No targets", false);
+
+
         
         // Get best target and the pose from that target
         bestTarget = res.getBestTarget();

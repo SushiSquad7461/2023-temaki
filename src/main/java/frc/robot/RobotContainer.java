@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -108,8 +109,12 @@ public class RobotContainer {
         );
 
         // Reset odo
-        oi.getDriverController().povLeft().onTrue(
+        oi.getDriverController().povUp().onTrue(
             swerve.resetOdometryToBestAprilTag()
+        );
+
+        oi.getDriverController().povLeft().onTrue(
+            swerve.moveToAprilTag(2, new Translation2d(0.65, 0.5))
         );
 
         // Lower arm

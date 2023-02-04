@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import SushiFrcLib.Math.Normalization;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kSwerve;
@@ -19,6 +21,9 @@ public class TeleopSwerveDrive extends CommandBase {
     private final Supplier<Double> xaxisSupplier; 
     private final Supplier<Double> yaxisSupplier;
     private final Supplier<Double> rotSupplier;
+
+    private Boolean isRedAlliance;
+    private NetworkTable table;
 
     /**
      * Set swerve subsytem, controlers, axis's, and other swerve paramaters.
@@ -38,13 +43,17 @@ public class TeleopSwerveDrive extends CommandBase {
         this.yaxisSupplier = yaxisSupplier;
         this.rotSupplier = rotSupplier;
 
+        table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+        isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+
         addRequirements(swerve);
     }
 
     @Override
     public void execute() {
-        double forwardBack = yaxisSupplier.get();
-        double leftRight = xaxisSupplier.get();
+        isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+        double forwardBack = yaxisSupplier.get() * (isRedAlliance ? -1 : 1);
+        double leftRight = xaxisSupplier.get() * (isRedAlliance ? -1 : 1);
         double rot = rotSupplier.get();
 
         forwardBack = Normalization.cube(
