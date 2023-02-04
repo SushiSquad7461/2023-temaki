@@ -350,14 +350,20 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(.5), 
             Units.inchesToMeters(7),
-            0 // Keep z zero, it seems to mess with the calculations.
+            Units.inchesToMeters(22.5)
         );
 
-        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(180, 0, 0);
+        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
+            Units.degreesToRadians(180),
+            Units.degreesToRadians(0),
+            Units.degreesToRadians(0)
+        ).unaryMinus();
 
+        // The reason it's initialized like this is because we don't want
+        // the rotation to be applied to the translation.
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
-            CAMERA_POS_METERS, 
-            CAMERA_ANGLE_DEGREES
+            new Pose3d(CAMERA_POS_METERS, new Rotation3d()),
+            new Pose3d(new Translation3d(), CAMERA_ANGLE_DEGREES)
         ); 
     }
 }
