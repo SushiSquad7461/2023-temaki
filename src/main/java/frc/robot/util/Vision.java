@@ -75,14 +75,15 @@ public class Vision {
   
     private void update() {
         // Return if no new data is ready
-        // if (lastUpdateTimeMicro == rawBytesEntry.getLastChange()) {
-        //     SmartDashboard.putBoolean("No last time updated", true);
-        //     return;
-        // } else {
-        //     lastUpdateTimeMicro = rawBytesEntry.getLastChange();
-        //     SmartDashboard.putBoolean("No last time updated", false);
-        // }
-            PhotonPipelineResult res = camera.getLatestResult();
+        if (lastUpdateTimeMicro == rawBytesEntry.getLastChange()) {
+            SmartDashboard.putBoolean("No last time updated", true);
+            return;
+        } else {
+            lastUpdateTimeMicro = rawBytesEntry.getLastChange();
+            SmartDashboard.putBoolean("No last time updated", false);
+        }
+
+        PhotonPipelineResult res = camera.getLatestResult();
         if (!res.hasTargets()) {
             SmartDashboard.putBoolean("No targets", true);
             measurements.clear();
