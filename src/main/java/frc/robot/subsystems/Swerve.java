@@ -219,22 +219,16 @@ public class Swerve extends SubsystemBase {
     public void drive(Translation2d translation, 
         double rotation, boolean fieldRelative, boolean isOpenLoop
     ) {
-        Translation2d limitedTranslation = new Translation2d(
-            kSwerve.X_LIMITER.calculate(translation.getX()),
-            kSwerve.Y_LIMITER.calculate(translation.getY())
-        );
-        double limitedRotation = kSwerve.THETA_LIMITER.calculate(rotation);
-
         SwerveModuleState[] swerveModuleStates = kSwerve.SWERVE_KINEMATICS.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                limitedTranslation.getX(),
-                limitedTranslation.getY(),
-                limitedRotation,
+                translation.getX(),
+                translation.getY(),
+                rotation,
                 gyro.getAngle()
             ) : new ChassisSpeeds(
-                limitedTranslation.getX(),
-                limitedTranslation.getY(),
-                limitedRotation
+                translation.getX(),
+                translation.getY(),
+                rotation
             )
         );
 

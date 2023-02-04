@@ -142,14 +142,6 @@ public final class Constants {
         public static final PIDController Y_CONTROLLER = new PIDController(1, 0, 0);
         public static final PIDController ANGLE_CONTROLLER = new PIDController(2, 0, 0);
 
-        /** 
-         * Slew rate limiters for auto tip.
-         * Limits the acceleration essentially.
-         */
-        public static final SlewRateLimiter X_LIMITER = new SlewRateLimiter(MAX_ACCELERATION);
-        public static final SlewRateLimiter Y_LIMITER = new SlewRateLimiter(MAX_ACCELERATION);
-        public static final SlewRateLimiter THETA_LIMITER = new SlewRateLimiter(MAX_ANGULAR_ACCELERATION);
-
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
         public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
@@ -254,6 +246,15 @@ public final class Constants {
 
         public static final int DRIVE_PORT = 0;
         public static final int OPERATOR_PORT = 1;
+
+        /** 
+         * Slew rate limiters for anti tip.
+         * Limits the acceleration essentially.
+         */
+        public static final SlewRateLimiter DRIVE_X_LIMITER = new SlewRateLimiter(4);
+        public static final SlewRateLimiter DRIVE_Y_LIMITER = new SlewRateLimiter(4);
+        public static final SlewRateLimiter DRIVE_THETA_LIMITER = new SlewRateLimiter(4);
+
     }
 
     /**
