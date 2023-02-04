@@ -158,24 +158,6 @@ public final class Constants {
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
             VecBuilder.fill(1.2, 1.2, 1.2);
 
-
-        /** Auto Align Pid Values */
-        public static final double X_AUTO_ALIGN_TOLLERENCE = 0.03;
-        public static final double Y_AUTO_ALIGN_TOLLERENCE = 0.03;
-        public static final double THETA_AUTO_ALIGN_TOLLERENCE = 0.03;
-
-        public static final double AUTO_ALIGN_Y_kP = 10.0;
-        public static final double AUTO_ALIGN_Y_kI = 0.0;
-        public static final double AUTO_ALIGN_Y_kD = 0.75;
-        public static final double AUTO_ALIGN_X_kP = 10.0;
-        public static final double AUTO_ALIGN_X_kI = 0.0;
-        public static final double AUTO_ALIGN_X_kD = 0.75;
-        public static final double AUTO_ALIGN_THETA_kP = 12.0;
-        public static final double AUTO_ALIGN_THETA_kI = 0.0;
-        public static final double AUTO_ALIGN_THETA_kD = 0.9;
-
-        public static final Translation2d DEFUALT_ALLIGMENT_OFFSET = new Translation2d(0.85, 0);
-
         /* Module Specific Constants */
 
         /** Front Left Module - Module 0. */
@@ -221,7 +203,33 @@ public final class Constants {
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
         }
+    }
 
+    /** 
+     * Auto align values.
+     */
+    public static final class kAutoAlign {
+        
+        /** PID tolerance */
+        public static final double X_TOLLERENCE = 0.03;
+        public static final double Y_TOLLERENCE = 0.03;
+        public static final double THETA_TOLLERENCE = 0.03;
+
+        /** Pid values */
+        public static final double X_P = 10.0;
+        public static final double X_I = 0.0;
+        public static final double X_D = 0.75;
+
+        public static final double Y_P = 10.0;
+        public static final double Y_I = 0.0;
+        public static final double Y_D = 0.75;
+        
+        public static final double THETA_P = 12.0;
+        public static final double THETA_I = 0.0;
+        public static final double THETA_D = 0.9;
+
+        /** Default offset value. */
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.85, 0);
     }
 
     /**

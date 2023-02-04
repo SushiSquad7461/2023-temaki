@@ -11,13 +11,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.kAutoAlign;
 import frc.robot.Constants.kPorts;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
@@ -142,32 +141,32 @@ public class Swerve extends SubsystemBase {
      */
     public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d offset) {
         PIDController yaxisPid = new PIDController(
-            kSwerve.AUTO_ALIGN_Y_kP, 
-            kSwerve.AUTO_ALIGN_Y_kI, 
-            kSwerve.AUTO_ALIGN_Y_kD
+            kAutoAlign.Y_P, 
+            kAutoAlign.Y_I, 
+            kAutoAlign.Y_D
         );
 
         PIDController xaxisPid = new PIDController(
-            kSwerve.AUTO_ALIGN_X_kP, 
-            kSwerve.AUTO_ALIGN_X_kI, 
-            kSwerve.AUTO_ALIGN_X_kD
+            kAutoAlign.X_P, 
+            kAutoAlign.X_I, 
+            kAutoAlign.X_D
         );
 
         PIDController thetaPid = new PIDController(
-            kSwerve.AUTO_ALIGN_THETA_kP, 
-            kSwerve.AUTO_ALIGN_THETA_kI, 
-            kSwerve.AUTO_ALIGN_THETA_kD
+            kAutoAlign.THETA_P, 
+            kAutoAlign.THETA_I, 
+            kAutoAlign.THETA_D
         );
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
-        xaxisPid.setTolerance(kSwerve.X_AUTO_ALIGN_TOLLERENCE);
-        yaxisPid.setTolerance(kSwerve.Y_AUTO_ALIGN_TOLLERENCE);
-        thetaPid.setTolerance(kSwerve.THETA_AUTO_ALIGN_TOLLERENCE);
+        xaxisPid.setTolerance(kAutoAlign.X_TOLLERENCE);
+        yaxisPid.setTolerance(kAutoAlign.Y_TOLLERENCE);
+        thetaPid.setTolerance(kAutoAlign.THETA_TOLLERENCE);
 
         // Give offset a default value
         if (offset == null) {
-            offset = kSwerve.DEFUALT_ALLIGMENT_OFFSET;
+            offset = kAutoAlign.DEFAULT_OFFSET;
         }
 
         // Get forward vector of pose and add it to offset
