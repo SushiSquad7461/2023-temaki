@@ -43,17 +43,17 @@ public class AlphaArm extends Arm {
     }
 
     private AlphaArm() {
-        armP = new TunableNumber("Arm P", kArm.kP, Constants.TUNING_MODE);
-        armI = new TunableNumber("Arm I", kArm.kI, Constants.TUNING_MODE);
-        armD = new TunableNumber("Arm D", kArm.kD, Constants.TUNING_MODE);
-        armF = new TunableNumber("Arm F", kArm.kF, Constants.TUNING_MODE);
+        armP = new TunableNumber("Arm P", kArm.KP, Constants.TUNING_MODE);
+        armI = new TunableNumber("Arm I", kArm.KI, Constants.TUNING_MODE);
+        armD = new TunableNumber("Arm D", kArm.KD, Constants.TUNING_MODE);
+        armF = new TunableNumber("Arm F", kArm.KF, Constants.TUNING_MODE);
         targetPos = new TunableNumber("Target Pos", 0, Constants.TUNING_MODE);
 
         armFeedforward = new ArmFeedforward(
-            Constants.kArm.kS, 
-            Constants.kArm.kG, 
-            Constants.kArm.kV, 
-            Constants.kArm.kA
+            Constants.kArm.KS, 
+            Constants.kArm.KG, 
+            Constants.kArm.KV, 
+            Constants.kArm.KA
         );
 
         leftMotor = MotorHelper.createSparkMax(

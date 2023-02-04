@@ -271,14 +271,14 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double kP = 0.0150000; // 0.015
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        public static final double kF = 0.0;
-        public static final double kS = 0.32245;
-        public static final double kG = 0.42; //0.42
-        public static final double kV = 0.018286;
-        public static final double kA = 0.0019367;
+        public static final double KP = 0.0150000; // 0.015
+        public static final double KI = 0.0;
+        public static final double KD = 0.0;
+        public static final double KF = 0.0;
+        public static final double KS = 0.32245;
+        public static final double KG = 0.42; //0.42
+        public static final double KV = 0.018286;
+        public static final double KA = 0.0019367;
 
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
