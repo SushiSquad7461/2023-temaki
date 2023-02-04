@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -90,6 +91,8 @@ public class Vision {
         // Get best target and the pose from that target
         bestTarget = res.getBestTarget();
         Pose3d bestPose = getRobotPoseFromTarget(bestTarget);
+        SmartDashboard.putBoolean("Best target", bestPose == null);
+
         if (bestPose == null) {
             // If no pose, then no measurement
             bestMeasurement = null;

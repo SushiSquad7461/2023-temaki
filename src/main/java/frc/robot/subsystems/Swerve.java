@@ -181,7 +181,7 @@ public class Swerve extends SubsystemBase {
         yaxisPid.setSetpoint(offsetTarget.getY());
 
         // Invert theta to ensure we're facing towards the target
-        thetaPid.setSetpoint(targetRot.rotateBy(Rotation2d.fromDegrees(180)).getRadians());
+        thetaPid.setSetpoint(targetRot.minus(Rotation2d.fromDegrees(180)).getRadians());
 
         return run(
             () -> {
@@ -260,15 +260,20 @@ public class Swerve extends SubsystemBase {
         return runOnce(() -> {
             VisionMeasurement measurement = Vision.getVision().getBestMeasurement();
             if (measurement != null) {
-                this.resetOdometry(measurement.robotPose);
+                this.resetOdometryWithGyroInversion(measurement.robotPose);
             }
         });
     }
 
-    public void resetOdometry(Pose2d pose) {
-        gyro.setAngle(pose.getRotation());
+    public void resetOdometryAndGyro(Pose2d pose) {
         swerveOdometry.resetPosition(pose.getRotation(), getPositions(), pose);
     }
+
+    public void resetOdometryWithGyroInversion(Pose2d pose) {
+        gyro.setAngle(pose.getRotation().unaryMinus());
+        swerveOdometry.resetPosition(pose.getRotation().unaryMinus(), getPositions(), pose);
+    }
+
 
     /**
      * Returns current swerve module states.

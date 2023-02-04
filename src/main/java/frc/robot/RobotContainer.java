@@ -114,8 +114,6 @@ public class RobotContainer {
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.LOWERED),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
@@ -125,9 +123,7 @@ public class RobotContainer {
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            arm.moveArm(ArmPos.L2_SCORING)
         ));
 
         // Score item to relese cube

@@ -22,9 +22,6 @@
     },
     "transitory": {
       "SmartDashboard": {
-        "Auto Selector": {
-          "open": true
-        },
         "Field": {
           "open": true
         },

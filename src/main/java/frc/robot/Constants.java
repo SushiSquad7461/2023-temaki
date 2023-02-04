@@ -156,7 +156,7 @@ public final class Constants {
             VecBuilder.fill(0.1, 0.1, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.9, 0.9, 0.9);
+            VecBuilder.fill(1.2, 1.2, 1.2);
 
 
         /** Auto Align Pid Values */
