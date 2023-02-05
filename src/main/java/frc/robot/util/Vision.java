@@ -47,7 +47,7 @@ public class Vision {
 
         rawBytesEntry = ntInstance
             .getTable("photonvision")
-            .getSubTable("limelight")
+            .getSubTable(camera.getName())
             .getEntry("rawBytes");
     }
 
