@@ -81,6 +81,29 @@ public class RobotContainer {
         }
     }
 
+    private void toggleIntakeReversal() {
+        intakeToggled = !intakeToggled;
+        if (intakeToggled) {
+            (
+                new SequentialCommandGroup(
+                    intake.extendIntake(),
+                    new ParallelCommandGroup( 
+                        intake.reverseIntake(),
+                        manipulator.cubeReverse()
+                    )
+                )
+            ).schedule();
+        } else {
+            (
+                new SequentialCommandGroup(
+                    manipulator.stop(),
+                    intake.retractIntake(), 
+                    intake.stopIntake()
+                )
+            ).schedule();
+        }
+    }
+
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
@@ -103,19 +126,27 @@ public class RobotContainer {
             )
         );
 
+        oi.getDriverController().leftTrigger().onTrue(
+            new InstantCommand(
+                () -> {
+                    toggleIntakeReversal();
+                }
+            )
+        );
+
         // Move to april tag id 2
-        oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToAprilTag(2, null)
-        );
+        // oi.getDriverController().rightBumper().onTrue(
+        //     swerve.moveToAprilTag(2, null)
+        // );
 
-        // Reset odo
-        oi.getDriverController().povUp().onTrue(
-            swerve.resetOdometryToBestAprilTag()
-        );
+        // // Reset odo
+        // oi.getDriverController().povUp().onTrue(
+        //     swerve.resetOdometryToBestAprilTag()
+        // );
 
-        oi.getDriverController().povLeft().onTrue(
-            swerve.moveToAprilTag(2, new Translation2d(0.65, 0.5))
-        );
+        // oi.getDriverController().povLeft().onTrue(
+        //     swerve.moveToAprilTag(2, new Translation2d(0.65, 0.5))
+        // );
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
@@ -149,9 +180,7 @@ public class RobotContainer {
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
         ));
 
         // pickup cone
