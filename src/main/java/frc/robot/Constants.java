@@ -322,7 +322,7 @@ public final class Constants {
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 0.25;
     }
 
     /** Vision constants. */
@@ -359,11 +359,9 @@ public final class Constants {
             Units.degreesToRadians(0)
         ).unaryMinus();
 
-        // The reason it's initialized like this is because we don't want
-        // the rotation to be applied to the translation.
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
-            new Pose3d(CAMERA_POS_METERS, new Rotation3d()),
-            new Pose3d(new Translation3d(), CAMERA_ANGLE_DEGREES)
+            CAMERA_POS_METERS.unaryMinus(), 
+            CAMERA_ANGLE_DEGREES
         ); 
     }
 }
