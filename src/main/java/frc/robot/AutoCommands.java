@@ -75,7 +75,7 @@ public class AutoCommands {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> {
                     if (isFirstPath) {
-                        swerve.resetOdometry(getInitialPose(path));
+                        swerve.resetOdometryAndGyro(getInitialPose(path));
                     }
                 }, swerve),
                 new PPSwerveControllerCommand(

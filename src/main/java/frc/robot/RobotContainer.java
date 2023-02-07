@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -80,6 +81,29 @@ public class RobotContainer {
         }
     }
 
+    private void toggleIntakeReversal() {
+        intakeToggled = !intakeToggled;
+        if (intakeToggled) {
+            (
+                new SequentialCommandGroup(
+                    intake.extendIntake(),
+                    new ParallelCommandGroup( 
+                        intake.reverseIntake(),
+                        manipulator.cubeReverse()
+                    )
+                )
+            ).schedule();
+        } else {
+            (
+                new SequentialCommandGroup(
+                    manipulator.stop(),
+                    intake.retractIntake(), 
+                    intake.stopIntake()
+                )
+            ).schedule();
+        }
+    }
+
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
@@ -102,20 +126,30 @@ public class RobotContainer {
             )
         );
 
-        // Move to april tag id 2
-        oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToAprilTag(2, null)
+        oi.getDriverController().leftTrigger().onTrue(
+            new InstantCommand(
+                () -> {
+                    toggleIntakeReversal();
+                }
+            )
         );
 
-        // Reset odo
-        oi.getDriverController().povLeft().onTrue(
-            swerve.resetOdometryToBestAprilTag()
-        );
+        // Move to april tag id 2
+        // oi.getDriverController().rightBumper().onTrue(
+        //     swerve.moveToAprilTag(2, null)
+        // );
+
+        // // Reset odo
+        // oi.getDriverController().povUp().onTrue(
+        //     swerve.resetOdometryToBestAprilTag()
+        // );
+
+        // oi.getDriverController().povLeft().onTrue(
+        //     swerve.moveToAprilTag(2, new Translation2d(0.65, 0.5))
+        // );
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.LOWERED),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             intake.retractIntake()
@@ -125,9 +159,7 @@ public class RobotContainer {
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            arm.moveArm(ArmPos.L2_SCORING)
         ));
 
         // Score item to relese cube
@@ -148,9 +180,7 @@ public class RobotContainer {
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
         ));
 
         // pickup cone

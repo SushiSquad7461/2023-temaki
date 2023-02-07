@@ -12,6 +12,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -132,9 +133,10 @@ public final class Constants {
         public static final double DRIVE_F = 0.046;
 
         /* Swerve Profiling Values */
-        public static final double MAX_ACCELERATION = 2; // 2
         public static final double MAX_SPEED = 4; // 4.5 meters per second
-        public static final double MAX_ANGULAR_VELOCITY = 20; // 11.5
+        public static final double MAX_ACCELERATION = 2; // 2
+        public static final double MAX_ANGULAR_VELOCITY = 10; // 11.5
+        public static final double MAX_ANGULAR_ACCELERATION = 20; // 11.5
 
         public static final PIDController X_CONTROLLER = new PIDController(1, 0, 0);
         public static final PIDController Y_CONTROLLER = new PIDController(1, 0, 0);
@@ -156,25 +158,7 @@ public final class Constants {
             VecBuilder.fill(0.1, 0.1, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.9, 0.9, 0.9);
-
-
-        /** Auto Align Pid Values */
-        public static final double X_AUTO_ALIGN_TOLLERENCE = 0.03;
-        public static final double Y_AUTO_ALIGN_TOLLERENCE = 0.03;
-        public static final double THETA_AUTO_ALIGN_TOLLERENCE = 0.03;
-
-        public static final double AUTO_ALIGN_Y_kP = 10.0;
-        public static final double AUTO_ALIGN_Y_kI = 0.0;
-        public static final double AUTO_ALIGN_Y_kD = 0.75;
-        public static final double AUTO_ALIGN_X_kP = 10.0;
-        public static final double AUTO_ALIGN_X_kI = 0.0;
-        public static final double AUTO_ALIGN_X_kD = 0.75;
-        public static final double AUTO_ALIGN_THETA_kP = 12.0;
-        public static final double AUTO_ALIGN_THETA_kI = 0.0;
-        public static final double AUTO_ALIGN_THETA_kD = 0.9;
-
-        public static final Translation2d DEFUALT_ALLIGMENT_OFFSET = new Translation2d(0.85, 0);
+            VecBuilder.fill(1.2, 1.2, 1.2);
 
         /* Module Specific Constants */
 
@@ -221,7 +205,33 @@ public final class Constants {
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
         }
+    }
 
+    /** 
+     * Auto align values.
+     */
+    public static final class kAutoAlign {
+        
+        /** PID tolerance */
+        public static final double X_TOLLERENCE = 0.03;
+        public static final double Y_TOLLERENCE = 0.03;
+        public static final double THETA_TOLLERENCE = 0.03;
+
+        /** Pid values */
+        public static final double X_P = 10.0;
+        public static final double X_I = 0.0;
+        public static final double X_D = 0.75;
+
+        public static final double Y_P = 10.0;
+        public static final double Y_I = 0.0;
+        public static final double Y_D = 0.75;
+        
+        public static final double THETA_P = 12.0;
+        public static final double THETA_I = 0.0;
+        public static final double THETA_D = 0.9;
+
+        /** Default offset value. */
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.85, 0);
     }
 
     /**
@@ -236,6 +246,15 @@ public final class Constants {
 
         public static final int DRIVE_PORT = 0;
         public static final int OPERATOR_PORT = 1;
+
+        /** 
+         * Slew rate limiters for anti tip.
+         * Limits the acceleration essentially.
+         */
+        public static final SlewRateLimiter DRIVE_X_LIMITER = new SlewRateLimiter(4);
+        public static final SlewRateLimiter DRIVE_Y_LIMITER = new SlewRateLimiter(4);
+        public static final SlewRateLimiter DRIVE_THETA_LIMITER = new SlewRateLimiter(4);
+
     }
 
     /**
@@ -253,14 +272,14 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double kP = 0.0150000; // 0.015
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        public static final double kF = 0.0;
-        public static final double kS = 0.32245;
-        public static final double kG = 0.42; //0.42
-        public static final double kV = 0.018286;
-        public static final double kA = 0.0019367;
+        public static final double KP = 0.0150000; // 0.015
+        public static final double KI = 0.0;
+        public static final double KD = 0.0;
+        public static final double KF = 0.0;
+        public static final double KS = 0.32245;
+        public static final double KG = 0.42; //0.42
+        public static final double KV = 0.018286;
+        public static final double KA = 0.0019367;
 
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
@@ -303,7 +322,7 @@ public final class Constants {
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 0.25;
     }
 
     /** Vision constants. */
@@ -331,13 +350,17 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(.5), 
             Units.inchesToMeters(7),
-            0 // Keep z zero, it seems to mess with the calculations.
+            Units.inchesToMeters(22.5)
         );
 
-        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(180, 0, 0);
+        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
+            Units.degreesToRadians(180),
+            Units.degreesToRadians(0),
+            Units.degreesToRadians(0)
+        ).unaryMinus();
 
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
-            CAMERA_POS_METERS, 
+            CAMERA_POS_METERS.unaryMinus(), 
             CAMERA_ANGLE_DEGREES
         ); 
     }
