@@ -135,18 +135,18 @@ public class RobotContainer {
         );
 
         // Move to april tag id 2
-        // oi.getDriverController().rightBumper().onTrue(
-        //     swerve.moveToAprilTag(2, null)
-        // );
+        oi.getDriverController().rightBumper().onTrue(
+            swerve.moveToAprilTag(2, null)
+        );
 
         // // Reset odo
-        // oi.getDriverController().povUp().onTrue(
-        //     swerve.resetOdometryToBestAprilTag()
-        // );
+        oi.getDriverController().povUp().onTrue(
+            swerve.resetOdometryToBestAprilTag()
+        );
 
-        // oi.getDriverController().povLeft().onTrue(
-        //     swerve.moveToAprilTag(2, new Translation2d(0.65, 0.5))
-        // );
+        oi.getDriverController().povLeft().onTrue(
+            swerve.moveToAprilTag(2, new Translation2d(0.9, 0.6))
+        );
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
