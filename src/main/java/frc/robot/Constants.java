@@ -155,10 +155,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.1, 0.1, 0.1);
+            VecBuilder.fill(0.6, 0.6, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(1.2, 1.2, 1.2);
+            VecBuilder.fill(0.3, 0.3, 0.5);
 
         /* Module Specific Constants */
 
@@ -231,7 +231,7 @@ public final class Constants {
         public static final double THETA_D = 0.9;
 
         /** Default offset value. */
-        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.85, 0);
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.1, 0);
     }
 
     /**
@@ -251,9 +251,9 @@ public final class Constants {
          * Slew rate limiters for anti tip.
          * Limits the acceleration essentially.
          */
-        public static final SlewRateLimiter DRIVE_X_LIMITER = new SlewRateLimiter(4);
-        public static final SlewRateLimiter DRIVE_Y_LIMITER = new SlewRateLimiter(4);
-        public static final SlewRateLimiter DRIVE_THETA_LIMITER = new SlewRateLimiter(4);
+        public static final SlewRateLimiter DRIVE_X_LIMITER = new SlewRateLimiter(3);
+        public static final SlewRateLimiter DRIVE_Y_LIMITER = new SlewRateLimiter(3);
+        public static final SlewRateLimiter DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
 
     }
 
@@ -294,7 +294,7 @@ public final class Constants {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(100),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(75),
+            L2_SCORING(80),
             L3_SCORING(0);
 
             private double angle;
@@ -348,14 +348,14 @@ public final class Constants {
         
         // X is forward, Y is left.
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
-            Units.inchesToMeters(.5), 
-            Units.inchesToMeters(7),
-            Units.inchesToMeters(22.5)
+            Units.inchesToMeters(2.691), 
+            Units.inchesToMeters(6),
+            Units.inchesToMeters(29.811)
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
-            Units.degreesToRadians(180),
             Units.degreesToRadians(0),
+            Units.degreesToRadians(12),
             Units.degreesToRadians(0)
         ).unaryMinus();
 
