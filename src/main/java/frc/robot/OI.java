@@ -28,15 +28,15 @@ public class OI {
     }
 
     public double getDriveTrainRotation() {
-        return getRawAxis(kOI.DRIVE_ROTATE);
+        return kOI.DRIVE_THETA_LIMITER.calculate(getRawAxis(kOI.DRIVE_ROTATE));
     }
 
     public double getDriveTrainTranslationY() {
-        return getRawAxis(kOI.DRIVE_TRANSLATION_Y);
+        return kOI.DRIVE_Y_LIMITER.calculate(getRawAxis(kOI.DRIVE_TRANSLATION_Y));
     }
 
     public double getDriveTrainTranslationX() {
-        return getRawAxis(kOI.DRIVE_TRANSLATION_X);
+        return kOI.DRIVE_X_LIMITER.calculate(getRawAxis(kOI.DRIVE_TRANSLATION_X));
     }
 
     private double getRawAxis(int id) {

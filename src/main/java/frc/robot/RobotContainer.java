@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.util.CommandFactories;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -80,6 +82,29 @@ public class RobotContainer {
         }
     }
 
+    private void toggleIntakeReversal() {
+        intakeToggled = !intakeToggled;
+        if (intakeToggled) {
+            (
+                new SequentialCommandGroup(
+                    intake.extendIntake(),
+                    new ParallelCommandGroup( 
+                        intake.reverseIntake(),
+                        manipulator.cubeReverse()
+                    )
+                )
+            ).schedule();
+        } else {
+            (
+                new SequentialCommandGroup(
+                    manipulator.stop(),
+                    intake.retractIntake(), 
+                    intake.stopIntake()
+                )
+            ).schedule();
+        }
+    }
+
     private void configureButtonBindings() {
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
@@ -90,7 +115,6 @@ public class RobotContainer {
                 true, 
                 false
             )
-
         );
 
         // Toggle intake
@@ -102,55 +126,53 @@ public class RobotContainer {
             )
         );
 
+        oi.getDriverController().leftTrigger().onTrue(
+            new InstantCommand(
+                () -> {
+                    toggleIntakeReversal();
+                }
+            )
+        );
+
         // Move to april tag id 2
         oi.getDriverController().rightBumper().onTrue(
             swerve.moveToAprilTag(2, null)
         );
 
-        // Reset odo
-        oi.getDriverController().povLeft().onTrue(
+        // // Reset odo
+        oi.getDriverController().povUp().onTrue(
             swerve.resetOdometryToBestAprilTag()
         );
 
+        oi.getDriverController().povLeft().onTrue(
+            swerve.moveToAprilTag(2, new Translation2d(0.9, 0.6))
+        );
+
         // Lower arm
-        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
-        ));
+        // oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.LOWERED),
+        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+        //     intake.retractIntake()
+        // ));
 
         // Raise arm to score at L2
-        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
-        ));
+        // oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+        //     intake.extendIntake(),
+        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+        //     arm.moveArm(ArmPos.L2_SCORING)
+        // ));
 
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
 
         // Score item to relese cone
-        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
-            manipulator.coneReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
 
-        // raise arm for cone
+        // cone pick up from substation
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
         ));
 
         // pickup cone
