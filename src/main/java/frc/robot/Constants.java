@@ -63,11 +63,11 @@ public final class Constants {
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
         public static final int INTAKE_MOTOR_ID = 20;
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 3;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 7;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 4;
 
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 6;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 5;  
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 

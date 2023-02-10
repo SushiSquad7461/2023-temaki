@@ -19,6 +19,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.util.CommandFactories;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -114,7 +115,6 @@ public class RobotContainer {
                 true, 
                 false
             )
-
         );
 
         // Toggle intake
@@ -149,34 +149,26 @@ public class RobotContainer {
         );
 
         // Lower arm
-        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
-        ));
+        // oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.LOWERED),
+        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+        //     intake.retractIntake()
+        // ));
 
         // Raise arm to score at L2
-        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING)
-        ));
+        // oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+        //     intake.extendIntake(),
+        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+        //     arm.moveArm(ArmPos.L2_SCORING)
+        // ));
 
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
 
         // Score item to relese cone
-        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
-            manipulator.coneReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
 
-        // raise arm for cone
+        // cone pick up from substation
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
