@@ -29,6 +29,7 @@ public class Manipulator extends SubsystemBase {
         motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
         motor.setInverted(true);
         motor.burnFlash();
+
     }
 
     /**

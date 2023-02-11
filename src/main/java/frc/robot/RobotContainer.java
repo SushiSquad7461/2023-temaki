@@ -48,7 +48,7 @@ public class RobotContainer {
         indexer = Indexer.getInstance();
         manipulator = Manipulator.getInstance();
 
-        autos = new AutoCommands(swerve);
+        autos = new AutoCommands();
 
         configureButtonBindings();
     }
