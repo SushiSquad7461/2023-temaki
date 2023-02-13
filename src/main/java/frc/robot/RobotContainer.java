@@ -70,7 +70,7 @@ public class RobotContainer {
                         indexer.runIndexer(), 
                         manipulator.cube()
                     ), 
-                    new WaitCommand(1.5), 
+                    new WaitCommand(0.5), 
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
                         indexer.stopIndexer(), 
@@ -135,9 +135,9 @@ public class RobotContainer {
         );
 
         // Move to april tag id 2
-        oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToAprilTag(2, null)
-        );
+        // oi.getDriverController().rightBumper().onTrue(
+        //     swerve.moveToAprilTag(2, null)
+        // );
 
         // // Reset odo
         oi.getDriverController().povUp().onTrue(
@@ -145,7 +145,11 @@ public class RobotContainer {
         );
 
         oi.getDriverController().povLeft().onTrue(
-            swerve.moveToAprilTag(2, new Translation2d(0.9, 0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
+        );
+
+        oi.getDriverController().rightBumper().onTrue(
+            swerve.moveToAprilTag(7, null)
         );
 
         // Lower arm

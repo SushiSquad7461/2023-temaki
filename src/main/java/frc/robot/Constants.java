@@ -315,7 +315,7 @@ public final class Constants {
      */
     public static final class kCommandTimmings {
         public static final double PNEUMATIC_WAIT_TIME = 0.7;
-        public static final double MANIPULATOR_WAIT_TIME = 1;
+        public static final double MANIPULATOR_WAIT_TIME = 0.5;
     }
 
     /**
@@ -350,7 +350,7 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(2.691), 
             Units.inchesToMeters(6),
-            Units.inchesToMeters(29.811)
+            Units.inchesToMeters(27)
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(

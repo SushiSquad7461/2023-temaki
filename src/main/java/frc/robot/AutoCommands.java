@@ -59,7 +59,7 @@ public class AutoCommands {
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(1.5), 
+            new WaitCommand(0.5), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 

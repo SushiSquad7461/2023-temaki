@@ -46,7 +46,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command coneReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED);
+            motor.set(kManipulator.SPEED*3);
         });
     }
 
@@ -64,7 +64,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cubeReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * -1.0);
+            motor.set(kManipulator.SPEED * -3.0);
         });
     }
 
