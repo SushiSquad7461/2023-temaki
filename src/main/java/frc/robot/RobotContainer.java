@@ -135,8 +135,8 @@ public class RobotContainer {
         );
 
         // Move to april tag id 2
-        oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToAprilTag(2, null)
+        oi.getDriverController().rightBumper().whileTrue(
+            swerve.moveToNearestAprilTag(null)
         );
 
         // // Reset odo
@@ -145,7 +145,7 @@ public class RobotContainer {
         );
 
         oi.getDriverController().povLeft().onTrue(
-            swerve.moveToAprilTag(2, new Translation2d(0.9, 0.6))
+            swerve.moveToAprilTag(7, new Translation2d(0.9, 0.6))
         );
 
         // Lower arm
@@ -187,5 +187,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autos.getAuto();
+
     }
 }

@@ -133,8 +133,8 @@ public final class Constants {
         public static final double DRIVE_F = 0.046;
 
         /* Swerve Profiling Values */
-        public static final double MAX_SPEED = 4; // 4.5 meters per second
-        public static final double MAX_ACCELERATION = 2; // 2
+        public static final double MAX_SPEED = 10; // 4.5 meters per second
+        public static final double MAX_ACCELERATION = 4; // 2
         public static final double MAX_ANGULAR_VELOCITY = 10; // 11.5
         public static final double MAX_ANGULAR_ACCELERATION = 20; // 11.5
 
@@ -350,7 +350,7 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(2.691), 
             Units.inchesToMeters(6),
-            Units.inchesToMeters(29.811)
+            Units.inchesToMeters(26.75)
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
