@@ -1,7 +1,9 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,9 +12,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kSwerve;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.util.CommandFactories;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 /**
@@ -20,36 +33,63 @@ import java.util.function.Consumer;
  */
 public class AutoCommands {
     private final Swerve swerve;
-    private final SendableChooser<SequentialCommandGroup> autoChooser;
+    private final Intake intake;
+    private final Indexer indexer;
+    private final Manipulator manipulator;
+    private final Arm arm;
+    private final SwerveAutoBuilder autoBuilder;
+    private final SendableChooser<Command> autoChooser;
+    HashMap<String, Command> eventMap = new HashMap<String, Command>();
 
     /**
      * Define all auto commands.
      */
-    public AutoCommands(Swerve swerve) {
-        this.swerve = swerve;
+
+    public AutoCommands() {
+        this.swerve = Swerve.getInstance();
+        this.indexer = Indexer.getInstance();
+        this.intake = Intake.getInstance();
+        this.manipulator = Manipulator.getInstance();
+        this.arm = AlphaArm.getInstance();
+
+        eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake()));
+        eventMap.put("intakeUp", new SequentialCommandGroup(
+            intake.retractIntake(), 
+            new ParallelCommandGroup(
+                indexer.runIndexer(), 
+                manipulator.cube()
+            ), 
+            new WaitCommand(0.5), 
+            new ParallelCommandGroup(
+                intake.stopIntake(), 
+                indexer.stopIndexer(), 
+                manipulator.holdCube()
+            )
+        ));
+        eventMap.put("scoreCube", CommandFactories.getCubeScore(intake, (AlphaArm)arm, manipulator));
+
+        autoBuilder = new SwerveAutoBuilder(
+            swerve::getPose, // Pose2d supplier
+            swerve::resetOdometryAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
+            kSwerve.SWERVE_KINEMATICS, // SwerveDriveKinematics
+            kSwerve.TRANSLATION_CONTROLLER, // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            kSwerve.ANGLE_CONTROLLER, // PID constants to correct for rotation error (used to create the rotation controller)
+            swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
+            eventMap,
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true // The drive subsystem. Used to properly set the requirements of path following commands
+            swerve
+        );
 
         autoChooser = new SendableChooser<>();
 
-        autoChooser.addOption("nothing", new SequentialCommandGroup(new InstantCommand(() -> {
+        autoChooser.addOption("nothing", new InstantCommand(() -> {
             System.out.println("YOUR A CLOWN");
-        })));
+        }));
 
-        autoChooser.addOption("R2.5CubeLZ", new SequentialCommandGroup(
-            getCommand("R_GridToCubeLZ", true),
-            getCommand("R_CubeToGridLZ", false),
-            getCommand("R_GridToCube2LZ", false)   
-        ));
+        autoChooser.addOption("2 Piece Loading Zone", makeAuto("2_Piece_Loading_Zone"));
 
-        autoChooser.addOption("R2Cube+ChargeLZ", new SequentialCommandGroup(
-            getCommand("R_GridToCubeLZ", true),
-            getCommand("R_CubeToGridLZ", false),
-            getCommand("R_GridToChargeLZ", false)
-        ));
-
-        autoChooser.addOption("RCharge", new SequentialCommandGroup(
-            getCommand("R_StartToCharge", true) 
-        ));
-
+        autoChooser.addOption("2 Piece Loading Zone and Charge", new SequentialCommandGroup(makeAuto("2_Piece_Loading_Zone"), makeAuto("Node_to_Charge")));
+        autoChooser.addOption("Charge", makeAuto("Charge"));
         putAutoChooser();
     }
 
@@ -60,38 +100,12 @@ public class AutoCommands {
     /**
      * Get currently selected auto.
      */
-    public SequentialCommandGroup getAuto() {
+    public Command getAuto() {
         return autoChooser.getSelected();
     }
 
-    private Command getCommand(String pathName, boolean isFirstPath) {
-        PathPlannerTrajectory path = PathPlanner.loadPath(
-                pathName,
-                kSwerve.MAX_SPEED,
-                kSwerve.MAX_ACCELERATION);
-
-        Consumer<SwerveModuleState[]> display = s -> swerve.setModuleStates(s);
-
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> {
-                    if (isFirstPath) {
-                        swerve.resetOdometryAndGyro(getInitialPose(path));
-                    }
-                }, swerve),
-                new PPSwerveControllerCommand(
-                        path,
-                        swerve::getPose,
-                        kSwerve.SWERVE_KINEMATICS,
-                        kSwerve.X_CONTROLLER,
-                        kSwerve.Y_CONTROLLER,
-                        kSwerve.ANGLE_CONTROLLER,
-                        display,
-                        swerve),
-                new InstantCommand(() -> {
-                    swerve.drive(new Translation2d(0, 0), 0, true, false);
-                }
-                )
-        );
+    private Command makeAuto(String path) {
+        return autoBuilder.fullAuto(PathPlanner.loadPathGroup(path, kSwerve.MAX_SPEED, kSwerve.MAX_ACCELERATION));
     }
 
     private Pose2d getInitialPose(PathPlannerTrajectory path) {
