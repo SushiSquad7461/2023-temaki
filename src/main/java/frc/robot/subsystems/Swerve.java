@@ -113,12 +113,18 @@ public class Swerve extends SubsystemBase {
             .getEstimatedPosition()
             .getTranslation(); 
 
+        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+
+
         double minDistance = Double.MAX_VALUE;
         AprilTag closestTag = null;
 
         for (AprilTag tag : Constants.kVision.APRIL_TAG_FIELD_LAYOUT.getTags()) {
-            Translation2d tagTranslation = tag.pose.getTranslation().toTranslation2d();
+            Translation2d tagTranslation = tag.pose.toPose2d().getTranslation();
             double distanceToTag = currentTranslation.getDistance(tagTranslation);
+
+            SmartDashboard.putNumber("Tag Distance" + tag.ID, distanceToTag);
 
             if (distanceToTag < minDistance) {
                 minDistance = distanceToTag;
@@ -139,7 +145,7 @@ public class Swerve extends SubsystemBase {
      *      tag, y+ left from tag). A null value will default to 1 meter in front of
      *      the target.
      */
-    public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d offset) {
+    public Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d newOffset) {
         PIDController yaxisPid = new PIDController(
             kAutoAlign.Y_P, 
             kAutoAlign.Y_I, 
@@ -164,27 +170,28 @@ public class Swerve extends SubsystemBase {
         yaxisPid.setTolerance(kAutoAlign.Y_TOLLERENCE);
         thetaPid.setTolerance(kAutoAlign.THETA_TOLLERENCE);
 
-        // Give offset a default value
-        if (offset == null) {
-            offset = kAutoAlign.DEFAULT_OFFSET;
-        }
+        return runOnce(() -> {
+            Translation2d offset = newOffset;
+            // Give offset a default value
+            if (offset == null) {
+                offset = kAutoAlign.DEFAULT_OFFSET;
+            }
 
-        // Get forward vector of pose and add it to offset
-        Pose2d pose = poseSupplier.get();
-        Rotation2d targetRot = pose.getRotation();
-        offset = offset.rotateBy(targetRot);
-        Translation2d targetTrans = pose.getTranslation();
-        Translation2d offsetTarget = targetTrans.plus(offset);
-        field.getObject("target").setPose(new Pose2d(offsetTarget, targetRot));
+            // Get forward vector of pose and add it to offset
+            Pose2d pose = poseSupplier.get();
+            Rotation2d targetRot = pose.getRotation();
+            offset = offset.rotateBy(targetRot);
+            Translation2d targetTrans = pose.getTranslation();
+            Translation2d offsetTarget = targetTrans.plus(offset);
+            field.getObject("target").setPose(new Pose2d(offsetTarget, targetRot));
 
-        // Set pid setpoints
-        xaxisPid.setSetpoint(offsetTarget.getX());
-        yaxisPid.setSetpoint(offsetTarget.getY());
+            // Set pid setpoints
+            xaxisPid.setSetpoint(offsetTarget.getX());
+            yaxisPid.setSetpoint(offsetTarget.getY());
 
-        // Invert theta to ensure we're facing towards the target
-        thetaPid.setSetpoint(targetRot.minus(Rotation2d.fromDegrees(180)).getRadians());
-
-        return run(
+            // Invert theta to ensure we're facing towards the target
+            thetaPid.setSetpoint(targetRot.minus(Rotation2d.fromDegrees(180)).getRadians());
+        }).andThen(run(
             () -> {
                 SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());
                 SmartDashboard.putNumber("y tolerance", yaxisPid.getPositionError());
@@ -202,7 +209,7 @@ public class Swerve extends SubsystemBase {
                     false
                 );
             }
-        ).until(
+        )).until(
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
         ).andThen(
             () -> { 
@@ -312,7 +319,7 @@ public class Swerve extends SubsystemBase {
         if (measurements != null) {
             for (VisionMeasurement measurement : measurements) {
                 // Skip measurement if it's more than a meter away
-                if (measurement.robotPose.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) > 1.0) {
+                if (measurement.robotPose.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) > 1.0 && measurement.ambiguity > 0.2) {
                     continue;
                 }
         

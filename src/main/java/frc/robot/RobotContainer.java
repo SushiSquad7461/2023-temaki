@@ -19,6 +19,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.util.CommandFactories;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -47,7 +48,7 @@ public class RobotContainer {
         indexer = Indexer.getInstance();
         manipulator = Manipulator.getInstance();
 
-        autos = new AutoCommands(swerve);
+        autos = new AutoCommands();
 
         configureButtonBindings();
     }
@@ -69,7 +70,7 @@ public class RobotContainer {
                         indexer.runIndexer(), 
                         manipulator.cube()
                     ), 
-                    new WaitCommand(1.5), 
+                    new WaitCommand(0.5), 
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
                         indexer.stopIndexer(), 
@@ -114,7 +115,6 @@ public class RobotContainer {
                 true, 
                 false
             )
-
         );
 
         // Toggle intake
@@ -134,9 +134,9 @@ public class RobotContainer {
             )
         );
 
-        // Move to april tag id 2
+        // Move to nearest april tag
         oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToAprilTag(2, null)
+            swerve.moveToNearestAprilTag(null)
         );
 
         // // Reset odo
@@ -145,7 +145,11 @@ public class RobotContainer {
         );
 
         oi.getDriverController().povLeft().onTrue(
-            swerve.moveToAprilTag(2, new Translation2d(0.9, 0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
+        );
+
+        oi.getDriverController().povRight().onTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
         );
 
         // Lower arm
@@ -163,20 +167,12 @@ public class RobotContainer {
         ));
 
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
 
         // Score item to relese cone
-        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
-            manipulator.coneReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
 
-        // raise arm for cone
+        // cone pick up from substation
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
@@ -195,5 +191,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autos.getAuto();
+
     }
 }

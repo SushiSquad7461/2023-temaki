@@ -7,6 +7,7 @@ package frc.robot;
 import SushiFrcLib.DependencyInjection.RobotName;
 import SushiFrcLib.Swerve.SwerveModuleConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
@@ -63,11 +64,11 @@ public final class Constants {
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
         public static final int INTAKE_MOTOR_ID = 20;
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 3;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 7;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 4;
 
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 6;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 5;  
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -133,14 +134,13 @@ public final class Constants {
         public static final double DRIVE_F = 0.046;
 
         /* Swerve Profiling Values */
-        public static final double MAX_SPEED = 4; // 4.5 meters per second
-        public static final double MAX_ACCELERATION = 2; // 2
+        public static final double MAX_SPEED = 10; // 4.5 meters per second
+        public static final double MAX_ACCELERATION = 4; // 2
         public static final double MAX_ANGULAR_VELOCITY = 10; // 11.5
         public static final double MAX_ANGULAR_ACCELERATION = 20; // 11.5
 
-        public static final PIDController X_CONTROLLER = new PIDController(1, 0, 0);
-        public static final PIDController Y_CONTROLLER = new PIDController(1, 0, 0);
-        public static final PIDController ANGLE_CONTROLLER = new PIDController(2, 0, 0);
+        public static final PIDConstants TRANSLATION_CONTROLLER = new PIDConstants(1, 0, 0);
+        public static final PIDConstants ANGLE_CONTROLLER = new PIDConstants(2, 0, 0);
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -315,7 +315,7 @@ public final class Constants {
      */
     public static final class kCommandTimmings {
         public static final double PNEUMATIC_WAIT_TIME = 0.7;
-        public static final double MANIPULATOR_WAIT_TIME = 1;
+        public static final double MANIPULATOR_WAIT_TIME = 0.5;
     }
 
     /**
@@ -350,7 +350,7 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(2.691), 
             Units.inchesToMeters(6),
-            Units.inchesToMeters(29.811)
+            Units.inchesToMeters(26.75)
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
