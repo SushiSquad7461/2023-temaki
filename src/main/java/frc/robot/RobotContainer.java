@@ -135,7 +135,7 @@ public class RobotContainer {
         );
 
         // Move to april tag id 2
-        oi.getDriverController().rightBumper().whileTrue(
+        oi.getDriverController().rightBumper().onTrue(
             swerve.moveToNearestAprilTag(null)
         );
 
@@ -145,22 +145,26 @@ public class RobotContainer {
         );
 
         oi.getDriverController().povLeft().onTrue(
-            swerve.moveToAprilTag(7, new Translation2d(0.9, 0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
+        );
+
+        oi.getDriverController().povRight().onTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
         );
 
         // Lower arm
-        // oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-        //     arm.moveArm(ArmPos.LOWERED),
-        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-        //     intake.retractIntake()
-        // ));
+        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.LOWERED),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            intake.retractIntake()
+        ));
 
         // Raise arm to score at L2
-        // oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-        //     intake.extendIntake(),
-        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-        //     arm.moveArm(ArmPos.L2_SCORING)
-        // ));
+        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            arm.moveArm(ArmPos.L2_SCORING)
+        ));
 
         // Score item to relese cube
         oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
