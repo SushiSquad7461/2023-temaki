@@ -182,7 +182,7 @@ public final class Constants {
                         ANGLE_OFFSET = 89.648438;
                         break;
                     default:
-                        ANGLE_OFFSET = 229.130859;
+                        ANGLE_OFFSET = 229.130859-180;
                         break;
                 }
             }
@@ -205,7 +205,7 @@ public final class Constants {
                         ANGLE_OFFSET = 195.380859;
                         break;
                     default:
-                        ANGLE_OFFSET = 2.109375;
+                        ANGLE_OFFSET = 2.109375+180;
                         break;
                 }
             }
@@ -228,7 +228,7 @@ public final class Constants {
                         ANGLE_OFFSET = 67.675781;
                         break;
                     default:
-                        ANGLE_OFFSET = 303.574219;
+                        ANGLE_OFFSET = 303.574219-180;
                         break;
                 }
             }
@@ -251,7 +251,7 @@ public final class Constants {
                         ANGLE_OFFSET = 69.785156;
                         break;
                     default:
-                        ANGLE_OFFSET = 16.083984;
+                        ANGLE_OFFSET = 16.083984+180;
                         break;
                 }
             }
