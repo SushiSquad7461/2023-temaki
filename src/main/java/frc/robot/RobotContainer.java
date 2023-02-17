@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
 import frc.robot.commands.TeleopSwerveDrive;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.subsystems.indexer.AlphaIndexer;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -29,7 +29,7 @@ public class RobotContainer {
     private final OI oi;
     private final AutoCommands autos;
     private final AlphaArm arm;
-    private final Indexer indexer;
+    private final AlphaIndexer indexer;
     private final Manipulator manipulator;
     private boolean intakeToggled = false;
 
@@ -44,7 +44,7 @@ public class RobotContainer {
         intake = Intake.getInstance();
         arm = AlphaArm.getInstance();
         oi = OI.getInstance();
-        indexer = Indexer.getInstance();
+        indexer = AlphaIndexer.getInstance();
         manipulator = Manipulator.getInstance();
 
         autos = new AutoCommands(swerve);

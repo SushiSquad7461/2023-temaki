@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.indexer;
 
 import SushiFrcLib.Motor.MotorHelper;
 import com.revrobotics.CANSparkMax;
@@ -11,37 +11,39 @@ import frc.robot.Constants.kPorts;
 /**
  * Controls indexer subsytem.
  */
-public class Indexer extends SubsystemBase {
+public class AlphaIndexer extends Indexer {
     private final CANSparkMax indexerMotor;
 
-    private static Indexer instance;
+    private static AlphaIndexer instance;
 
     /**
      * singleton get instance method.
      */
-    public static Indexer getInstance() {
+    public static AlphaIndexer getInstance() {
         if (instance == null) {
-            instance = new Indexer();
+            instance = new AlphaIndexer();
         }
         return instance;
     }
 
-    private Indexer() {
+    private AlphaIndexer() {
         indexerMotor = MotorHelper.createSparkMax(kPorts.INDEXER_MOTOR, MotorType.kBrushless);
     }
 
     /**
      * Runs indexer in positive direction.
      */
+    @Override
     public Command runIndexer() {
         return runOnce(() -> {
-            indexerMotor.set(kIndexer.SPEED);
+            indexerMotor.set(kIndexer.INDEXER_SPEED);
         });
     }
 
     /**
      * Stops indexer.
      */
+    @Override
     public Command stopIndexer() {
         return runOnce(() -> {
             indexerMotor.set(0);
@@ -51,9 +53,10 @@ public class Indexer extends SubsystemBase {
     /**
      * Reverses indexer.
      */
+    @Override
     public Command reverseIndexer() {
         return runOnce(() -> {
-            indexerMotor.set(kIndexer.SPEED * -1);
+            indexerMotor.set(kIndexer.INDEXER_SPEED * -1);
         });
     }
 }
