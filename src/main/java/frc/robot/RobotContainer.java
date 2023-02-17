@@ -134,10 +134,10 @@ public class RobotContainer {
             )
         );
 
-        // Move to april tag id 2
-        // oi.getDriverController().rightBumper().onTrue(
-        //     swerve.moveToAprilTag(2, null)
-        // );
+        // Move to nearest april tag
+        oi.getDriverController().rightBumper().onTrue(
+            swerve.moveToNearestAprilTag(null)
+        );
 
         // // Reset odo
         oi.getDriverController().povUp().onTrue(
@@ -148,23 +148,23 @@ public class RobotContainer {
             swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
         );
 
-        oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToAprilTag(7, null)
+        oi.getDriverController().povRight().onTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
         );
 
         // Lower arm
-        // oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-        //     arm.moveArm(ArmPos.LOWERED),
-        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-        //     intake.retractIntake()
-        // ));
+        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.LOWERED),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            intake.retractIntake()
+        ));
 
         // Raise arm to score at L2
-        // oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-        //     intake.extendIntake(),
-        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-        //     arm.moveArm(ArmPos.L2_SCORING)
-        // ));
+        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            arm.moveArm(ArmPos.L2_SCORING)
+        ));
 
         // Score item to relese cube
         oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
@@ -191,5 +191,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autos.getAuto();
+
     }
 }
