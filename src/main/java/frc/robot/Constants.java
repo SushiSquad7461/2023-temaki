@@ -174,7 +174,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 1;
             public static final int ANGLE_MOTOR_ID = 3;
             public static final int CAN_CODER_ID = 2;
-            public static final double ANGLE_OFFSET = 89.648438;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 89.648438;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 229.130859;
+                        break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -185,7 +197,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 10;
             public static final int ANGLE_MOTOR_ID = 12;
             public static final int CAN_CODER_ID = 11;
-            public static final double ANGLE_OFFSET = 195.380859;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 195.380859;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 2.109375;
+                        break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -196,7 +220,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 4;
             public static final int ANGLE_MOTOR_ID = 6;
             public static final int CAN_CODER_ID = 5;
-            public static final double ANGLE_OFFSET = 67.675781;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 67.675781;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 303.574219;
+                        break;
+                }
+            }
+            
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -207,7 +243,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 7;
             public static final int ANGLE_MOTOR_ID = 9;
             public static final int CAN_CODER_ID = 8;
-            public static final double ANGLE_OFFSET = 69.785156;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 69.785156;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 16.083984;
+                        break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );

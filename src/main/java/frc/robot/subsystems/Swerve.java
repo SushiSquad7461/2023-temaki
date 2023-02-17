@@ -303,6 +303,10 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());
+
+        for (SwerveModule urmom : swerveMods) {
+            SmartDashboard.putNumber("CanCoder angle" + urmom.moduleNumber, urmom.getCanCoder().getDegrees());
+        }
         
         // Loop through all measurements and add it to pose estimator
         List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
