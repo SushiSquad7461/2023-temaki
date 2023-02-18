@@ -84,7 +84,7 @@ public final class Constants {
 
         // arm pneumatic
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 2;  
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
 
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
