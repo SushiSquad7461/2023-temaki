@@ -37,8 +37,8 @@ public class Intake extends SubsystemBase {
 
         solenoidRight = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
-            kPorts.PNEUMATIC_FORWARD_CHANNEL_RIGHT, 
-            kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT
+            kPorts.PNEUMATIC_FORWARD_CHANNEL, 
+            kPorts.PNEUMATIC_REVERSE_CHANNEL
         );
 
         solenoidRight.set(Value.kReverse);

@@ -29,7 +29,6 @@ public class AlphaArm extends Arm {
     private final TunableNumber targetPos;
     private static AlphaArm instance;
     private final ArmFeedforward armFeedforward;
-
     private SparkMaxPIDController leftMotorPid;
 
     /**

@@ -34,7 +34,7 @@ import java.io.IOException;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean TUNING_MODE = false;
+    public static final boolean TUNING_MODE = true;
     public static final double STICK_DEADBAND = 0.1;
 
     enum RobotNames {
@@ -42,18 +42,18 @@ public final class Constants {
         BETA
     }
 
-    public static final RobotNames ROBOT_NAME;
+    public static final RobotNames ROBOT_NAME = RobotNames.BETA;
 
-    static {
-        switch (RobotName.getInstance().getName()) {
-          case "alpha":
-              ROBOT_NAME = RobotNames.ALPHA;
-              break;
-          default:
-              ROBOT_NAME = RobotNames.BETA;
-              break;
-        }
-    }
+    // static {
+    //     switch (RobotName.getInstance().getName()) {
+    //       case "alpha":
+    //           ROBOT_NAME = RobotNames.ALPHA;
+    //           break;
+    //       default:
+    //           ROBOT_NAME = RobotNames.BETA;
+    //           break;
+    //     }
+    // }
 
     /**
      * Defines port values.
@@ -65,11 +65,26 @@ public final class Constants {
         public static final int CONE_RAMP_MOTOR = 25;
         public static final int INTAKE_MOTOR_ID = 20;
 
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 0;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
+        // intake pneumatic
+        public static final int PNEUMATIC_FORWARD_CHANNEL;
+        public static final int PNEUMATIC_REVERSE_CHANNEL;
 
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    PNEUMATIC_FORWARD_CHANNEL = 5;
+                    PNEUMATIC_REVERSE_CHANNEL = 6;
+                    break;
+                default:
+                    PNEUMATIC_FORWARD_CHANNEL = 0;
+                    PNEUMATIC_REVERSE_CHANNEL = 1;
+                    break;
+            }
+        }
+
+        // arm pneumatic
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 2;  
 
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
@@ -315,8 +330,21 @@ public final class Constants {
     public static final class kArm {
         public static final double GEAR_RATIO;
 
-        public static final boolean LEFT_INVERSION = true;
-        public static final boolean RIGHT_INVERSION = true;
+        public static final boolean LEFT_INVERSION;
+        public static final boolean RIGHT_INVERSION;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    LEFT_INVERSION = true;
+                    RIGHT_INVERSION = true;
+                    break;
+                default:
+                    LEFT_INVERSION = false;
+                    RIGHT_INVERSION = false;
+                    break;
+            }
+        }
 
         public static final int LEFT_CURRENT_LIMIT = 25;
         public static final int RIGHT_CURRENT_LIMIT = 25;
@@ -327,7 +355,18 @@ public final class Constants {
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
-        public static final double ENCODER_ANGLE_OFFSET = 233.6;
+        public static final double ENCODER_ANGLE_OFFSET;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    ENCODER_ANGLE_OFFSET = 233.6;
+                    break;
+                default:
+                    ENCODER_ANGLE_OFFSET = 198.428918;
+                    break;
+            }
+        }
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
 
         public static final double KP;
@@ -342,7 +381,7 @@ public final class Constants {
         static {
             switch (ROBOT_NAME) {
               case ALPHA:
-                  GEAR_RATIO = 72;
+                  GEAR_RATIO = 72.0;
 
                   KP = 0.0150000;
                   KI = 0.0;
@@ -354,14 +393,14 @@ public final class Constants {
                   KA = 0.0019367;
                   break;
               default:
-                  GEAR_RATIO = 0;
+                  GEAR_RATIO = 96.67;
 
                   KP = 0.0;
                   KI = 0.0;
                   KD = 0.0;
                   KF = 0.0;
                   KS = 0.0;
-                  KG = 0.0;
+                  KG = 0.6;
                   KV = 0.0;
                   KA = 0.0;
                   break;

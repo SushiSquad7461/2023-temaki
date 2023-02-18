@@ -18,7 +18,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.BetaArm;
 import frc.robot.subsystems.indexer.AlphaIndexer;
+import frc.robot.subsystems.indexer.BetaIndexer;
+import frc.robot.subsystems.indexer.Indexer;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -28,8 +32,8 @@ public class RobotContainer {
     private final Intake intake;
     private final OI oi;
     private final AutoCommands autos;
-    private final AlphaArm arm;
-    private final AlphaIndexer indexer;
+    private final Arm arm;
+    private final Indexer indexer;
     private final Manipulator manipulator;
     private boolean intakeToggled = false;
 
@@ -42,9 +46,19 @@ public class RobotContainer {
 
         swerve = Swerve.getInstance();
         intake = Intake.getInstance();
-        arm = AlphaArm.getInstance();
+
+        switch (Constants.ROBOT_NAME) {
+            case ALPHA:
+                arm = AlphaArm.getInstance();
+                indexer = AlphaIndexer.getInstance();
+                break;
+            default:
+                arm = BetaArm.getInstance();
+                indexer = BetaIndexer.getInstance();
+                break;
+        }
+
         oi = OI.getInstance();
-        indexer = AlphaIndexer.getInstance();
         manipulator = Manipulator.getInstance();
 
         autos = new AutoCommands(swerve);
@@ -130,6 +144,14 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                     toggleIntakeReversal();
+                }
+            )
+        );
+
+        oi.getDriverController().b().onTrue(
+            new InstantCommand(
+                () -> {
+                    manipulator.cone();
                 }
             )
         );

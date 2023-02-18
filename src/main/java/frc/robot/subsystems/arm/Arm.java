@@ -13,7 +13,7 @@ public abstract class Arm extends SubsystemBase {
      *
      * @return position in degrees
      */
-    public abstract double getAbsolutePosition();
+    // public abstract double getAbsolutePosition();
 
     /**
      * Sets arm to a certain position.
