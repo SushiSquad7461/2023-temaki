@@ -65,14 +65,11 @@ public final class Constants {
         public static final int CONE_RAMP_MOTOR = 25;
         public static final int INTAKE_MOTOR_ID = 20;
 
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 3;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0;
-
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 0;
         public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
 
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 1;  
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
 
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
@@ -179,10 +176,10 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                     case ALPHA:
-                        ANGLE_OFFSET = 89.648438;
+                        ANGLE_OFFSET = 195.380859;
                         break;
                     default:
-                        ANGLE_OFFSET = 229.130859-180;
+                        ANGLE_OFFSET = 2.109375+180;
                         break;
                 }
             }
@@ -202,10 +199,10 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                     case ALPHA:
-                        ANGLE_OFFSET = 195.380859;
+                        ANGLE_OFFSET = 89.648438;
                         break;
                     default:
-                        ANGLE_OFFSET = 2.109375+180;
+                        ANGLE_OFFSET = 229.130859-180;
                         break;
                 }
             }
@@ -225,10 +222,10 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                     case ALPHA:
-                        ANGLE_OFFSET = 67.675781;
+                        ANGLE_OFFSET = 69.785156;
                         break;
                     default:
-                        ANGLE_OFFSET = 303.574219-180;
+                        ANGLE_OFFSET = 16.083984+180;
                         break;
                 }
             }
@@ -248,10 +245,10 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                     case ALPHA:
-                        ANGLE_OFFSET = 69.785156;
+                        ANGLE_OFFSET = 67.675781;
                         break;
                     default:
-                        ANGLE_OFFSET = 16.083984+180;
+                        ANGLE_OFFSET = 303.574219-180;
                         break;
                 }
             }

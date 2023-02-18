@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
         motorIntake.burnFlash();
 
         solenoidRight = new DoubleSolenoid(
-            PneumaticsModuleType.CTREPCM, 
+            PneumaticsModuleType.REVPH, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL_RIGHT, 
             kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT
         );
