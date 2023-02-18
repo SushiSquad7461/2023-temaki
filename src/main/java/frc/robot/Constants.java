@@ -34,7 +34,7 @@ import java.io.IOException;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final boolean TUNING_MODE = true;
+    public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
 
     enum RobotNames {
@@ -98,7 +98,19 @@ public final class Constants {
      * Constants for indexer.
      */
     public static class kIndexer {
-        public static final double INDEXER_SPEED = 0.7;
+        public static final double INDEXER_SPEED;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    INDEXER_SPEED = 0.7;
+                    break;
+                default:
+                    INDEXER_SPEED = -0.7;
+                    break;
+            }
+        }
+
         public static final double CONE_RAMP_SPEED = 0.7;
     }
 
@@ -375,6 +387,8 @@ public final class Constants {
         public static final double KF;
         public static final double KS;
         public static final double KG;
+        public static final double KGR;
+        public static final double KGE;
         public static final double KV;
         public static final double KA;
 
@@ -389,18 +403,22 @@ public final class Constants {
                   KF = 0.0;
                   KS = 0.32245;
                   KG = 0.42;
+                  KGE = 0;
+                  KGR = 0;
                   KV = 0.018286;
                   KA = 0.0019367;
                   break;
               default:
                   GEAR_RATIO = 96.67;
 
-                  KP = 0.0;
+                  KP = 0.015;
                   KI = 0.0;
                   KD = 0.0;
                   KF = 0.0;
                   KS = 0.0;
-                  KG = 0.6;
+                  KG = 0.0;
+                  KGR = 0.6;
+                  KGE = 1.2;
                   KV = 0.0;
                   KA = 0.0;
                   break;
@@ -415,7 +433,7 @@ public final class Constants {
             CONE_PICKUP_ALLIGMENT(100),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(75),
-            L3_SCORING(0);
+            L3_SCORING(100);
 
             private double angle;
 

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kArm.ArmPos;
@@ -34,7 +35,8 @@ public class BetaArm extends Arm {
     private final TunableNumber armF;
     private final TunableNumber targetPos;
     private static BetaArm instance;
-    private final ArmFeedforward armFeedforward;
+    private final ArmFeedforward armFeedforwardRetracted;
+    private final ArmFeedforward armFeedforwardExtended;
     private SparkMaxPIDController leftMotorPid;
     private final DutyCycleEncoder absoluteEncoder;
 
@@ -55,10 +57,17 @@ public class BetaArm extends Arm {
         armF = new TunableNumber("Arm F", kArm.KF, Constants.TUNING_MODE);
         targetPos = new TunableNumber("Target Pos", 0, Constants.TUNING_MODE);
 
-        armFeedforward = new ArmFeedforward(
+        armFeedforwardRetracted = new ArmFeedforward(
             Constants.kArm.KS, 
-            Constants.kArm.KG, 
+            Constants.kArm.KGR, 
             Constants.kArm.KV, 
+            Constants.kArm.KA
+        );
+
+        armFeedforwardExtended = new ArmFeedforward(
+            Constants.kArm.KS,
+            Constants.kArm.KGE,
+            Constants.kArm.KV,
             Constants.kArm.KA
         );
 
@@ -120,6 +129,10 @@ public class BetaArm extends Arm {
         return target - getAbsolutePosition();
     }
 
+    public void toggleSolenoid() {
+        solenoid.toggle();
+    }
+
     /**
      * Sets the position of the arm to a certain angle.
      */
@@ -132,15 +145,27 @@ public class BetaArm extends Arm {
 
         targetPos.setDefault(degree);
 
-        leftMotorPid.setReference(
-            degree, 
-            CANSparkMax.ControlType.kPosition,
-            0, 
-            armFeedforward.calculate(
-                Units.degreesToRadians(degree - kArm.FEEDFORWARD_ANGLE_OFFSET),
-                0
-            )
-        );
+        if(solenoid.get() == Value.kForward) {
+            leftMotorPid.setReference(
+                degree, 
+                CANSparkMax.ControlType.kPosition,
+                0, 
+                armFeedforwardExtended.calculate(
+                    Units.degreesToRadians(degree - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                    0
+                )
+            );
+        } else {
+            leftMotorPid.setReference(
+                degree, 
+                CANSparkMax.ControlType.kPosition,
+                0, 
+                armFeedforwardRetracted.calculate(
+                    Units.degreesToRadians(degree - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                    0
+                )
+            );
+        }
     }
 
     private boolean isAtPos(double degrees) {
@@ -176,13 +201,15 @@ public class BetaArm extends Arm {
         }
     }
 
+    @Override
     public Command moveArm(ArmPos angle) {
         return new SequentialCommandGroup(
             new InstantCommand(
                 () -> {
-                    if (angle != ArmPos.L3_SCORING) {
+                    if (angle != ArmPos.L3_SCORING)
                         retractArm();
-                    }
+                    if(angle == ArmPos.LOWERED)
+                        new WaitCommand(5).schedule();
                 }
             ),
             moveArm(angle.getAngle()),

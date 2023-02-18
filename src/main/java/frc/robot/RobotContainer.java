@@ -156,7 +156,15 @@ public class RobotContainer {
             )
         );
 
-        // Move to april tag id 2
+        oi.getDriverController().a().onTrue(
+                new InstantCommand(
+                    () -> {
+                        ((BetaArm)arm).toggleSolenoid();
+                    }
+                )
+        );
+
+        // Move to april t
         // oi.getDriverController().rightBumper().onTrue(
         //     swerve.moveToAprilTag(2, null)
         // );
@@ -173,15 +181,15 @@ public class RobotContainer {
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME)
+            //intake.retractIntake()
         ));
 
         // Raise arm to score at L2
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
+            //intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING)
+            arm.moveArm(ArmPos.L3_SCORING)
         ));
 
         // Score item to relese cube
@@ -200,7 +208,7 @@ public class RobotContainer {
 
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
+            //intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
         ));
