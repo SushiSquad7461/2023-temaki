@@ -7,6 +7,7 @@ package frc.robot;
 import SushiFrcLib.DependencyInjection.RobotName;
 import SushiFrcLib.Swerve.SwerveModuleConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
@@ -138,9 +139,8 @@ public final class Constants {
         public static final double MAX_ANGULAR_VELOCITY = 10; // 11.5
         public static final double MAX_ANGULAR_ACCELERATION = 20; // 11.5
 
-        public static final PIDController X_CONTROLLER = new PIDController(1, 0, 0);
-        public static final PIDController Y_CONTROLLER = new PIDController(1, 0, 0);
-        public static final PIDController ANGLE_CONTROLLER = new PIDController(2, 0, 0);
+        public static final PIDConstants TRANSLATION_CONTROLLER = new PIDConstants(1, 0, 0);
+        public static final PIDConstants ANGLE_CONTROLLER = new PIDConstants(2, 0, 0);
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -315,7 +315,7 @@ public final class Constants {
      */
     public static final class kCommandTimmings {
         public static final double PNEUMATIC_WAIT_TIME = 0.7;
-        public static final double MANIPULATOR_WAIT_TIME = 1;
+        public static final double MANIPULATOR_WAIT_TIME = 0.5;
     }
 
     /**

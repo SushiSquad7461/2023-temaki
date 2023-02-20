@@ -29,6 +29,7 @@ public class Manipulator extends SubsystemBase {
         motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
         motor.setInverted(true);
         motor.burnFlash();
+
     }
 
     /**
@@ -45,7 +46,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command coneReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED);
+            motor.set(kManipulator.SPEED*3);
         });
     }
 
@@ -63,7 +64,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cubeReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * -1.0);
+            motor.set(kManipulator.SPEED * -3.0);
         });
     }
 

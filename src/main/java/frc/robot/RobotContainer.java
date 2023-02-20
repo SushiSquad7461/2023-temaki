@@ -48,7 +48,7 @@ public class RobotContainer {
         indexer = Indexer.getInstance();
         manipulator = Manipulator.getInstance();
 
-        autos = new AutoCommands(swerve);
+        autos = new AutoCommands();
 
         configureButtonBindings();
     }
@@ -70,7 +70,7 @@ public class RobotContainer {
                         indexer.runIndexer(), 
                         manipulator.cube()
                     ), 
-                    new WaitCommand(1.5), 
+                    new WaitCommand(0.5), 
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
                         indexer.stopIndexer(), 
