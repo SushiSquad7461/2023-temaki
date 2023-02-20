@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 
 /**
  * Class that controls falcon swerve drivetrain.
@@ -50,7 +52,7 @@ public class Swerve extends SubsystemBase {
     }
 
     private Swerve() {
-        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION);
+        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION, kPorts.CANIVORE_NAME);
         gyro.zeroGyro();
         
         field = new Field2d();

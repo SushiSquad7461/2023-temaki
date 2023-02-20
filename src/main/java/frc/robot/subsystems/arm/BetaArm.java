@@ -212,6 +212,7 @@ public class BetaArm extends Arm {
                         new WaitCommand(5).schedule();
                 }
             ),
+            angle == ArmPos.LOWERED ? new WaitCommand(3): new WaitCommand(0), 
             moveArm(angle.getAngle()),
             new InstantCommand(
                 () -> {

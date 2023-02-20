@@ -148,21 +148,18 @@ public class RobotContainer {
             )
         );
 
-        oi.getDriverController().b().onTrue(
-            new InstantCommand(
-                () -> {
-                    manipulator.cone();
-                }
-            )
-        );
 
-        oi.getDriverController().a().onTrue(
-                new InstantCommand(
-                    () -> {
-                        ((BetaArm)arm).toggleSolenoid();
-                    }
-                )
-        );
+        oi.getDriverController().y().onTrue(
+            new SequentialCommandGroup(
+                intake.reverseIntake(),
+                indexer.runIndexer(),
+                manipulator.cubeReverse()
+            )
+        ).onFalse(new SequentialCommandGroup(
+            intake.stopIntake(),
+            indexer.stopIndexer(),
+            manipulator.stop()
+        ));
 
         // Move to april t
         // oi.getDriverController().rightBumper().onTrue(
