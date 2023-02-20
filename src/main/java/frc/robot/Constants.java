@@ -155,10 +155,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.6, 0.6, 0.1);
+            VecBuilder.fill(1.2, 1.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.3, 0.3, 0.5);
+            VecBuilder.fill(1.8, 1.8, 1.2);
 
         /* Module Specific Constants */
 
@@ -213,9 +213,9 @@ public final class Constants {
     public static final class kAutoAlign {
         
         /** PID tolerance */
-        public static final double X_TOLLERENCE = 0.03;
-        public static final double Y_TOLLERENCE = 0.03;
-        public static final double THETA_TOLLERENCE = 0.03;
+        public static final double X_TOLLERENCE = 0.01;
+        public static final double Y_TOLLERENCE = 0.02;
+        public static final double THETA_TOLLERENCE = 0.02;
 
         /** Pid values */
         public static final double X_P = 10.0;
@@ -226,12 +226,12 @@ public final class Constants {
         public static final double Y_I = 0.0;
         public static final double Y_D = 0.75;
         
-        public static final double THETA_P = 12.0;
+        public static final double THETA_P = 8.0;
         public static final double THETA_I = 0.0;
         public static final double THETA_D = 0.9;
 
         /** Default offset value. */
-        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.1, 0);
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.0, 0);
     }
 
     /**
@@ -292,7 +292,7 @@ public final class Constants {
          */
         public enum ArmPos {
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(100),
+            CONE_PICKUP_ALLIGMENT(91.5), // Change this for double substation 90.5 too low
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(80),
             L3_SCORING(0);
@@ -322,7 +322,7 @@ public final class Constants {
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 0.25;
+        public static final double SPEED = 0.4;
     }
 
     /** Vision constants. */
@@ -350,7 +350,7 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(2.691), 
             Units.inchesToMeters(6),
-            Units.inchesToMeters(26.75)
+            Units.inchesToMeters(27.75)
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(

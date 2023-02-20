@@ -135,28 +135,41 @@ public class RobotContainer {
         );
 
         // Move to april tag id 2
-        oi.getDriverController().rightBumper().onTrue(
+        oi.getDriverController().rightBumper().whileTrue(
             swerve.moveToNearestAprilTag(null)
         );
 
         // // Reset odo
-        oi.getDriverController().povUp().onTrue(
+        oi.getDriverController().povDown().onTrue(
             swerve.resetOdometryToBestAprilTag()
         );
 
-        oi.getDriverController().povLeft().onTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
+        // TODO: add alliance based substation selection
+        oi.getDriverController().povUp().onTrue(
+            new SequentialCommandGroup(
+                swerve.moveToAprilTag(4, new Translation2d(1.1, -0.2))
+                // new SequentialCommandGroup(
+                //     intake.extendIntake(),
+                //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+                //     arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
+                // ),
+                // swerve.moveToAprilTag(4, new Translation2d(0.9, -0.2))
+            )
         );
 
-        oi.getDriverController().povRight().onTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
+        oi.getDriverController().povLeft().whileTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.8, 0.6))
+        );
+
+        oi.getDriverController().povRight().whileTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.8, -0.6))
         );
 
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.LOWERED),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            manipulator.stop()
         ));
 
         // Raise arm to score at L2
@@ -176,7 +189,8 @@ public class RobotContainer {
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+            manipulator.cone()
         ));
 
         // pickup cone
