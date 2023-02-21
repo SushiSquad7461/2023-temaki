@@ -43,18 +43,18 @@ public final class Constants {
         BETA
     }
 
-    public static final RobotNames ROBOT_NAME;
+    public static final RobotNames ROBOT_NAME = RobotNames.BETA;
 
-    static {
-        switch (RobotName.getInstance().getName()) {
-          case "alpha":
-              ROBOT_NAME = RobotNames.ALPHA;
-              break;
-          default:
-              ROBOT_NAME = RobotNames.BETA;
-              break;
-        }
-    }
+    // static {
+    //     switch (RobotName.getInstance().getName()) {
+    //       case "alpha":
+    //           ROBOT_NAME = RobotNames.ALPHA;
+    //           break;
+    //       default:
+    //           ROBOT_NAME = RobotNames.BETA;
+    //           break;
+    //     }
+    // }
 
     /**
      * Defines port values.
@@ -63,12 +63,38 @@ public final class Constants {
         public static final String CANIVORE_NAME = "Sussy Squad";
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
+        public static final int CONE_RAMP_MOTOR = 25;
         public static final int INTAKE_MOTOR_ID = 20;
+<<<<<<< HEAD
         public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 7;
         public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 4;
 
         public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 6;
         public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 5;  
+=======
+
+        // intake pneumatic
+        public static final int PNEUMATIC_FORWARD_CHANNEL;
+        public static final int PNEUMATIC_REVERSE_CHANNEL;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    PNEUMATIC_FORWARD_CHANNEL = 5;
+                    PNEUMATIC_REVERSE_CHANNEL = 6;
+                    break;
+                default:
+                    PNEUMATIC_FORWARD_CHANNEL = 0;
+                    PNEUMATIC_REVERSE_CHANNEL = 1;
+                    break;
+            }
+        }
+
+        // arm pneumatic
+        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
+
+>>>>>>> beta-code
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -81,7 +107,20 @@ public final class Constants {
      * Constants for indexer.
      */
     public static class kIndexer {
-        public static final double SPEED = 0.7;
+        public static final double INDEXER_SPEED;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    INDEXER_SPEED = 0.7;
+                    break;
+                default:
+                    INDEXER_SPEED = -0.7;
+                    break;
+            }
+        }
+
+        public static final double CONE_RAMP_SPEED = 0.7;
     }
 
     /**
@@ -167,7 +206,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 1;
             public static final int ANGLE_MOTOR_ID = 3;
             public static final int CAN_CODER_ID = 2;
-            public static final double ANGLE_OFFSET = 89.648438;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 195.380859;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 2.109375+180;
+                        break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -178,7 +229,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 10;
             public static final int ANGLE_MOTOR_ID = 12;
             public static final int CAN_CODER_ID = 11;
-            public static final double ANGLE_OFFSET = 195.380859;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 89.648438;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 229.130859-180;
+                        break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -189,7 +252,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 4;
             public static final int ANGLE_MOTOR_ID = 6;
             public static final int CAN_CODER_ID = 5;
-            public static final double ANGLE_OFFSET = 67.675781;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 69.785156;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 16.083984+180;
+                        break;
+                }
+            }
+            
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -200,7 +275,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 7;
             public static final int ANGLE_MOTOR_ID = 9;
             public static final int CAN_CODER_ID = 8;
-            public static final double ANGLE_OFFSET = 69.785156;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                    case ALPHA:
+                        ANGLE_OFFSET = 67.675781;
+                        break;
+                    default:
+                        ANGLE_OFFSET = 303.574219-180;
+                        break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -261,10 +348,23 @@ public final class Constants {
      * Arm values.
      */
     public static final class kArm {
-        public static final double GEAR_RATIO = 72.00;
+        public static final double GEAR_RATIO;
 
-        public static final boolean LEFT_INVERSION = true;
-        public static final boolean RIGHT_INVERSION = true;
+        public static final boolean LEFT_INVERSION;
+        public static final boolean RIGHT_INVERSION;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    LEFT_INVERSION = true;
+                    RIGHT_INVERSION = true;
+                    break;
+                default:
+                    LEFT_INVERSION = false;
+                    RIGHT_INVERSION = false;
+                    break;
+            }
+        }
 
         public static final int LEFT_CURRENT_LIMIT = 25;
         public static final int RIGHT_CURRENT_LIMIT = 25;
@@ -272,20 +372,66 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double KP = 0.0150000; // 0.015
-        public static final double KI = 0.0;
-        public static final double KD = 0.0;
-        public static final double KF = 0.0;
-        public static final double KS = 0.32245;
-        public static final double KG = 0.42; //0.42
-        public static final double KV = 0.018286;
-        public static final double KA = 0.0019367;
-
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
-        public static final double ENCODER_ANGLE_OFFSET = 233.6;
-        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
+        public static final double ENCODER_ANGLE_OFFSET;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    ENCODER_ANGLE_OFFSET = 233.6;
+                    break;
+                default:
+                    ENCODER_ANGLE_OFFSET = 198.428918;
+                    break;
+            }
+        }
+        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+
+        public static final double KP;
+        public static final double KI;
+        public static final double KD;
+        public static final double KF;
+        public static final double KS;
+        public static final double KG;
+        public static final double KGR;
+        public static final double KGE;
+        public static final double KV;
+        public static final double KA;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  GEAR_RATIO = 72.0;
+
+                  KP = 0.0150000;
+                  KI = 0.0;
+                  KD = 0.0;
+                  KF = 0.0;
+                  KS = 0.32245;
+                  KG = 0.42;
+                  KGE = 0;
+                  KGR = 0;
+                  KV = 0.018286;
+                  KA = 0.0019367;
+                  break;
+              default:
+                  GEAR_RATIO = 96.67;
+
+                  KP = 0.015;
+                  KI = 0.0;
+                  KD = 0.0;
+                  KF = 0.0;
+                  KS = 0.0;
+                  KG = 0.0;
+                  KGR = 0.6;
+                  KGE = 1.2;
+                  KV = 0.0;
+                  KA = 0.0;
+                  break;
+            }
+        }
 
         /**
          * Enum for arm angles.
@@ -294,8 +440,13 @@ public final class Constants {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(100),
             CONE_PICKUP_LOWERED(75),
+<<<<<<< HEAD
             L2_SCORING(80),
             L3_SCORING(0);
+=======
+            L2_SCORING(75),
+            L3_SCORING(100);
+>>>>>>> beta-code
 
             private double angle;
 

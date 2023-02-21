@@ -22,6 +22,15 @@
     },
     "transitory": {
       "SmartDashboard": {
+<<<<<<< HEAD
+=======
+        "Field": {
+          "open": true
+        },
+        "TunableNumbers": {
+          "open": true
+        },
+>>>>>>> beta-code
         "open": true
       }
     },
@@ -45,7 +54,16 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT3)",
+    "mode": "Client (NT4)",
     "serverTeam": "7461"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 332
+        }
+      ]
+    }
   }
 }

@@ -15,7 +15,6 @@ import frc.robot.Constants.kPorts;
  */
 public class Intake extends SubsystemBase {
     private CANSparkMax motorIntake;
-    private final DoubleSolenoid solenoidLeft;
     private final DoubleSolenoid solenoidRight;
 
     private static Intake instance;
@@ -36,6 +35,7 @@ public class Intake extends SubsystemBase {
         motorIntake.setInverted(true);
         motorIntake.burnFlash();
 
+<<<<<<< HEAD
         solenoidLeft = new DoubleSolenoid(
             PneumaticsModuleType.CTREPCM, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL_LEFT, 
@@ -45,9 +45,14 @@ public class Intake extends SubsystemBase {
             PneumaticsModuleType.CTREPCM, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL_RIGHT, 
             kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT
+=======
+        solenoidRight = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH, 
+            kPorts.PNEUMATIC_FORWARD_CHANNEL, 
+            kPorts.PNEUMATIC_REVERSE_CHANNEL
+>>>>>>> beta-code
         );
 
-        solenoidLeft.set(Value.kReverse);
         solenoidRight.set(Value.kReverse);
     }
 
@@ -65,7 +70,7 @@ public class Intake extends SubsystemBase {
      */
     public Command extendIntake() {
         return runOnce(() -> {
-            if (solenoidLeft.get() == Value.kReverse) {
+            if (solenoidRight.get() == Value.kReverse) {
                 toggleIntake();
             }
         });
@@ -85,7 +90,7 @@ public class Intake extends SubsystemBase {
      */
     public Command retractIntake() {
         return runOnce(() -> {
-            if (solenoidLeft.get() == Value.kForward) {
+            if (solenoidRight.get() == Value.kForward) {
                 toggleIntake();
             }
         });
@@ -101,7 +106,6 @@ public class Intake extends SubsystemBase {
     }
 
     private void toggleIntake() {
-        solenoidLeft.toggle();
         solenoidRight.toggle();
     }
 }

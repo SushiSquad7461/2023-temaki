@@ -14,12 +14,19 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
 import frc.robot.commands.TeleopSwerveDrive;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+<<<<<<< HEAD
 import frc.robot.util.CommandFactories;
+=======
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.BetaArm;
+import frc.robot.subsystems.indexer.AlphaIndexer;
+import frc.robot.subsystems.indexer.BetaIndexer;
+import frc.robot.subsystems.indexer.Indexer;
+>>>>>>> beta-code
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -29,7 +36,7 @@ public class RobotContainer {
     private final Intake intake;
     private final OI oi;
     private final AutoCommands autos;
-    private final AlphaArm arm;
+    private final Arm arm;
     private final Indexer indexer;
     private final Manipulator manipulator;
     private boolean intakeToggled = false;
@@ -43,9 +50,19 @@ public class RobotContainer {
 
         swerve = Swerve.getInstance();
         intake = Intake.getInstance();
-        arm = AlphaArm.getInstance();
+
+        switch (Constants.ROBOT_NAME) {
+            case ALPHA:
+                arm = AlphaArm.getInstance();
+                indexer = AlphaIndexer.getInstance();
+                break;
+            default:
+                arm = BetaArm.getInstance();
+                indexer = BetaIndexer.getInstance();
+                break;
+        }
+
         oi = OI.getInstance();
-        indexer = Indexer.getInstance();
         manipulator = Manipulator.getInstance();
 
         autos = new AutoCommands();
@@ -134,10 +151,30 @@ public class RobotContainer {
             )
         );
 
+<<<<<<< HEAD
         // Move to nearest april tag
         oi.getDriverController().rightBumper().onTrue(
             swerve.moveToNearestAprilTag(null)
         );
+=======
+
+        oi.getDriverController().y().onTrue(
+            new SequentialCommandGroup(
+                intake.reverseIntake(),
+                indexer.runIndexer(),
+                manipulator.cubeReverse()
+            )
+        ).onFalse(new SequentialCommandGroup(
+            intake.stopIntake(),
+            indexer.stopIndexer(),
+            manipulator.stop()
+        ));
+
+        // Move to april t
+        // oi.getDriverController().rightBumper().onTrue(
+        //     swerve.moveToAprilTag(2, null)
+        // );
+>>>>>>> beta-code
 
         // // Reset odo
         oi.getDriverController().povUp().onTrue(
@@ -155,15 +192,15 @@ public class RobotContainer {
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME)
+            //intake.retractIntake()
         ));
 
         // Raise arm to score at L2
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
+            //intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING)
+            arm.moveArm(ArmPos.L3_SCORING)
         ));
 
         // Score item to relese cube
@@ -174,7 +211,7 @@ public class RobotContainer {
 
         // cone pick up from substation
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
+            //intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
         ));
