@@ -35,22 +35,10 @@ public class Intake extends SubsystemBase {
         motorIntake.setInverted(true);
         motorIntake.burnFlash();
 
-<<<<<<< HEAD
-        solenoidLeft = new DoubleSolenoid(
-            PneumaticsModuleType.CTREPCM, 
-            kPorts.PNEUMATIC_FORWARD_CHANNEL_LEFT, 
-            kPorts.PNEUMATIC_REVERSE_CHANNEL_LEFT
-        );
-        solenoidRight = new DoubleSolenoid(
-            PneumaticsModuleType.CTREPCM, 
-            kPorts.PNEUMATIC_FORWARD_CHANNEL_RIGHT, 
-            kPorts.PNEUMATIC_REVERSE_CHANNEL_RIGHT
-=======
         solenoidRight = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL, 
             kPorts.PNEUMATIC_REVERSE_CHANNEL
->>>>>>> beta-code
         );
 
         solenoidRight.set(Value.kReverse);

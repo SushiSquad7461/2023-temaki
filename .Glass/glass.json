@@ -22,15 +22,12 @@
     },
     "transitory": {
       "SmartDashboard": {
-<<<<<<< HEAD
-=======
         "Field": {
           "open": true
         },
         "TunableNumbers": {
           "open": true
         },
->>>>>>> beta-code
         "open": true
       }
     },

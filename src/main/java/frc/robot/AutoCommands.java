@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kSwerve;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.BetaArm;
+import frc.robot.subsystems.indexer.BetaIndexer;
 import frc.robot.util.CommandFactories;
 
 import java.util.ArrayList;
@@ -47,10 +49,10 @@ public class AutoCommands {
 
     public AutoCommands() {
         this.swerve = Swerve.getInstance();
-        this.indexer = Indexer.getInstance();
+        this.indexer = BetaIndexer.getInstance();
         this.intake = Intake.getInstance();
         this.manipulator = Manipulator.getInstance();
-        this.arm = AlphaArm.getInstance();
+        this.arm = BetaArm.getInstance();
 
         eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake()));
         eventMap.put("intakeUp", new SequentialCommandGroup(

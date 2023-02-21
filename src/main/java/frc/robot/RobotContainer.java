@@ -18,15 +18,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
-<<<<<<< HEAD
-import frc.robot.util.CommandFactories;
-=======
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.BetaArm;
 import frc.robot.subsystems.indexer.AlphaIndexer;
 import frc.robot.subsystems.indexer.BetaIndexer;
 import frc.robot.subsystems.indexer.Indexer;
->>>>>>> beta-code
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -151,12 +147,6 @@ public class RobotContainer {
             )
         );
 
-<<<<<<< HEAD
-        // Move to nearest april tag
-        oi.getDriverController().rightBumper().onTrue(
-            swerve.moveToNearestAprilTag(null)
-        );
-=======
 
         oi.getDriverController().y().onTrue(
             new SequentialCommandGroup(
@@ -174,7 +164,6 @@ public class RobotContainer {
         // oi.getDriverController().rightBumper().onTrue(
         //     swerve.moveToAprilTag(2, null)
         // );
->>>>>>> beta-code
 
         // // Reset odo
         oi.getDriverController().povUp().onTrue(
@@ -203,11 +192,11 @@ public class RobotContainer {
             arm.moveArm(ArmPos.L3_SCORING)
         ));
 
-        // Score item to relese cube
-        oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
+        // // Score item to relese cube
+        // oi.getOperatorController().x().onTrue(CommandFactories.getCubeScore(intake, arm, manipulator));
 
-        // Score item to relese cone
-        oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
+        // // Score item to relese cone
+        // oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
 
         // cone pick up from substation
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(

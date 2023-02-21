@@ -65,13 +65,6 @@ public final class Constants {
         public static final int INDEXER_MOTOR = 21;
         public static final int CONE_RAMP_MOTOR = 25;
         public static final int INTAKE_MOTOR_ID = 20;
-<<<<<<< HEAD
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 7;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 4;
-
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 6;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 5;  
-=======
 
         // intake pneumatic
         public static final int PNEUMATIC_FORWARD_CHANNEL;
@@ -94,7 +87,6 @@ public final class Constants {
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
         public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
 
->>>>>>> beta-code
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -440,13 +432,8 @@ public final class Constants {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(100),
             CONE_PICKUP_LOWERED(75),
-<<<<<<< HEAD
-            L2_SCORING(80),
-            L3_SCORING(0);
-=======
             L2_SCORING(75),
             L3_SCORING(100);
->>>>>>> beta-code
 
             private double angle;
 
