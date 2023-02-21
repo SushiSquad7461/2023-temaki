@@ -75,7 +75,8 @@ public class RobotContainer {
             (
                 new SequentialCommandGroup(
                     intake.extendIntake(), 
-                    intake.runIntake()
+                    intake.runIntake(),
+                    indexer.runIndexer()
                 )
             ).schedule();
         } else {
@@ -148,6 +149,18 @@ public class RobotContainer {
                 () -> {
                     toggleIntakeReversal();
                 }
+            )
+        );
+
+        oi.getDriverController().x().onTrue(
+            new SequentialCommandGroup(
+                intake.extendIntake(),
+                ((BetaIntake)intake).cubeShoot()
+            )
+        ).onFalse(
+            new SequentialCommandGroup(
+                intake.retractIntake(),
+                intake.stopIntake()
             )
         );
 
