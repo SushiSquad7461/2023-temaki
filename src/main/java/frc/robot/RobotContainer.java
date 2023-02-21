@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
 import frc.robot.commands.TeleopSwerveDrive;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -23,6 +22,9 @@ import frc.robot.subsystems.arm.BetaArm;
 import frc.robot.subsystems.indexer.AlphaIndexer;
 import frc.robot.subsystems.indexer.BetaIndexer;
 import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.intake.AlphaIntake;
+import frc.robot.subsystems.intake.BetaIntake;
+import frc.robot.subsystems.intake.Intake;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -45,16 +47,17 @@ public class RobotContainer {
         SmartDashboard.putString("Robot Name", Constants.ROBOT_NAME.toString());
 
         swerve = Swerve.getInstance();
-        intake = Intake.getInstance();
 
         switch (Constants.ROBOT_NAME) {
             case ALPHA:
                 arm = AlphaArm.getInstance();
                 indexer = AlphaIndexer.getInstance();
+                intake = AlphaIntake.getInstance();
                 break;
             default:
                 arm = BetaArm.getInstance();
                 indexer = BetaIndexer.getInstance();
+                intake = BetaIntake.getInstance();
                 break;
         }
 
@@ -151,14 +154,18 @@ public class RobotContainer {
 
         oi.getDriverController().y().onTrue(
             new SequentialCommandGroup(
-                intake.reverseIntake(),
+                ((BetaIntake)intake).coneIntake(),
                 indexer.runIndexer(),
-                manipulator.cubeReverse()
+                manipulator.cone()
             )
-        ).onFalse(new SequentialCommandGroup(
+        ).onFalse(new ParallelCommandGroup(
             intake.stopIntake(),
-            indexer.stopIndexer(),
-            manipulator.stop()
+            new SequentialCommandGroup(
+                manipulator.cone(),
+                new WaitCommand(0),
+                indexer.stopIndexer(),
+                manipulator.stop()
+            )
         ));
 
         // Move to april t
