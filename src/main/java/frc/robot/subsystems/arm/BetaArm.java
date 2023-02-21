@@ -206,10 +206,9 @@ public class BetaArm extends Arm {
         return new SequentialCommandGroup(
             new InstantCommand(
                 () -> {
+                    resetArm();
                     if (angle != ArmPos.L3_SCORING)
                         retractArm();
-                    if(angle == ArmPos.LOWERED)
-                        new WaitCommand(5).schedule();
                 }
             ),
             angle == ArmPos.LOWERED ? new WaitCommand(3): new WaitCommand(0), 
@@ -249,6 +248,10 @@ public class BetaArm extends Arm {
         SmartDashboard.putNumber("Left Motor Voltage", leftMotor.getOutputCurrent());
         SmartDashboard.putNumber("Right Motor Voltage", rightMotor.getOutputCurrent());
         SmartDashboard.putNumber("ur moms absolute encoder", getAbsolutePosition());
+
+        if (Math.abs(getAbsolutePosition() - leftMotor.getEncoder().getPosition()) > 1) {
+            resetArm();
+        }
 
         update();
     }
