@@ -65,6 +65,7 @@ public final class Constants {
         public static final int INDEXER_MOTOR = 21;
         public static final int CONE_RAMP_MOTOR = 25;
         public static final int INTAKE_MOTOR_ID = 20;
+        public static final int INTAKE_TOP_MOTOR_ID = 26;
 
         // intake pneumatic
         public static final int PNEUMATIC_FORWARD_CHANNEL;
@@ -112,7 +113,7 @@ public final class Constants {
             }
         }
 
-        public static final double CONE_RAMP_SPEED = 0.7;
+        public static final double CONE_RAMP_SPEED = 0.5;
     }
 
     /**
@@ -460,7 +461,7 @@ public final class Constants {
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 0.25;
+        public static final double SPEED = 0.75;
     }
 
     /** Vision constants. */

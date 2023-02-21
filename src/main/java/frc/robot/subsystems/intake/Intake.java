@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -13,28 +13,14 @@ import frc.robot.Constants.kPorts;
 /**
  * Class that controls a cube intake.
  */
-public class Intake extends SubsystemBase {
-    private CANSparkMax motorIntake;
+public abstract class Intake extends SubsystemBase {
     private final DoubleSolenoid solenoidRight;
-
-    private static Intake instance;
-
     /**
      * Gets instance for singleton.
      */
-    public static Intake getInstance() {
-        if (instance == null) {
-            instance = new Intake();
-        }
-        return instance;
-    }
 
 
-    private Intake() {
-        motorIntake = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
-        motorIntake.setInverted(true);
-        motorIntake.burnFlash();
-
+    public Intake() {
         solenoidRight = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL, 
@@ -47,12 +33,7 @@ public class Intake extends SubsystemBase {
     /**
      * Makes sure intake is extended and turns on motor.
      */
-    public Command runIntake() {
-        return runOnce(() -> {
-            motorIntake.set(kIntake.MOTOR_SPEED);
-        });
-    }
-
+    public abstract Command runIntake();
     /**
      * Extends intake.
      */
@@ -67,11 +48,7 @@ public class Intake extends SubsystemBase {
     /**
      * Makes sure intake is retracted and turns of motor. 
      */
-    public Command stopIntake() {
-        return runOnce(() -> {
-            motorIntake.set(0);
-        });
-    }
+    public abstract Command stopIntake();
 
     /**
      * Retracts intake.
@@ -87,11 +64,7 @@ public class Intake extends SubsystemBase {
     /**
      * Reverses intake.
      */
-    public Command reverseIntake() {
-        return runOnce(() -> {
-            motorIntake.set(-kIntake.MOTOR_SPEED);
-        });
-    }
+    public abstract Command reverseIntake();
 
     private void toggleIntake() {
         solenoidRight.toggle();
