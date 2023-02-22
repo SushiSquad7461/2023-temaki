@@ -7,12 +7,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kIndexer;
 import frc.robot.Constants.kPorts;
+import frc.robot.subsystems.util.MotorTest;
+import frc.robot.subsystems.util.Neo;
 
 /**
  * Controls indexer subsytem.
  */
 public class Indexer extends SubsystemBase {
     private final CANSparkMax indexerMotor;
+    private MotorTest motorTest;
 
     private static Indexer instance;
 
@@ -28,6 +31,9 @@ public class Indexer extends SubsystemBase {
 
     private Indexer() {
         indexerMotor = MotorHelper.createSparkMax(kPorts.INDEXER_MOTOR, MotorType.kBrushless);
+        Neo neoIndexer = new Neo(indexerMotor);
+        motorTest = MotorTest.getInstance();
+        motorTest.registerMotor(neoIndexer, "Indexer Subsystem", "indexer", neoIndexer.canID, 0);
     }
 
     /**

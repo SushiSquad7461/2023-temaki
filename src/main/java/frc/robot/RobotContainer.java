@@ -19,6 +19,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.subsystems.util.MotorTest;
 import frc.robot.util.CommandFactories;
 
 /**
@@ -41,6 +42,7 @@ public class RobotContainer {
     public RobotContainer() {
         SmartDashboard.putString("Robot Name", Constants.ROBOT_NAME.toString());
 
+        MotorTest motorTest = MotorTest.getInstance();
         swerve = Swerve.getInstance();
         intake = Intake.getInstance();
         arm = AlphaArm.getInstance();
