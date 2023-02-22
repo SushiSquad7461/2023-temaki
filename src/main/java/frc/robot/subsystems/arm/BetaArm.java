@@ -28,7 +28,8 @@ import frc.robot.Constants.kPorts;
 public class BetaArm extends Arm {
     private final CANSparkMax leftMotor;
     private final CANSparkMax rightMotor;
-    private final DoubleSolenoid solenoid;
+    private final DoubleSolenoid solenoidLeft;
+    private final DoubleSolenoid solenoidRight;
     private final TunableNumber armP;
     private final TunableNumber armI;
     private final TunableNumber armD;
@@ -98,13 +99,20 @@ public class BetaArm extends Arm {
         // absoluteEncoder = leftMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
         absoluteEncoder = new DutyCycleEncoder(kPorts.ENCODER_CHANNEL);
 
-        solenoid = new DoubleSolenoid(
+        solenoidLeft = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL_ARM, 
             kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM
         );
 
-        solenoid.set(Value.kReverse);
+        solenoidRight = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH, 
+            kPorts.PNEUMATIC_FORWARD_CHANNEL_ARM2, 
+            kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM2
+        );
+
+        solenoidLeft.set(Value.kReverse);
+        solenoidRight.set(Value.kReverse);
 
         leftMotorPid = leftMotor.getPIDController();
 
@@ -130,7 +138,8 @@ public class BetaArm extends Arm {
     }
 
     public void toggleSolenoid() {
-        solenoid.toggle();
+        solenoidLeft.toggle();
+        solenoidRight.toggle();
     }
 
     /**
@@ -145,7 +154,7 @@ public class BetaArm extends Arm {
 
         targetPos.setDefault(degree);
 
-        if(solenoid.get() == Value.kForward) {
+        if(solenoidLeft.get() == Value.kForward) {
             leftMotorPid.setReference(
                 degree, 
                 CANSparkMax.ControlType.kPosition,
@@ -224,14 +233,16 @@ public class BetaArm extends Arm {
     }
 
     public void extendArm() {
-        if (solenoid.get() != Value.kForward) {
-            solenoid.toggle();
+        if (solenoidLeft.get() != Value.kForward) {
+            solenoidLeft.toggle();
+            solenoidRight.toggle();
         }
     }
 
     public void retractArm() {
-        if (solenoid.get() != Value.kReverse) {
-            solenoid.toggle();
+        if (solenoidLeft.get() != Value.kReverse) {
+            solenoidLeft.toggle();
+            solenoidRight.toggle();
         }
     }
 

@@ -37,7 +37,7 @@ public class BetaIntake extends Intake {
         bottom.setInverted(true);
         bottom.burnFlash();
 
-        top = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
+        top = new CANSparkMax(kPorts.INTAKE_TOP_MOTOR_ID, MotorType.kBrushless);
         top.setInverted(false);
         top.burnFlash();
     }

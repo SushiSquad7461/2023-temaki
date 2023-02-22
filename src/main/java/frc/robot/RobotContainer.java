@@ -210,6 +210,12 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
+        oi.getDriverController().x().onTrue(
+            new InstantCommand(
+
+            )
+        );
+
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             //intake.extendIntake(),
