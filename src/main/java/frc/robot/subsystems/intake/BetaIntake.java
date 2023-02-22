@@ -2,12 +2,8 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kPorts;
 
@@ -33,7 +29,7 @@ public class BetaIntake extends Intake {
 
     private BetaIntake() {
         super();
-        bottom = new CANSparkMax(kPorts.INTAKE_MOTOR_ID, MotorType.kBrushless);
+        bottom = new CANSparkMax(kPorts.INTAKE_BOTTOM_MOTOR_ID, MotorType.kBrushless);
         bottom.setInverted(true);
         bottom.burnFlash();
 
@@ -71,7 +67,10 @@ public class BetaIntake extends Intake {
             top.set(-kIntake.MOTOR_SPEED);
         });
     }
-    
+   
+    /**
+     * Intake cones using cone ramp.
+     */
     public Command coneIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
@@ -79,6 +78,9 @@ public class BetaIntake extends Intake {
         });
     }
 
+    /**
+     * Shoot out cubes.
+     */
     public Command cubeShoot() {
         return runOnce(() -> {
             bottom.set(kIntake.MOTOR_SPEED);

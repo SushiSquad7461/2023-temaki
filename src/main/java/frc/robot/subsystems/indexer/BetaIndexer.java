@@ -1,13 +1,15 @@
 package frc.robot.subsystems.indexer;
 
+import SushiFrcLib.Motor.MotorHelper;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import SushiFrcLib.Motor.MotorHelper;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kIndexer;
 import frc.robot.Constants.kPorts;
 
+/**
+ * Implements a indexer for temaki.
+ */
 public class BetaIndexer extends Indexer {
     private final CANSparkMax indexerMotor;
     private final CANSparkMax coneRamp;

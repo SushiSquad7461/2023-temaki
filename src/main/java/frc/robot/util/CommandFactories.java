@@ -8,7 +8,6 @@ import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.arm.AlphaArm;
-import frc.robot.subsystems.arm.Arm;
 
 public class CommandFactories {
     public static Command getConeScore(Intake intake, AlphaArm arm, Manipulator manipulator) {
