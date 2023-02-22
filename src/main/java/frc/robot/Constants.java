@@ -433,7 +433,7 @@ public final class Constants {
          */
         public enum ArmPos {
             LOWERED(3),
-            CONE_PICKUP_ALLIGMENT(100),
+            CONE_PICKUP_ALLIGMENT(97),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(75),
             L3_SCORING(100);
@@ -464,6 +464,8 @@ public final class Constants {
      */
     public static final class kManipulator {
         public static final double SPEED = 0.75;
+        public static final int CURRENT_LIMITING = 40;
+        public static final int MAX_CURRENT = 30;
     }
 
     /** Vision constants. */

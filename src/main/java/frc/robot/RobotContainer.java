@@ -234,8 +234,8 @@ public class RobotContainer {
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             //intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+            manipulator.cone()
         ));
 
         // pickup cone
