@@ -432,7 +432,7 @@ public final class Constants {
          * Enum for arm angles.
          */
         public enum ArmPos {
-            LOWERED(0),
+            LOWERED(3),
             CONE_PICKUP_ALLIGMENT(100),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(75),

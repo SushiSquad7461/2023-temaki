@@ -35,6 +35,7 @@ public class BetaArm extends Arm {
     private final TunableNumber armD;
     private final TunableNumber armF;
     private final TunableNumber targetPos;
+    private double targetDegrees;
     private static BetaArm instance;
     private final ArmFeedforward armFeedforwardRetracted;
     private final ArmFeedforward armFeedforwardExtended;
@@ -125,7 +126,7 @@ public class BetaArm extends Arm {
         ); //degrees per second
 
         rightMotor.follow(leftMotor, true);
-
+        targetDegrees = getAbsolutePosition();
         resetArm();
     }
 
@@ -146,6 +147,7 @@ public class BetaArm extends Arm {
      * Sets the position of the arm to a certain angle.
      */
     public void setPosition(double degree) {
+        targetDegrees = degree;
         if (degree < 0) {
             degree = 0;
         } else if (degree > kArm.MAX_POSITION) {
@@ -220,7 +222,7 @@ public class BetaArm extends Arm {
                         retractArm();
                 }
             ),
-            angle == ArmPos.LOWERED ? new WaitCommand(3): new WaitCommand(0), 
+            angle == ArmPos.LOWERED ? new WaitCommand(1): new WaitCommand(0), 
             moveArm(angle.getAngle()),
             new InstantCommand(
                 () -> {
@@ -236,6 +238,15 @@ public class BetaArm extends Arm {
         if (solenoidLeft.get() != Value.kForward) {
             solenoidLeft.toggle();
             solenoidRight.toggle();
+            leftMotorPid.setReference(
+                targetDegrees, 
+                CANSparkMax.ControlType.kPosition,
+                0, 
+                armFeedforwardRetracted.calculate(
+                    Units.degreesToRadians(targetDegrees - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                    0
+                )
+            );
         }
     }
 
@@ -243,6 +254,15 @@ public class BetaArm extends Arm {
         if (solenoidLeft.get() != Value.kReverse) {
             solenoidLeft.toggle();
             solenoidRight.toggle();
+            leftMotorPid.setReference(
+                targetDegrees, 
+                CANSparkMax.ControlType.kPosition,
+                0, 
+                armFeedforwardExtended.calculate(
+                    Units.degreesToRadians(targetDegrees - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                    0
+                )
+            );
         }
     }
 

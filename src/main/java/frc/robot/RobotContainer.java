@@ -154,11 +154,13 @@ public class RobotContainer {
 
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
+                indexer.reverseIndexer(),
                 intake.extendIntake(),
                 ((BetaIntake)intake).cubeShoot()
             )
         ).onFalse(
             new SequentialCommandGroup(
+                indexer.stopIndexer(),
                 intake.retractIntake(),
                 intake.stopIntake()
             )
@@ -223,9 +225,9 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
-        oi.getDriverController().x().onTrue(
+        oi.getOperatorController().leftTrigger().onTrue(
             new InstantCommand(
-
+               () ->  ((BetaArm)arm).toggleSolenoid()
             )
         );
 
