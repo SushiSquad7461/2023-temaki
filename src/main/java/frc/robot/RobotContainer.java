@@ -37,8 +37,6 @@ public class RobotContainer {
     private final Arm arm;
     private final Indexer indexer;
     private final Manipulator manipulator;
-    private boolean intakeToggled = false;
-
 
     /**
      * Instaite subsystems and commands.
@@ -47,79 +45,133 @@ public class RobotContainer {
         SmartDashboard.putString("Robot Name", Constants.ROBOT_NAME.toString());
 
         swerve = Swerve.getInstance();
-
-        switch (Constants.ROBOT_NAME) {
-            case ALPHA:
-                arm = AlphaArm.getInstance();
-                indexer = AlphaIndexer.getInstance();
-                intake = AlphaIntake.getInstance();
-                break;
-            default:
-                arm = BetaArm.getInstance();
-                indexer = BetaIndexer.getInstance();
-                intake = BetaIntake.getInstance();
-                break;
-        }
-
         oi = OI.getInstance();
         manipulator = Manipulator.getInstance();
-
         autos = new AutoCommands(swerve);
+
+        switch (Constants.ROBOT_NAME) {
+          case ALPHA:
+              arm = AlphaArm.getInstance();
+              indexer = AlphaIndexer.getInstance();
+              intake = AlphaIntake.getInstance();
+              configureAlphaButtonBindings();
+              break;
+          default:
+              arm = BetaArm.getInstance();
+              indexer = BetaIndexer.getInstance();
+              intake = BetaIntake.getInstance();
+              configureBetaButtonBindings();
+              break;
+        }
 
         configureButtonBindings();
     }
 
-    private void toggleIntake() {
-        intakeToggled = !intakeToggled;
-        if (intakeToggled) {
-            (
-                new SequentialCommandGroup(
-                    intake.extendIntake(), 
-                    intake.runIntake(),
-                    indexer.runIndexer()
-                )
-            ).schedule();
-        } else {
-            (
-                new SequentialCommandGroup(
-                    intake.retractIntake(), 
-                    new ParallelCommandGroup(
-                        indexer.runIndexer(), 
-                        manipulator.cube()
-                    ), 
-                    new WaitCommand(1.5), 
-                    new ParallelCommandGroup(
-                        intake.stopIntake(), 
-                        indexer.stopIndexer(), 
-                        manipulator.holdCube()
+    /**
+     * Configures button bindings for alpha.
+     */
+    public void configureAlphaButtonBindings() {
+        oi.getDriverController().rightBumper().whileTrue(
+            swerve.moveToNearestAprilTag(null)
+        );
 
-                    )
-                )
-            ).schedule();
-        }
+        // // Reset odo
+        oi.getDriverController().povDown().onTrue(
+            swerve.resetOdometryToBestAprilTag()
+        );
+
+        // TODO: add alliance based substation selection
+        oi.getDriverController().povUp().onTrue(
+            new SequentialCommandGroup(
+                swerve.moveToAprilTag(4, new Translation2d(1.1, -0.2))
+            )
+        );
+
+        oi.getDriverController().povLeft().whileTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.8, 0.6))
+        );
+
+        oi.getDriverController().povRight().whileTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.8, -0.6))
+        );
+
+        // raise arm for cone
+        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+            manipulator.cone()
+        ));
+
+        // Lower arm
+        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.LOWERED),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            intake.retractIntake()
+        ));
+
+        // Raise arm to score at L2
+        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+            intake.extendIntake(),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            arm.moveArm(ArmPos.L3_SCORING)
+        ));
     }
 
-    private void toggleIntakeReversal() {
-        intakeToggled = !intakeToggled;
-        if (intakeToggled) {
-            (
-                new SequentialCommandGroup(
-                    intake.extendIntake(),
-                    new ParallelCommandGroup( 
-                        intake.reverseIntake(),
-                        manipulator.cubeReverse()
-                    )
-                )
-            ).schedule();
-        } else {
-            (
-                new SequentialCommandGroup(
-                    manipulator.stop(),
-                    intake.retractIntake(), 
-                    intake.stopIntake()
-                )
-            ).schedule();
-        }
+    /**
+     * Configures button bindings for beta.
+     */
+    public void configureBetaButtonBindings() {
+        oi.getDriverController().x().onTrue(
+            new SequentialCommandGroup(
+                indexer.reverseIndexer(),
+                intake.extendIntake(),
+                ((BetaIntake) intake).cubeShoot()
+            )
+        ).onFalse(
+            new SequentialCommandGroup(
+                indexer.stopIndexer(),
+                intake.retractIntake(),
+                intake.stopIntake()
+            )
+        );
+
+        oi.getDriverController().y().onTrue(
+            new SequentialCommandGroup(
+                ((BetaIntake) intake).coneIntake(),
+                indexer.runIndexer(),
+                manipulator.cone()
+            )
+        ).onFalse(new ParallelCommandGroup(
+            intake.stopIntake(),
+            new SequentialCommandGroup(
+                manipulator.cone(),
+                new WaitCommand(0),
+                indexer.stopIndexer(),
+                manipulator.stop()
+            )
+        ));
+
+        oi.getOperatorController().leftTrigger().onTrue(
+            new InstantCommand(
+                () -> ((BetaArm) arm).toggleSolenoid()
+            )
+        );
+
+        // raise arm for cone
+        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+            manipulator.cone()
+        ));
+
+        // Lower arm
+        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.LOWERED)
+        ));
+
+        // Raise arm to score at L2
+        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L3_SCORING)
+        ));
     }
 
     private void configureButtonBindings() {
@@ -152,65 +204,6 @@ public class RobotContainer {
             )
         );
 
-        oi.getDriverController().x().onTrue(
-            new SequentialCommandGroup(
-                indexer.reverseIndexer(),
-                intake.extendIntake(),
-                ((BetaIntake)intake).cubeShoot()
-            )
-        ).onFalse(
-            new SequentialCommandGroup(
-                indexer.stopIndexer(),
-                intake.retractIntake(),
-                intake.stopIntake()
-            )
-        );
-
-
-        oi.getDriverController().y().onTrue(
-            new SequentialCommandGroup(
-                ((BetaIntake)intake).coneIntake(),
-                indexer.runIndexer(),
-                manipulator.cone()
-            )
-        ).onFalse(new ParallelCommandGroup(
-            intake.stopIntake(),
-            new SequentialCommandGroup(
-                manipulator.cone(),
-                new WaitCommand(0),
-                indexer.stopIndexer(),
-                manipulator.stop()
-            )
-        ));
-
-        // Move to april t
-        // oi.getDriverController().rightBumper().onTrue(
-        //     swerve.moveToAprilTag(2, null)
-        // );
-
-        // // Reset odo
-        // oi.getDriverController().povUp().onTrue(
-        //     swerve.resetOdometryToBestAprilTag()
-        // );
-
-        // oi.getDriverController().povLeft().onTrue(
-        //     swerve.moveToAprilTag(2, new Translation2d(0.65, 0.5))
-        // );
-
-        // Lower arm
-        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME)
-            //intake.retractIntake()
-        ));
-
-        // Raise arm to score at L2
-        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-            //intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L3_SCORING)
-        ));
-
         // Score item to relese cube
         oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
             manipulator.cubeReverse(),
@@ -225,19 +218,6 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
-        oi.getOperatorController().leftTrigger().onTrue(
-            new InstantCommand(
-               () ->  ((BetaArm)arm).toggleSolenoid()
-            )
-        );
-
-        // raise arm for cone
-        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
-            //intake.extendIntake(),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            manipulator.cone()
-        ));
-
         // pickup cone
         oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
             manipulator.cone(),
@@ -246,6 +226,57 @@ public class RobotContainer {
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.stop()
         ));
+    }
+
+    private void toggleIntake() {
+        if (!intake.isIn()) {
+            (
+                new SequentialCommandGroup(
+                    intake.extendIntake(), 
+                    intake.runIntake(),
+                    indexer.runIndexer()
+                )
+            ).schedule();
+        } else {
+            (
+                new SequentialCommandGroup(
+                    intake.retractIntake(), 
+                    new ParallelCommandGroup(
+                        indexer.runIndexer(), 
+                        manipulator.cube()
+                    ), 
+                    new WaitCommand(1.5), 
+                    new ParallelCommandGroup(
+                        intake.stopIntake(), 
+                        indexer.stopIndexer(), 
+                        manipulator.holdCube()
+
+                    )
+                )
+            ).schedule();
+        }
+    }
+
+    private void toggleIntakeReversal() {
+        if (!intake.isIn()) {
+            (
+                new SequentialCommandGroup(
+                    intake.extendIntake(),
+                    new ParallelCommandGroup(
+                        intake.reverseIntake(),
+                        manipulator.cubeReverse()
+                    )
+                )
+            ).schedule();
+        } else {
+            (
+                new SequentialCommandGroup(
+                    manipulator.stop(),
+                    intake.retractIntake(), 
+                    intake.stopIntake()
+                )
+            ).schedule();
+        }
     }
 
     public Command getAutonomousCommand() {

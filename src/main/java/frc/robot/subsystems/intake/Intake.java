@@ -11,20 +11,23 @@ import frc.robot.Constants.kPorts;
  * Class that controls a cube intake.
  */
 public abstract class Intake extends SubsystemBase {
-    private final DoubleSolenoid solenoidRight;
+    private final DoubleSolenoid solenoid;
+
     /**
-     * Gets instance for singleton.
+     * Creates a solenoid intake.
      */
-
-
     public Intake() {
-        solenoidRight = new DoubleSolenoid(
+        solenoid = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL, 
             kPorts.PNEUMATIC_REVERSE_CHANNEL
         );
 
-        solenoidRight.set(Value.kReverse);
+        solenoid.set(Value.kReverse);
+    }
+
+    public boolean isIn() {
+        return solenoid.get() == Value.kReverse;
     }
 
     /**
@@ -37,7 +40,7 @@ public abstract class Intake extends SubsystemBase {
      */
     public Command extendIntake() {
         return runOnce(() -> {
-            if (solenoidRight.get() == Value.kReverse) {
+            if (solenoid.get() == Value.kReverse) {
                 toggleIntake();
             }
         });
@@ -53,7 +56,7 @@ public abstract class Intake extends SubsystemBase {
      */
     public Command retractIntake() {
         return runOnce(() -> {
-            if (solenoidRight.get() == Value.kForward) {
+            if (solenoid.get() == Value.kForward) {
                 toggleIntake();
             }
         });
@@ -65,6 +68,6 @@ public abstract class Intake extends SubsystemBase {
     public abstract Command reverseIntake();
 
     private void toggleIntake() {
-        solenoidRight.toggle();
+        solenoid.toggle();
     }
 }
