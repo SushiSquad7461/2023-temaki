@@ -79,6 +79,13 @@ public class BetaIntake extends Intake {
         });
     }
 
+    public Command cubeShoot() {
+        return runOnce(() -> {
+            bottom.set(kIntake.MOTOR_SPEED);
+            top.set(-kIntake.MOTOR_SPEED);
+        });
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Top intake current", top.getOutputCurrent());

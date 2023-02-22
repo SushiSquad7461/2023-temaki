@@ -114,14 +114,14 @@ public final class Constants {
             }
         }
 
-        public static final double CONE_RAMP_SPEED = 0.5;
+        public static final double CONE_RAMP_SPEED = 0.1;
     }
 
     /**
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.5;
+        public static final double MOTOR_SPEED = 0.3;
     }
     
     /**
