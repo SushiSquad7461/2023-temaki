@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intake.BetaIntake;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -50,7 +51,7 @@ public class AutoCommands {
     public AutoCommands() {
         this.swerve = Swerve.getInstance();
         this.indexer = BetaIndexer.getInstance();
-        this.intake = Intake.getInstance();
+        this.intake = BetaIntake.getInstance();
         this.manipulator = Manipulator.getInstance();
         this.arm = BetaArm.getInstance();
 

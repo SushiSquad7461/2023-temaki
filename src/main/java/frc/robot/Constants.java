@@ -88,6 +88,8 @@ public final class Constants {
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
         public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
 
+        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM2 = 4;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM2 = 6;
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -113,14 +115,14 @@ public final class Constants {
             }
         }
 
-        public static final double CONE_RAMP_SPEED = 0.5;
+        public static final double CONE_RAMP_SPEED = 0.1;
     }
 
     /**
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.5;
+        public static final double MOTOR_SPEED = 0.3;
     }
     
     /**
@@ -430,8 +432,8 @@ public final class Constants {
          * Enum for arm angles.
          */
         public enum ArmPos {
-            LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(100),
+            LOWERED(3),
+            CONE_PICKUP_ALLIGMENT(97),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(75),
             L3_SCORING(100);
@@ -462,6 +464,8 @@ public final class Constants {
      */
     public static final class kManipulator {
         public static final double SPEED = 0.75;
+        public static final int CURRENT_LIMITING = 40;
+        public static final int MAX_CURRENT = 30;
     }
 
     /** Vision constants. */

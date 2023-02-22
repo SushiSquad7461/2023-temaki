@@ -75,7 +75,8 @@ public class RobotContainer {
             (
                 new SequentialCommandGroup(
                     intake.extendIntake(), 
-                    intake.runIntake()
+                    intake.runIntake(),
+                    indexer.runIndexer()
                 )
             ).schedule();
         } else {
@@ -150,6 +151,20 @@ public class RobotContainer {
             )
         );
 
+        oi.getDriverController().x().onTrue(
+            new SequentialCommandGroup(
+                indexer.reverseIndexer(),
+                intake.extendIntake(),
+                ((BetaIntake)intake).cubeShoot()
+            )
+        ).onFalse(
+            new SequentialCommandGroup(
+                indexer.stopIndexer(),
+                intake.retractIntake(),
+                intake.stopIntake()
+            )
+        );
+
 
         oi.getDriverController().y().onTrue(
             new SequentialCommandGroup(
@@ -205,11 +220,17 @@ public class RobotContainer {
         // // Score item to relese cone
         // oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
 
-        // cone pick up from substation
+        oi.getOperatorController().leftTrigger().onTrue(
+            new InstantCommand(
+               () ->  ((BetaArm)arm).toggleSolenoid()
+            )
+        );
+
+        // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             //intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT)
+            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+            manipulator.cone()
         ));
 
         // pickup cone

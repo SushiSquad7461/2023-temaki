@@ -28,12 +28,14 @@ import frc.robot.Constants.kPorts;
 public class BetaArm extends Arm {
     private final CANSparkMax leftMotor;
     private final CANSparkMax rightMotor;
-    private final DoubleSolenoid solenoid;
+    private final DoubleSolenoid solenoidLeft;
+    private final DoubleSolenoid solenoidRight;
     private final TunableNumber armP;
     private final TunableNumber armI;
     private final TunableNumber armD;
     private final TunableNumber armF;
     private final TunableNumber targetPos;
+    private double targetDegrees;
     private static BetaArm instance;
     private final ArmFeedforward armFeedforwardRetracted;
     private final ArmFeedforward armFeedforwardExtended;
@@ -98,13 +100,20 @@ public class BetaArm extends Arm {
         // absoluteEncoder = leftMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
         absoluteEncoder = new DutyCycleEncoder(kPorts.ENCODER_CHANNEL);
 
-        solenoid = new DoubleSolenoid(
+        solenoidLeft = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 
             kPorts.PNEUMATIC_FORWARD_CHANNEL_ARM, 
             kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM
         );
 
-        solenoid.set(Value.kReverse);
+        solenoidRight = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH, 
+            kPorts.PNEUMATIC_FORWARD_CHANNEL_ARM2, 
+            kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM2
+        );
+
+        solenoidLeft.set(Value.kReverse);
+        solenoidRight.set(Value.kReverse);
 
         leftMotorPid = leftMotor.getPIDController();
 
@@ -117,7 +126,7 @@ public class BetaArm extends Arm {
         ); //degrees per second
 
         rightMotor.follow(leftMotor, true);
-
+        targetDegrees = getAbsolutePosition();
         resetArm();
     }
 
@@ -130,13 +139,15 @@ public class BetaArm extends Arm {
     }
 
     public void toggleSolenoid() {
-        solenoid.toggle();
+        solenoidLeft.toggle();
+        solenoidRight.toggle();
     }
 
     /**
      * Sets the position of the arm to a certain angle.
      */
     public void setPosition(double degree) {
+        targetDegrees = degree;
         if (degree < 0) {
             degree = 0;
         } else if (degree > kArm.MAX_POSITION) {
@@ -145,7 +156,7 @@ public class BetaArm extends Arm {
 
         targetPos.setDefault(degree);
 
-        if(solenoid.get() == Value.kForward) {
+        if(solenoidLeft.get() == Value.kForward) {
             leftMotorPid.setReference(
                 degree, 
                 CANSparkMax.ControlType.kPosition,
@@ -211,7 +222,7 @@ public class BetaArm extends Arm {
                         retractArm();
                 }
             ),
-            angle == ArmPos.LOWERED ? new WaitCommand(3): new WaitCommand(0), 
+            angle == ArmPos.LOWERED ? new WaitCommand(1): new WaitCommand(0), 
             moveArm(angle.getAngle()),
             new InstantCommand(
                 () -> {
@@ -224,14 +235,34 @@ public class BetaArm extends Arm {
     }
 
     public void extendArm() {
-        if (solenoid.get() != Value.kForward) {
-            solenoid.toggle();
+        if (solenoidLeft.get() != Value.kForward) {
+            solenoidLeft.toggle();
+            solenoidRight.toggle();
+            leftMotorPid.setReference(
+                targetDegrees, 
+                CANSparkMax.ControlType.kPosition,
+                0, 
+                armFeedforwardRetracted.calculate(
+                    Units.degreesToRadians(targetDegrees - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                    0
+                )
+            );
         }
     }
 
     public void retractArm() {
-        if (solenoid.get() != Value.kReverse) {
-            solenoid.toggle();
+        if (solenoidLeft.get() != Value.kReverse) {
+            solenoidLeft.toggle();
+            solenoidRight.toggle();
+            leftMotorPid.setReference(
+                targetDegrees, 
+                CANSparkMax.ControlType.kPosition,
+                0, 
+                armFeedforwardExtended.calculate(
+                    Units.degreesToRadians(targetDegrees - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                    0
+                )
+            );
         }
     }
 
