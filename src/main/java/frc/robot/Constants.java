@@ -64,11 +64,16 @@ public final class Constants {
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
         public static final int INTAKE_MOTOR_ID = 20;
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 7;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 4;
 
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 6;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 5;  
+        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 3; //7
+        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 0; //4
+
+        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 2;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 1;  
+
+        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 1;  
+
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -261,7 +266,7 @@ public final class Constants {
      * Arm values.
      */
     public static final class kArm {
-        public static final double GEAR_RATIO = 72.00;
+        public static final double GEAR_RATIO;
 
         public static final boolean LEFT_INVERSION = true;
         public static final boolean RIGHT_INVERSION = true;
@@ -272,20 +277,49 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double KP = 0.0150000; // 0.015
-        public static final double KI = 0.0;
-        public static final double KD = 0.0;
-        public static final double KF = 0.0;
-        public static final double KS = 0.32245;
-        public static final double KG = 0.42; //0.42
-        public static final double KV = 0.018286;
-        public static final double KA = 0.0019367;
-
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
         public static final double ENCODER_ANGLE_OFFSET = 233.6;
-        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
+        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+
+        public static final double KP;
+        public static final double KI;
+        public static final double KD;
+        public static final double KF;
+        public static final double KS;
+        public static final double KG;
+        public static final double KV;
+        public static final double KA;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  GEAR_RATIO = 72;
+
+                  KP = 0.0150000;
+                  KI = 0.0;
+                  KD = 0.0;
+                  KF = 0.0;
+                  KS = 0.32245;
+                  KG = 0.42;
+                  KV = 0.018286;
+                  KA = 0.0019367;
+                  break;
+              default:
+                  GEAR_RATIO = 0;
+
+                  KP = 0.0;
+                  KI = 0.0;
+                  KD = 0.0;
+                  KF = 0.0;
+                  KS = 0.0;
+                  KG = 0.0;
+                  KV = 0.0;
+                  KA = 0.0;
+                  break;
+            }
+        }
 
         /**
          * Enum for arm angles.

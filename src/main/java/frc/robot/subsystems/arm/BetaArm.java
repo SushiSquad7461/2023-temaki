@@ -7,42 +7,45 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kPorts;
 
 /**
- * Implements arm ABC for alpha robot.
+ * Implementation of beta arm.
  */
-public class AlphaArm extends Arm {
+public class BetaArm extends Arm {
     private final CANSparkMax leftMotor;
     private final CANSparkMax rightMotor;
-    private final DutyCycleEncoder encoder;
+    private final DoubleSolenoid solenoid;
     private final TunableNumber armP;
     private final TunableNumber armI;
     private final TunableNumber armD;
     private final TunableNumber armF;
     private final TunableNumber targetPos;
-    private static AlphaArm instance;
+    private static BetaArm instance;
     private final ArmFeedforward armFeedforward;
-
     private SparkMaxPIDController leftMotorPid;
 
     /**
      * Gets current instance of arm. implements singelton.
      */
-    public static AlphaArm getInstance() {
+    public static BetaArm getInstance() {
         if (instance == null) {
-            instance = new AlphaArm();
+            instance = new BetaArm();
         }
         return instance;
     }
 
-    private AlphaArm() {
+    private BetaArm() {
         armP = new TunableNumber("Arm P", kArm.KP, Constants.TUNING_MODE);
         armI = new TunableNumber("Arm I", kArm.KI, Constants.TUNING_MODE);
         armD = new TunableNumber("Arm D", kArm.KD, Constants.TUNING_MODE);
@@ -80,7 +83,12 @@ public class AlphaArm extends Arm {
             armF.get()
         );
 
-        encoder = new DutyCycleEncoder(kPorts.ENCODER_CHANNEL);
+        solenoid = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH, 
+            kPorts.PNEUMATIC_FORWARD_CHANNEL_ARM, 
+            kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM
+        );
+        solenoid.set(Value.kReverse);
 
         leftMotorPid = leftMotor.getPIDController();
         leftMotor.getEncoder().setPositionConversionFactor(
@@ -92,17 +100,17 @@ public class AlphaArm extends Arm {
         ); //degrees per second
 
         rightMotor.follow(leftMotor, true);
+
         resetArm();
     }
 
     public double getAbsolutePosition() {
-        return (encoder.get() * 360.0) - kArm.ENCODER_ANGLE_OFFSET;
+        return leftMotor.getEncoder().getPosition();
     }
 
     public double getError(double target) {
         return target - getAbsolutePosition();
     }
-
 
     /**
      * Sets the position of the arm to a certain angle.
@@ -142,7 +150,10 @@ public class AlphaArm extends Arm {
         leftMotor.getEncoder().setVelocityConversionFactor(
             (360.0 / Constants.kArm.GEAR_RATIO) / 60.0
         );
-        leftMotor.getEncoder().setPosition(getAbsolutePosition());
+
+        leftMotor.getEncoder().setPosition(
+            leftMotor.getEncoder().getPosition() - kArm.ENCODER_ANGLE_OFFSET
+        );
     }
     
     /**
@@ -168,7 +179,35 @@ public class AlphaArm extends Arm {
     }
 
     public Command moveArm(ArmPos angle) {
-        return moveArm(angle.getAngle());
+        return new SequentialCommandGroup(
+            new InstantCommand(
+                () -> {
+                    if (angle != ArmPos.L3_SCORING) {
+                        retractArm();
+                    }
+                }
+            ),
+            moveArm(angle.getAngle()),
+            new InstantCommand(
+                () -> {
+                    if (angle == ArmPos.L3_SCORING) {
+                        extendArm();
+                    }
+                }
+            )
+        );
+    }
+
+    public void extendArm() {
+        if (solenoid.get() != Value.kForward) {
+            solenoid.toggle();
+        }
+    }
+
+    public void retractArm() {
+        if (solenoid.get() != Value.kReverse) {
+            solenoid.toggle();
+        }
     }
 
     private Command moveArm(double degrees) {
