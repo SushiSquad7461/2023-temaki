@@ -177,10 +177,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.6, 0.6, 0.1);
+            VecBuilder.fill(1.2, 1.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.3, 0.3, 0.5);
+            VecBuilder.fill(1.8, 1.8, 1.2);
 
         /* Module Specific Constants */
 
@@ -282,10 +282,10 @@ public final class Constants {
      */
     public static final class kAutoAlign {
         
-        /* PID tolerance */
-        public static final double X_TOLLERENCE = 0.03;
-        public static final double Y_TOLLERENCE = 0.03;
-        public static final double THETA_TOLLERENCE = 0.03;
+        /** PID tolerance */
+        public static final double X_TOLLERENCE = 0.01;
+        public static final double Y_TOLLERENCE = 0.02;
+        public static final double THETA_TOLLERENCE = 0.02;
 
         /* Pid values */
         public static final double X_P = 10.0;
@@ -296,12 +296,12 @@ public final class Constants {
         public static final double Y_I = 0.0;
         public static final double Y_D = 0.75;
         
-        public static final double THETA_P = 12.0;
+        public static final double THETA_P = 8.0;
         public static final double THETA_I = 0.0;
         public static final double THETA_D = 0.9;
 
         /** Default offset value. */
-        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.1, 0);
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.0, 0);
     }
 
     /**
@@ -476,7 +476,7 @@ public final class Constants {
         public static final Translation3d CAMERA_POS_METERS = new Translation3d(
             Units.inchesToMeters(2.691), 
             Units.inchesToMeters(6),
-            Units.inchesToMeters(26.75)
+            Units.inchesToMeters(27.75)
         );
 
         public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(

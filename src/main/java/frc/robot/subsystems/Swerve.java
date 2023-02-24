@@ -170,6 +170,13 @@ public class Swerve extends SubsystemBase {
         thetaPid.setTolerance(kAutoAlign.THETA_TOLLERENCE);
 
         return runOnce(() -> {
+            xaxisPid.calculate(swerveOdometry.getEstimatedPosition().getX());
+            yaxisPid.calculate(swerveOdometry.getEstimatedPosition().getY());
+            thetaPid.calculate(
+                        swerveOdometry.getEstimatedPosition().getRotation().getRadians()
+            );
+
+            SmartDashboard.putNumber("In Auto Align", 1);
             Translation2d offset = newOffset;
             // Give offset a default value
             if (offset == null) {
@@ -212,6 +219,8 @@ public class Swerve extends SubsystemBase {
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
         ).andThen(
             () -> { 
+                SmartDashboard.putNumber("In Auto Align", 0);
+
                 xaxisPid.close(); 
                 yaxisPid.close(); 
                 thetaPid.close(); 
@@ -309,7 +318,11 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());
-        
+
+        for (SwerveModule m : swerveMods) {
+            SmartDashboard.putNumber("Module Angle " + m.moduleNumber, m.getDriveSpeed());
+        }   
+
         // Loop through all measurements and add it to pose estimator
         List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
 
@@ -322,10 +335,7 @@ public class Swerve extends SubsystemBase {
         if (measurements != null) {
             for (VisionMeasurement measurement : measurements) {
                 // Skip measurement if it's more than a meter away
-                if (measurement.robotPose.getTranslation().getDistance(
-                    swerveOdometry.getEstimatedPosition().getTranslation()
-                    ) > 1.0
-                ) {
+                if (measurement.robotPose.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) > 1.0 && measurement.ambiguity > 0.1) {
                     continue;
                 }
         
