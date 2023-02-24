@@ -224,7 +224,7 @@ public class RobotContainer {
     }
 
     private void toggleIntake() {
-        if (!intake.isIn()) {
+        if (intake.isIn()) {
             (
                 new SequentialCommandGroup(
                     intake.extendIntake(), 
@@ -253,7 +253,7 @@ public class RobotContainer {
     }
 
     private void toggleIntakeReversal() {
-        if (!intake.isIn()) {
+        if (intake.isIn()) {
             (
                 new SequentialCommandGroup(
                     intake.extendIntake(),

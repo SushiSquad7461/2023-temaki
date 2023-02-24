@@ -12,6 +12,7 @@ import frc.robot.Constants.kPorts;
  */
 public abstract class Intake extends SubsystemBase {
     private final DoubleSolenoid solenoid;
+    private boolean intakeIn;
 
     /**
      * Creates a solenoid intake.
@@ -24,10 +25,11 @@ public abstract class Intake extends SubsystemBase {
         );
 
         solenoid.set(Value.kReverse);
+        intakeIn = true;
     }
 
     public boolean isIn() {
-        return solenoid.get() == Value.kReverse;
+        return intakeIn;
     }
 
     /**
@@ -69,5 +71,6 @@ public abstract class Intake extends SubsystemBase {
 
     private void toggleIntake() {
         solenoid.toggle();
+        intakeIn = !intakeIn;
     }
 }
