@@ -17,7 +17,9 @@ public class Neo extends Motor {
     }
 
     public ArrayList<String> getErrors() {
-        return allErrors;
+        ArrayList<String> ret = allErrors;
+        allErrors = new ArrayList<String>();
+        return ret;
     }
 
     @Override
@@ -28,19 +30,30 @@ public class Neo extends Motor {
         } else {
             errorChecker = motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         }
-        allErrors.add("\ncoast/brake of " + motor.getDeviceId() + " is " + errorChecker.toString());
+
+        if (errorChecker != REVLibError.kOk){
+            allErrors.add("\n coast/brake of " + motor.getDeviceId() + " is " + errorChecker.toString());
+        }
     }
 
     @Override
-    public void invertMotor(boolean flipped){
+    public void invertMotor(boolean flipped) {
         motor.setInverted(flipped);
     }
 
     @Override
-    public void setSpeed(double newSpeed){
+    public void setSpeed(double speed, boolean isJoystick) {
+        double newSpeed;
+        if (isJoystick) {
+            //newSpeed = oi.getDriveTrainTranslationY()
+            newSpeed = 0;
+        } else {
+            newSpeed = speed;
+        }
+       
         double position = motor.getEncoder().getPosition();
         if (highLimit != 0){
-            if (!((newSpeed < 0 && position >= lowLimit) || position <= highLimit)){
+            if (!((speed < 0 && position >= lowLimit) || position <= highLimit)){
                 newSpeed = 0;
             }
         }
@@ -48,18 +61,21 @@ public class Neo extends Motor {
     }
 
     @Override
-    public void setCurrentLimit(double currentLimit){
+    public void setCurrentLimit (double currentLimit) {
         REVLibError errorChecker = REVLibError.kOk;
         if (currentLimit != 0){
             errorChecker = motor.setSmartCurrentLimit((int)(currentLimit));
         }
-        allErrors.add("\ncurrent limit of " + motor.getDeviceId() + " is " + errorChecker.toString());
+
+        if (errorChecker != REVLibError.kOk){
+            allErrors.add("\n current limit of " + motor.getDeviceId() + " is " + errorChecker.toString());
+        }
     }
 
     @Override
-    public void setEncoderLimit(double lowLimit, double highLimit){
+    public void setEncoderLimit(double lowLimit, double highLimit) {
         this.lowLimit = lowLimit;
-        if(highLimit != 0){
+        if (highLimit != 0) {
             motor.getEncoder().setPosition(0);
             this.highLimit = highLimit;
         }
