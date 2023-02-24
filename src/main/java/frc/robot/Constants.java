@@ -389,7 +389,7 @@ public final class Constants {
               case ALPHA:
                   GEAR_RATIO = 72.0;
 
-                  KP = 0.0150000;
+                  KP = 0.0100000;
                   KS = 0.32245;
                   KG = 0.42;
                   KGE = 0;
@@ -400,7 +400,7 @@ public final class Constants {
               default:
                   GEAR_RATIO = 96.67;
 
-                  KP = 0.015;
+                  KP = 0.010;
                   KS = 0.0;
                   KG = 0.0;
                   KGR = 0.6;
@@ -415,7 +415,7 @@ public final class Constants {
          * Enum for arm angles.
          */
         public enum ArmPos {
-            LOWERED(ROBOT_NAME == RobotNames.ALPHA ? 0 : 3),
+            LOWERED(0),
             CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 97),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 80 : 75),
@@ -438,8 +438,8 @@ public final class Constants {
      * Times are in seconds.
      */
     public static final class kCommandTimmings {
-        public static final double PNEUMATIC_WAIT_TIME = 0.7;
-        public static final double MANIPULATOR_WAIT_TIME = 0.5;
+        public static final double PNEUMATIC_WAIT_TIME = 0.5;
+        public static final double MANIPULATOR_WAIT_TIME = 0.8;
     }
 
     /**
@@ -471,19 +471,39 @@ public final class Constants {
                 throw new Error(e);
             }
         }
-        
-        // X is forward, Y is left.
-        public static final Translation3d CAMERA_POS_METERS = new Translation3d(
-            Units.inchesToMeters(2.691), 
-            Units.inchesToMeters(6),
-            Units.inchesToMeters(27.75)
-        );
 
-        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
-            Units.degreesToRadians(0),
-            Units.degreesToRadians(12),
-            Units.degreesToRadians(0)
-        ).unaryMinus();
+        public static final Translation3d CAMERA_POS_METERS;
+        public static final Rotation3d CAMERA_ANGLE_DEGREES;
+
+        static {
+            switch(ROBOT_NAME) {
+                case ALPHA:
+                    // X is forward, Y is left.
+                     CAMERA_POS_METERS = new Translation3d(
+                        Units.inchesToMeters(2.691), 
+                        Units.inchesToMeters(6),
+                        Units.inchesToMeters(27.75)
+                    );
+                    CAMERA_ANGLE_DEGREES = new Rotation3d(
+                        Units.degreesToRadians(0),
+                        Units.degreesToRadians(12),
+                        Units.degreesToRadians(0)
+                    ).unaryMinus();
+                    break;
+                default:
+                    // X is forward, Y is left.
+                    CAMERA_POS_METERS = new Translation3d(
+                        Units.inchesToMeters(1.486), 
+                        Units.inchesToMeters(-8.6),
+                        Units.inchesToMeters(31.193)
+                    );
+                    CAMERA_ANGLE_DEGREES = new Rotation3d(
+                        Units.degreesToRadians(0),
+                        Units.degreesToRadians(21.0),
+                        Units.degreesToRadians(180)
+                    ).unaryMinus();
+            }
+        }
 
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
             CAMERA_POS_METERS.unaryMinus(), 

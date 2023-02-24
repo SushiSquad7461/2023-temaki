@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCube"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
         "waitTime": 5.0

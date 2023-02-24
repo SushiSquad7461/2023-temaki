@@ -47,7 +47,6 @@ public class RobotContainer {
         swerve = Swerve.getInstance();
         oi = OI.getInstance();
         manipulator = Manipulator.getInstance();
-        autos = new AutoCommands();
 
         switch (Constants.ROBOT_NAME) {
           case ALPHA:
@@ -64,6 +63,8 @@ public class RobotContainer {
               break;
         }
 
+        autos = new AutoCommands(swerve, indexer, intake, manipulator, arm);
+
         configureButtonBindings();
     }
 
@@ -71,30 +72,6 @@ public class RobotContainer {
      * Configures button bindings for alpha.
      */
     public void configureAlphaButtonBindings() {
-        oi.getDriverController().rightBumper().whileTrue(
-            swerve.moveToNearestAprilTag(null)
-        );
-
-        // // Reset odo
-        oi.getDriverController().povDown().onTrue(
-            swerve.resetOdometryToBestAprilTag()
-        );
-
-        // TODO: add alliance based substation selection
-        oi.getDriverController().povUp().onTrue(
-            new SequentialCommandGroup(
-                swerve.moveToAprilTag(4, new Translation2d(1.1, -0.2))
-            )
-        );
-
-        oi.getDriverController().povLeft().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.8, 0.6))
-        );
-
-        oi.getDriverController().povRight().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.8, -0.6))
-        );
-
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
@@ -221,6 +198,30 @@ public class RobotContainer {
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.stop()
         ));
+
+        oi.getDriverController().rightBumper().whileTrue(
+            swerve.moveToNearestAprilTag(null)
+        );
+
+        // // Reset odo
+        oi.getDriverController().povDown().onTrue(
+            swerve.resetOdometryToBestAprilTag()
+        );
+
+        // TODO: add alliance based substation selection
+        oi.getDriverController().povUp().onTrue(
+            new SequentialCommandGroup(
+                swerve.moveToAprilTag(4, new Translation2d(1.1, -0.2))
+            )
+        );
+
+        oi.getDriverController().povLeft().whileTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.8, 0.6))
+        );
+
+        oi.getDriverController().povRight().whileTrue(
+            swerve.moveToNearestAprilTag(new Translation2d(0.8, -0.6))
+        );
     }
 
     private void toggleIntake() {
