@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.BetaArm;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,7 +24,7 @@ import frc.robot.subsystems.arm.AlphaArm;
 
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
-    private AlphaArm arm;
+    private Arm arm;
     private RobotContainer robotContainer;
     private Swerve swerve;
 
@@ -33,7 +35,16 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-        arm = AlphaArm.getInstance();
+        
+        switch (Constants.ROBOT_NAME) {
+            case ALPHA:
+                arm = AlphaArm.getInstance();
+                break;
+            default:
+                arm = BetaArm.getInstance();
+                break;
+        }
+
         swerve = Swerve.getInstance();
 
         DataLogManager.start();

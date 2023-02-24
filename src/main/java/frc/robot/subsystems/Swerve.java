@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-
 /**
  * Class that controls falcon swerve drivetrain.
  */
@@ -50,7 +49,7 @@ public class Swerve extends SubsystemBase {
     }
 
     private Swerve() {
-        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION);
+        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION, kPorts.CANIVORE_NAME);
         gyro.zeroGyro();
         
         field = new Field2d();
@@ -327,7 +326,11 @@ public class Swerve extends SubsystemBase {
         // Loop through all measurements and add it to pose estimator
         List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
 
-        field.getObject("best").setPoses(measurements.stream().map((measurement) -> measurement.robotPose).collect(Collectors.toList()));
+        field.getObject("best")
+            .setPoses(measurements.stream().map(
+                (measurement) -> measurement.robotPose
+            )
+            .collect(Collectors.toList()));
 
         if (measurements != null) {
             for (VisionMeasurement measurement : measurements) {
