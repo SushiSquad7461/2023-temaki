@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.ctre.phoenix.sensors.Pigeon2;
-
-
 /**
  * Class that controls falcon swerve drivetrain.
  */
@@ -312,20 +309,23 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());
-
-        for (SwerveModule urmom : swerveMods) {
-            SmartDashboard.putNumber("CanCoder angle" + urmom.moduleNumber, urmom.getCanCoder().getDegrees());
-        }
         
         // Loop through all measurements and add it to pose estimator
         List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
 
-        field.getObject("best").setPoses(measurements.stream().map((measurement) -> measurement.robotPose).collect(Collectors.toList()));
+        field.getObject("best")
+            .setPoses(measurements.stream().map(
+                (measurement) -> measurement.robotPose
+            )
+            .collect(Collectors.toList()));
 
         if (measurements != null) {
             for (VisionMeasurement measurement : measurements) {
                 // Skip measurement if it's more than a meter away
-                if (measurement.robotPose.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) > 1.0 && measurement.ambiguity > 0.2) {
+                if (measurement.robotPose.getTranslation().getDistance(
+                    swerveOdometry.getEstimatedPosition().getTranslation()
+                    ) > 1.0
+                ) {
                     continue;
                 }
         

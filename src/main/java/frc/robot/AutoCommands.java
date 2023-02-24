@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kSwerve;
+import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.BetaIntake;
 import frc.robot.subsystems.intake.Intake;
@@ -25,7 +26,6 @@ import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.BetaArm;
 import frc.robot.subsystems.indexer.BetaIndexer;
-import frc.robot.util.CommandFactories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +69,11 @@ public class AutoCommands {
                 manipulator.holdCube()
             )
         ));
-        eventMap.put("scoreCube", CommandFactories.getCubeScore(intake, (AlphaArm)arm, manipulator));
+        eventMap.put("scoreCube", new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L3_SCORING),
+            manipulator.cubeReverse(),
+            arm.moveArm(ArmPos.LOWERED)
+        ));
 
         autoBuilder = new SwerveAutoBuilder(
             swerve::getPose, // Pose2d supplier

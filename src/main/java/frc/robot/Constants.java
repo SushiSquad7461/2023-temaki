@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import SushiFrcLib.DependencyInjection.RobotName;
 import SushiFrcLib.Swerve.SwerveModuleConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.auto.PIDConstants;
@@ -45,17 +44,6 @@ public final class Constants {
 
     public static final RobotNames ROBOT_NAME = RobotNames.BETA;
 
-    // static {
-    //     switch (RobotName.getInstance().getName()) {
-    //       case "alpha":
-    //           ROBOT_NAME = RobotNames.ALPHA;
-    //           break;
-    //       default:
-    //           ROBOT_NAME = RobotNames.BETA;
-    //           break;
-    //     }
-    // }
-
     /**
      * Defines port values.
      */
@@ -64,7 +52,7 @@ public final class Constants {
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
         public static final int CONE_RAMP_MOTOR = 25;
-        public static final int INTAKE_MOTOR_ID = 20;
+        public static final int INTAKE_BOTTOM_MOTOR_ID = 20;
         public static final int INTAKE_TOP_MOTOR_ID = 26;
 
         // intake pneumatic
@@ -73,14 +61,14 @@ public final class Constants {
 
         static {
             switch (ROBOT_NAME) {
-                case ALPHA:
-                    PNEUMATIC_FORWARD_CHANNEL = 5;
-                    PNEUMATIC_REVERSE_CHANNEL = 6;
-                    break;
-                default:
-                    PNEUMATIC_FORWARD_CHANNEL = 0;
-                    PNEUMATIC_REVERSE_CHANNEL = 1;
-                    break;
+              case ALPHA:
+                  PNEUMATIC_FORWARD_CHANNEL = 5;
+                  PNEUMATIC_REVERSE_CHANNEL = 6;
+                  break;
+              default:
+                  PNEUMATIC_FORWARD_CHANNEL = 0;
+                  PNEUMATIC_REVERSE_CHANNEL = 1;
+                  break;
             }
         }
 
@@ -106,12 +94,12 @@ public final class Constants {
 
         static {
             switch (ROBOT_NAME) {
-                case ALPHA:
-                    INDEXER_SPEED = 0.7;
-                    break;
-                default:
-                    INDEXER_SPEED = -0.7;
-                    break;
+              case ALPHA:
+                  INDEXER_SPEED = 0.7;
+                  break;
+              default:
+                  INDEXER_SPEED = -0.7;
+                  break;
             }
         }
 
@@ -205,12 +193,12 @@ public final class Constants {
 
             static {
                 switch (ROBOT_NAME) {
-                    case ALPHA:
-                        ANGLE_OFFSET = 195.380859;
-                        break;
-                    default:
-                        ANGLE_OFFSET = 2.109375+180;
-                        break;
+                  case ALPHA:
+                      ANGLE_OFFSET = 195.380859;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 2.109375 + 180;
+                      break;
                 }
             }
 
@@ -228,12 +216,12 @@ public final class Constants {
 
             static {
                 switch (ROBOT_NAME) {
-                    case ALPHA:
-                        ANGLE_OFFSET = 89.648438;
-                        break;
-                    default:
-                        ANGLE_OFFSET = 229.130859-180;
-                        break;
+                  case ALPHA:
+                      ANGLE_OFFSET = 89.648438;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 229.130859 - 180;
+                      break;
                 }
             }
 
@@ -251,12 +239,12 @@ public final class Constants {
 
             static {
                 switch (ROBOT_NAME) {
-                    case ALPHA:
-                        ANGLE_OFFSET = 69.785156;
-                        break;
-                    default:
-                        ANGLE_OFFSET = 16.083984+180;
-                        break;
+                  case ALPHA:
+                      ANGLE_OFFSET = 69.785156;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 16.083984 + 180;
+                      break;
                 }
             }
             
@@ -274,12 +262,12 @@ public final class Constants {
 
             static {
                 switch (ROBOT_NAME) {
-                    case ALPHA:
-                        ANGLE_OFFSET = 67.675781;
-                        break;
-                    default:
-                        ANGLE_OFFSET = 303.574219-180;
-                        break;
+                  case ALPHA:
+                      ANGLE_OFFSET = 67.675781;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 303.574219 - 180;
+                      break;
                 }
             }
 
@@ -294,12 +282,12 @@ public final class Constants {
      */
     public static final class kAutoAlign {
         
-        /** PID tolerance */
+        /* PID tolerance */
         public static final double X_TOLLERENCE = 0.03;
         public static final double Y_TOLLERENCE = 0.03;
         public static final double THETA_TOLLERENCE = 0.03;
 
-        /** Pid values */
+        /* Pid values */
         public static final double X_P = 10.0;
         public static final double X_I = 0.0;
         public static final double X_D = 0.75;
@@ -350,14 +338,14 @@ public final class Constants {
 
         static {
             switch (ROBOT_NAME) {
-                case ALPHA:
-                    LEFT_INVERSION = true;
-                    RIGHT_INVERSION = true;
-                    break;
-                default:
-                    LEFT_INVERSION = false;
-                    RIGHT_INVERSION = false;
-                    break;
+              case ALPHA:
+                  LEFT_INVERSION = true;
+                  RIGHT_INVERSION = true;
+                  break;
+              default:
+                  LEFT_INVERSION = false;
+                  RIGHT_INVERSION = false;
+                  break;
             }
         }
 
@@ -374,24 +362,25 @@ public final class Constants {
 
         static {
             switch (ROBOT_NAME) {
-                case ALPHA:
-                    ENCODER_ANGLE_OFFSET = 233.6;
-                    break;
-                default:
-                    ENCODER_ANGLE_OFFSET = 198.428918;
-                    break;
+              case ALPHA:
+                  ENCODER_ANGLE_OFFSET = 233.6;
+                  break;
+              default:
+                  ENCODER_ANGLE_OFFSET = 198.428918;
+                  break;
             }
         }
+
         public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
 
         public static final double KP;
-        public static final double KI;
-        public static final double KD;
-        public static final double KF;
+        public static final double KI = 0.0;
+        public static final double KD = 0.0;
+        public static final double KF = 0.0;
         public static final double KS;
         public static final double KG;
-        public static final double KGR;
-        public static final double KGE;
+        public static final double KGR; // kG for beta retracted arm
+        public static final double KGE; // kG for beta extended arm
         public static final double KV;
         public static final double KA;
 
@@ -401,9 +390,6 @@ public final class Constants {
                   GEAR_RATIO = 72.0;
 
                   KP = 0.0150000;
-                  KI = 0.0;
-                  KD = 0.0;
-                  KF = 0.0;
                   KS = 0.32245;
                   KG = 0.42;
                   KGE = 0;
@@ -415,9 +401,6 @@ public final class Constants {
                   GEAR_RATIO = 96.67;
 
                   KP = 0.015;
-                  KI = 0.0;
-                  KD = 0.0;
-                  KF = 0.0;
                   KS = 0.0;
                   KG = 0.0;
                   KGR = 0.6;
@@ -432,11 +415,11 @@ public final class Constants {
          * Enum for arm angles.
          */
         public enum ArmPos {
-            LOWERED(3),
-            CONE_PICKUP_ALLIGMENT(97),
+            LOWERED(ROBOT_NAME == RobotNames.ALPHA ? 0 : 3),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 97),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(75),
-            L3_SCORING(100);
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 80 : 75),
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 0 : 100);
 
             private double angle;
 
