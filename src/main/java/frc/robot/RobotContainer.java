@@ -163,6 +163,19 @@ public class RobotContainer {
             )
         );
 
+        oi.getDriverController().b().onTrue(new InstantCommand(() -> {
+            swerve.turnOnLocationLock(180);
+        })).onFalse(new InstantCommand(() -> {
+            swerve.turnOfLocationLock();
+        }));
+
+        oi.getDriverController().a().onTrue(new InstantCommand(() -> {
+            swerve.turnOnLocationLock(0);
+        })).onFalse(new InstantCommand(() -> {
+            swerve.turnOfLocationLock();
+        }));
+
+
         // Toggle intake
         oi.getDriverController().leftBumper().onTrue(
             new InstantCommand(

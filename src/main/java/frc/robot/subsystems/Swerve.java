@@ -38,6 +38,9 @@ public class Swerve extends SubsystemBase {
     
     private static Swerve instance;
 
+    private boolean locationLock;
+    private PIDController locationLockPID;
+
     /**
      * singleton get instance method.
      */
@@ -49,7 +52,7 @@ public class Swerve extends SubsystemBase {
     }
 
     private Swerve() {
-        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION, kPorts.CANIVORE_NAME);
+        gyro = new Pigeon(kPorts.PIGEON_ID, kSwerve.GYRO_INVERSION, kPorts.PIGEON_CANIVORE_NAME);
         gyro.zeroGyro();
         
         field = new Field2d();
@@ -77,7 +80,20 @@ public class Swerve extends SubsystemBase {
             kSwerve.VISION_STANDARD_DEVIATION
         );
 
+        locationLock = false;
+        locationLockPID = new PIDController(0.1d, 0, 0);
+
         SmartDashboard.putData("Field", field);
+    }
+
+    public void turnOnLocationLock(double angle) {
+        locationLock = true;
+        locationLockPID.setSetpoint(angle);
+        locationLockPID.calculate(gyro.getAngle().getDegrees());
+    }
+
+    public void turnOfLocationLock() {
+        locationLock = false;
     }
 
     /**
@@ -228,10 +244,19 @@ public class Swerve extends SubsystemBase {
         );
     }
 
+    public void drive(Translation2d translation, 
+        double rotation, boolean fieldRelative, boolean isOpenLoop
+    ) {
+        if (locationLock) {
+            rotation = locationLockPID.calculate(gyro.getAngle().getDegrees());
+        }
+        driveWithLocationLock(translation, rotation, fieldRelative, isOpenLoop);
+    }
+
     /**
      * Updates the swerve module values for the swerve.
      */
-    public void drive(Translation2d translation, 
+    private void driveWithLocationLock(Translation2d translation, 
         double rotation, boolean fieldRelative, boolean isOpenLoop
     ) {
         SwerveModuleState[] swerveModuleStates = kSwerve.SWERVE_KINEMATICS.toSwerveModuleStates(

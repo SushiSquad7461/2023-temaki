@@ -43,13 +43,26 @@ public final class Constants {
         BETA
     }
 
-    public static final RobotNames ROBOT_NAME = RobotNames.BETA;
+    public static final RobotNames ROBOT_NAME = RobotNames.ALPHA;
 
     /**
      * Defines port values.
      */
     public static class kPorts {
         public static final String CANIVORE_NAME = "Sussy Squad";
+        public static final String PIGEON_CANIVORE_NAME;
+
+        static {
+            switch(ROBOT_NAME) {
+                case ALPHA:
+                    PIGEON_CANIVORE_NAME = "";
+                    break;
+                default:
+                    PIGEON_CANIVORE_NAME = "Sussy Squad";
+                    break;
+            }
+        }
+
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
         public static final int CONE_RAMP_MOTOR = 25;
@@ -446,8 +459,8 @@ public final class Constants {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 97),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 80 : 75),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 80 : 100);
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 75),
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 100);
 
             private double angle;
 
