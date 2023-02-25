@@ -196,7 +196,7 @@ public class Swerve extends SubsystemBase {
             yaxisPid.setSetpoint(offsetTarget.getY());
 
             // Invert theta to ensure we're facing towards the target
-            thetaPid.setSetpoint(targetRot.minus(Rotation2d.fromDegrees(180)).getRadians());
+            thetaPid.setSetpoint(targetRot.minus(kAutoAlign.DEFAULT_ROTATION).getRadians());
         }).andThen(run(
             () -> {
                 SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());

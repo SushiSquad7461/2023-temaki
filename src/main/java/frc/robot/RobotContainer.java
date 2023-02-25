@@ -90,7 +90,7 @@ public class RobotContainer {
         oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L3_SCORING)
+            arm.moveArm(ArmPos.L2_SCORING)
         ));
     }
 
@@ -186,6 +186,13 @@ public class RobotContainer {
             new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
             manipulator.stop()
         ));
+
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
+
 
         // // Score item to relese cone
         // oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));
