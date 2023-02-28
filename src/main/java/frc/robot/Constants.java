@@ -43,7 +43,7 @@ public final class Constants {
         BETA
     }
 
-    public static final RobotNames ROBOT_NAME = RobotNames.ALPHA;
+    public static final RobotNames ROBOT_NAME = RobotNames.BETA;
 
     /**
      * Defines port values.
@@ -117,7 +117,7 @@ public final class Constants {
             }
         }
 
-        public static final double CONE_RAMP_SPEED = 0.1;
+        public static final double CONE_RAMP_SPEED = 0.5;
     }
 
     /**
@@ -457,9 +457,9 @@ public final class Constants {
          */
         public enum ArmPos {
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 97),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 95.5),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 75),
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 81),
             L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 100);
 
             private double angle;
@@ -534,13 +534,13 @@ public final class Constants {
                 default:
                     // X is forward, Y is left.
                     CAMERA_POS_METERS = new Translation3d(
-                        Units.inchesToMeters(1.486), 
-                        Units.inchesToMeters(8.6),
-                        Units.inchesToMeters(31.193)
+                        Units.inchesToMeters(2.092), 
+                        Units.inchesToMeters(8.5),
+                        Units.inchesToMeters(31.161)
                     );
                     CAMERA_ANGLE_DEGREES = new Rotation3d(
                         Units.degreesToRadians(0),
-                        Units.degreesToRadians(21.0),
+                        Units.degreesToRadians(16.579),
                         Units.degreesToRadians(180)
                     ).unaryMinus();
             }

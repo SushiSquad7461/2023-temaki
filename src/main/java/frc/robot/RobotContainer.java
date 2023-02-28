@@ -206,6 +206,10 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
+        oi.getOperatorController().povLeft().onTrue(new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L2_SCORING)
+        ));
+
 
         // // Score item to relese cone
         // oi.getOperatorController().b().onTrue(CommandFactories.getConeScore(intake, arm, manipulator));

@@ -56,34 +56,47 @@ public class AutoCommands {
         this.manipulator = manipulator;
         this.arm = arm;
 
-        eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake()));
+        eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake(), new ParallelCommandGroup(
+            indexer.runIndexer(), 
+            manipulator.cube()
+        )));
+
         eventMap.put("intakeUp", new SequentialCommandGroup(
             intake.retractIntake(), 
             new ParallelCommandGroup(
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(0.5), 
+            new WaitCommand(2.0), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 
                 manipulator.holdCube()
             )
         ));
+
         eventMap.put("scoreCube", new SequentialCommandGroup(
             arm.moveArm(ArmPos.L3_SCORING),
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            arm.moveArm(ArmPos.LOWERED)
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
         ));
 
         eventMap.put("scoreCone", new SequentialCommandGroup(
             manipulator.cone(),
+            new WaitCommand(0.1),
             arm.moveArm(ArmPos.L3_SCORING),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            new WaitCommand(1.0),
             manipulator.coneReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            new WaitCommand(0.1)
+            // arm.moveArm(ArmPos.LOWERED)
+        ));
+
+        eventMap.put("raiseArm", new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L2_SCORING)
+        ));
+
+        eventMap.put("lowerArm", new SequentialCommandGroup(
             arm.moveArm(ArmPos.LOWERED)
         ));
 
@@ -106,6 +119,10 @@ public class AutoCommands {
         }));
 
         autoChooser.addOption("2 Piece Loading Zone", makeAuto("2_Piece_Loading_Zone"));
+
+        autoChooser.addOption("3 Piece Piece Loading Zone",new SequentialCommandGroup(makeAuto("2_Piece_Loading_Zone"), makeAuto("3_Piece_Loading_Zone")));
+
+
         autoChooser.addOption("Charge", makeAuto("Charge"));
         putAutoChooser();
     }
