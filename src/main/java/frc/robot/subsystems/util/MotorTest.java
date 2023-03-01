@@ -35,7 +35,8 @@ public class MotorTest {
   private List<Motor> motorList;
   private List<DoubleSolenoid> solenoidList;
 
-  private static int numMotors;
+  private int numMotors;
+  private int allDevices;
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -61,6 +62,8 @@ public class MotorTest {
     instance = null;
     motorList = new ArrayList<Motor>();
     solenoidList = new ArrayList<DoubleSolenoid>();
+
+    allDevices = 0;
     numMotors = 0;
 
     // numMotors = motorList.size();
@@ -69,13 +72,20 @@ public class MotorTest {
   public void updateMotors() {
     tableArray = dataTable.get();
     if (running.get()) {
-      for (int i = 0; i < motorList.size(); i++) {
+      for (int i = 0; i < allDevices; i++) {
         if (tableArray.length > i && !tableArray[i].equals("containsNull")) {
-          coastOrBrake(i);
-          invertMotor(i);
-          setCurrentLimit(i);
-          setEncoderLimit(i);
-          setSpeed(i);
+          if(!tableArray[i].contains("solenoid")){
+            numMotors++;
+            coastOrBrake(i);
+            invertMotor(i);
+            setCurrentLimit(i);
+            setEncoderLimit(i);
+            setSpeed(i);
+          }
+          else{
+            setSolenoid(i-numMotors);
+          }
+          
         } else {
           motorList.get(i).disable();
         }
@@ -84,10 +94,6 @@ public class MotorTest {
         if (errorList != null) {
           errorArray.add(String.join(" ", errorList));
         }
-      }
-
-      for (int i = 0; i < solenoidList.size(); i++) {
-        setSolenoid(i);
       }
 
       if (errorArray != null) {
@@ -151,7 +157,7 @@ public class MotorTest {
   public void setSolenoid(int idx) {
     String[] motorArray = (tableArray[idx]).split(" ");
     Value value;
-    if (Boolean.parseBoolean(motorArray[11])) {
+    if (Boolean.parseBoolean(motorArray[12])) {
       value = Value.kForward;
     } else {
       value = Value.kReverse;
@@ -161,6 +167,7 @@ public class MotorTest {
 
   public void register(Motor motor, DoubleSolenoid solenoid, String subsystem, String name, int id, double currentLimit,
       int pdhPort) {
+
     if (solenoid == null) {
       motorList.add(motor);
     } else {
@@ -169,7 +176,7 @@ public class MotorTest {
 
     motorArray.add(subsystem + " " + name + " " + id + " " + pdhPort + " " + currentLimit + " 0 0 0 0.0 -2.0 0.0 0 0");
     motorTable.set(motorArray.toArray(new String[motorList.size() + solenoidList.size()]));
-    numMotors = motorList.size() + solenoidList.size();
+    allDevices = motorList.size() + solenoidList.size();
   }
 
 }
