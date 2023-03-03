@@ -94,8 +94,8 @@ public class Swerve extends SubsystemBase {
             SwerveModule sModule = swerveMods[i];
             Falcon falconDrive = new Falcon((WPI_TalonFX) sModule.driveMotor);
             Falcon falconAngle = new Falcon((WPI_TalonFX) sModule.angleMotor);
-            motorTest.register(falconDrive, null, "SwerveSubsystem", ("driveSwerve:"+i), falconDrive.canID, falconDrive.currentLimit, i*2+3);
-            motorTest.register(falconAngle, null, "SwerveSubsystem", ("angleSwerve:"+i), falconAngle.canID, falconAngle.currentLimit, i*2+4);
+            motorTest.register(falconDrive, null, "SwerveSubsystem", ("driveSwerve:"+i));
+            motorTest.register(falconAngle, null, "SwerveSubsystem", ("angleSwerve:"+i));
         }
         
         SmartDashboard.putData("Field", field);

@@ -26,8 +26,10 @@ public abstract class Motor {
 
     public abstract ArrayList<String> getErrors();
 
+    public abstract String getRegisterString(String subsystem, String name);
+
     OI oi;
-    double lowLimit = Double.MIN_VALUE;
+    double lowLimit = Double.MAX_VALUE * -1;
     double highLimit = Double.MAX_VALUE;
     ArrayList<String> allErrors = new ArrayList<String>();
 }

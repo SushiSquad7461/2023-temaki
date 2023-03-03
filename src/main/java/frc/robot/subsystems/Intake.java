@@ -57,9 +57,9 @@ public class Intake extends SubsystemBase {
 
         Neo neoIntake = new Neo(intakeMotor);
         motorTest = MotorTest.getInstance();
-        motorTest.register(neoIntake, null, "IntakeSubsystem", "intake", neoIntake.canID, neoIntake.currentLimit, 1);
-        motorTest.register(null, solenoidLeft, "IntakeSubsytems", "solenoidLeft", 0, 0, 0);
-        motorTest.register(null, solenoidRight, "IntakeSubsytems", "solenoidRight", 0, 0, 0);
+        motorTest.register(neoIntake, null, "IntakeSubsystem", "intake");
+        motorTest.register(null, solenoidLeft, "IntakeSubsytems", "solenoidLeft");
+        motorTest.register(null, solenoidRight, "IntakeSubsytems", "solenoidRight");
     }
 
     /**

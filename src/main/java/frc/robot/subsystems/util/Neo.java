@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kOI;
 import frc.robot.OI;
@@ -22,9 +23,15 @@ public class Neo extends Motor {
         this.currentLimit = motor.getOutputCurrent();
     }
 
+    @Override
+    public String getRegisterString(String subsystem, String neoName){
+        return subsystem + " " + neoName + " "+ this.canID + " 0 "  + "0.0 " + "0 " + ((motor.getInverted()) ? 1 : 0) + " 0 " + this.currentLimit + " " + this.lowLimit + " " +this.highLimit + " 0 " + "0";
+    } 
+
     public ArrayList<String> getErrors() {
         ArrayList<String> ret = allErrors;
-        allErrors = new ArrayList<String>();
+        System.out.println("Clearing");
+        allErrors.removeAll(allErrors);
         return ret;
     }
 

@@ -37,7 +37,7 @@ public class Manipulator extends SubsystemBase {
 
         Neo neoManipulator = new Neo(manipulatorMotor);
         motorTest = MotorTest.getInstance();
-        motorTest.register(neoManipulator, null, "ManipulatorSubsystem", "manipulator", neoManipulator.canID, neoManipulator.currentLimit, 2);
+        motorTest.register(neoManipulator, null, "ManipulatorSubsystem", "manipulator");
     }
 
     /**

@@ -66,7 +66,6 @@ public class MotorTest {
     allDevices = 0;
     numMotors = 0;
 
-    // numMotors = motorList.size();
   }
 
   public void updateMotors() {
@@ -81,6 +80,7 @@ public class MotorTest {
             setCurrentLimit(i);
             setEncoderLimit(i);
             setSpeed(i);
+            motorList.get(i).checkElecErrors();
           }
           else{
             setSolenoid(i-numMotors);
@@ -89,7 +89,6 @@ public class MotorTest {
         } else {
           motorList.get(i).disable();
         }
-        motorList.get(i).checkElecErrors();
         errorList = motorList.get(i).getErrors(); // array list of strings
         if (errorList != null) {
           errorArray.add(String.join(" ", errorList));
@@ -165,16 +164,16 @@ public class MotorTest {
     solenoidList.get(idx).set(value);
   }
 
-  public void register(Motor motor, DoubleSolenoid solenoid, String subsystem, String name, int id, double currentLimit,
-      int pdhPort) {
+  public void register(Motor motor, DoubleSolenoid solenoid, String subsystem, String name) {
 
     if (solenoid == null) {
+      motorArray.add(motor.getRegisterString(subsystem, name));
       motorList.add(motor);
     } else {
+      motorArray.add(subsystem + " " + name +  " 0 0 0 0 0 0 0.0 -2.0 0.0 0 0");
       solenoidList.add(solenoid);
     }
 
-    motorArray.add(subsystem + " " + name + " " + id + " " + pdhPort + " " + currentLimit + " 0 0 0 0.0 -2.0 0.0 0 0");
     motorTable.set(motorArray.toArray(new String[motorList.size() + solenoidList.size()]));
     allDevices = motorList.size() + solenoidList.size();
   }

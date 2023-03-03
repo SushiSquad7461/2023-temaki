@@ -25,6 +25,11 @@ public class Falcon extends Motor {
     }
 
     @Override
+    public String getRegisterString(String subsystem, String neoName){
+        return subsystem + " " + neoName + " "+ this.canID + " 0 "  + "0 " + "0 " + ((motor.getInverted()) ? 1 : 0) + " " +this.currentLimit + " " + this.lowLimit + " " +this.highLimit + "0 " + "0";
+    }
+
+    @Override
     public void setIdle(IdleMode idle) {
         if (idle == IdleMode.COAST) {
             motor.setNeutralMode(NeutralMode.Coast);
