@@ -13,6 +13,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -49,6 +50,19 @@ public final class Constants {
      */
     public static class kPorts {
         public static final String CANIVORE_NAME = "Sussy Squad";
+        public static final String PIGEON_CANIVORE_NAME;
+
+        static {
+            switch(ROBOT_NAME) {
+                case ALPHA:
+                    PIGEON_CANIVORE_NAME = "";
+                    break;
+                default:
+                    PIGEON_CANIVORE_NAME = "Sussy Squad";
+                    break;
+            }
+        }
+
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
         public static final int CONE_RAMP_MOTOR = 25;
@@ -103,7 +117,7 @@ public final class Constants {
             }
         }
 
-        public static final double CONE_RAMP_SPEED = 0.1;
+        public static final double CONE_RAMP_SPEED = 0.5;
     }
 
     /**
@@ -194,7 +208,7 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                   case ALPHA:
-                      ANGLE_OFFSET = 195.380859;
+                      ANGLE_OFFSET = 89.648438;
                       break;
                   default:
                       ANGLE_OFFSET = 2.109375 + 180;
@@ -217,7 +231,7 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                   case ALPHA:
-                      ANGLE_OFFSET = 89.648438;
+                      ANGLE_OFFSET = 195.380859;
                       break;
                   default:
                       ANGLE_OFFSET = 229.130859 - 180;
@@ -240,7 +254,7 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                   case ALPHA:
-                      ANGLE_OFFSET = 69.785156;
+                      ANGLE_OFFSET = 67.675781;
                       break;
                   default:
                       ANGLE_OFFSET = 16.083984 + 180;
@@ -263,7 +277,7 @@ public final class Constants {
             static {
                 switch (ROBOT_NAME) {
                   case ALPHA:
-                      ANGLE_OFFSET = 67.675781;
+                      ANGLE_OFFSET = 69.785156;
                       break;
                   default:
                       ANGLE_OFFSET = 303.574219 - 180;
@@ -281,7 +295,19 @@ public final class Constants {
      * Auto align values.
      */
     public static final class kAutoAlign {
-        
+        public static final Rotation2d DEFAULT_ROTATION;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
+                    break;
+                default:
+                    DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
+                    break;
+            }
+        }
+
         /** PID tolerance */
         public static final double X_TOLLERENCE = 0.01;
         public static final double Y_TOLLERENCE = 0.02;
@@ -321,9 +347,24 @@ public final class Constants {
          * Slew rate limiters for anti tip.
          * Limits the acceleration essentially.
          */
-        public static final SlewRateLimiter DRIVE_X_LIMITER = new SlewRateLimiter(3);
-        public static final SlewRateLimiter DRIVE_Y_LIMITER = new SlewRateLimiter(3);
-        public static final SlewRateLimiter DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
+        public static final SlewRateLimiter DRIVE_X_LIMITER;
+        public static final SlewRateLimiter DRIVE_Y_LIMITER;
+        public static final SlewRateLimiter DRIVE_THETA_LIMITER;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    DRIVE_X_LIMITER = new SlewRateLimiter(3);
+                    DRIVE_Y_LIMITER = new SlewRateLimiter(3);
+                    DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
+                    break;
+                default:
+                    DRIVE_X_LIMITER = new SlewRateLimiter(3000);
+                    DRIVE_Y_LIMITER = new SlewRateLimiter(3000);
+                    DRIVE_THETA_LIMITER = new SlewRateLimiter(3000);
+                    break;
+            }
+        }
 
     }
 
@@ -416,10 +457,10 @@ public final class Constants {
          */
         public enum ArmPos {
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 97),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 95.5),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 80 : 75),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 0 : 100);
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 81),
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 100);
 
             private double angle;
 
@@ -493,13 +534,13 @@ public final class Constants {
                 default:
                     // X is forward, Y is left.
                     CAMERA_POS_METERS = new Translation3d(
-                        Units.inchesToMeters(1.486), 
-                        Units.inchesToMeters(-8.6),
-                        Units.inchesToMeters(31.193)
+                        Units.inchesToMeters(2.092), 
+                        Units.inchesToMeters(8.5),
+                        Units.inchesToMeters(31.161)
                     );
                     CAMERA_ANGLE_DEGREES = new Rotation3d(
                         Units.degreesToRadians(0),
-                        Units.degreesToRadians(21.0),
+                        Units.degreesToRadians(16.579),
                         Units.degreesToRadians(180)
                     ).unaryMinus();
             }
