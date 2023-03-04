@@ -95,12 +95,34 @@ public class RobotContainer {
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.L2_SCORING)
         ));
+
+        
+        // Score item to relese cube
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            manipulator.cubeReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
+
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
     }
 
     /**
      * Configures button bindings for beta.
      */
     public void configureBetaButtonBindings() {
+        
+        // Score item to relese cube
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            ((BetaManipulator) manipulator).release(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
+
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
                 indexer.reverseIndexer(),
@@ -195,19 +217,6 @@ public class RobotContainer {
                 }
             )
         );
-
-        // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
-
-        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
-            manipulator.coneReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
 
         oi.getOperatorController().povLeft().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.L2_SCORING)

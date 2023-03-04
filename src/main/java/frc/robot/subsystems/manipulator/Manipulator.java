@@ -24,27 +24,54 @@ public abstract class Manipulator extends SubsystemBase {
         motor.burnFlash();
     }
 
-    public abstract Command cone();
+    /**
+     * Draw cone into claw
+     */
+    public Command cone() {
+        return runOnce(() -> {
+            motor.set(kManipulator.SPEED * -1.0);
+        });
+    }
 
     /**
      * Reverse cone out of claw.
      */
-    public abstract Command coneReverse();
+    public Command coneReverse() {
+        return runOnce(() -> {
+            motor.set(kManipulator.SPEED*3);
+        });
+    }
 
     /**
      * Reverse the indexer.
      */
-    public abstract Command cube();
+    public Command cube() {
+        return runOnce(() -> {
+            motor.set(kManipulator.SPEED);
+        });
+    }
 
     /**
      * Reverse cube out of claw.
      */
-    public abstract Command cubeReverse();
+    public Command cubeReverse() {
+        return runOnce(() -> {
+            motor.set(kManipulator.SPEED * -3.0);
+        });
+    }
 
     /**
      * Stops indexer.
      */
-    public abstract Command stop();
+    public Command stop() {
+        return runOnce(() -> {
+            motor.set(0);
+        });
+    }
 
-    public abstract Command holdCube();
+    public Command holdCube() {
+        return runOnce(() -> {
+            motor.set(-0.01);
+        });
+    }
 }
