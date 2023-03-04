@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.manipulator;
 
 import SushiFrcLib.Motor.MotorHelper;
 import com.revrobotics.CANSparkMax;
@@ -13,26 +13,22 @@ import frc.robot.Constants.kPorts;
 /**
  * Controls the manipulator subsytem.
  */
-public class Manipulator extends SubsystemBase {
+public class AlphaManipulator extends Manipulator {
     private CANSparkMax motor;
-    private static Manipulator instance;
+    private static AlphaManipulator instance;
 
     /**
      * Gets the current manipular instance. for singleton support.
      */
-    public static Manipulator getInstance() {
+    public static AlphaManipulator getInstance() {
         if (instance == null) {
-            instance = new Manipulator();
+            instance = new AlphaManipulator();
         }
         return instance;
     }
 
-    private Manipulator() {
-        motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
-        motor.setSmartCurrentLimit(kManipulator.CURRENT_LIMITING);
-        motor.setInverted(true);
-        motor.burnFlash();
-
+    private AlphaManipulator() {
+        super();
     }
 
     /**

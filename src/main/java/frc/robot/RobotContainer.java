@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
 import frc.robot.commands.TeleopSwerveDrive;
-import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
@@ -25,6 +24,9 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.AlphaIntake;
 import frc.robot.subsystems.intake.BetaIntake;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.manipulator.AlphaManipulator;
+import frc.robot.subsystems.manipulator.BetaManipulator;
+import frc.robot.subsystems.manipulator.Manipulator;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -46,19 +48,20 @@ public class RobotContainer {
 
         swerve = Swerve.getInstance();
         oi = OI.getInstance();
-        manipulator = Manipulator.getInstance();
 
         switch (Constants.ROBOT_NAME) {
           case ALPHA:
               arm = AlphaArm.getInstance();
               indexer = AlphaIndexer.getInstance();
               intake = AlphaIntake.getInstance();
+              manipulator = AlphaManipulator.getInstance();
               configureAlphaButtonBindings();
               break;
           default:
               arm = BetaArm.getInstance();
               indexer = BetaIndexer.getInstance();
               intake = BetaIntake.getInstance();
+              manipulator = BetaManipulator.getInstance();
               configureBetaButtonBindings();
               break;
         }

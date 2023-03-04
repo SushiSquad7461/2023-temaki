@@ -29,7 +29,7 @@ public abstract class Arm extends SubsystemBase {
 
     private final DutyCycleEncoder absoluteEncoder;
 
-    Arm() {
+    protected Arm() {
         armP = new TunableNumber("Arm P", kArm.KP, Constants.TUNING_MODE);
         armI = new TunableNumber("Arm I", kArm.KI, Constants.TUNING_MODE);
         armD = new TunableNumber("Arm D", kArm.KD, Constants.TUNING_MODE);
