@@ -25,8 +25,8 @@ public class Falcon extends Motor {
     }
 
     @Override
-    public String getRegisterString(String subsystem, String neoName){
-        return subsystem + " " + neoName + " "+ this.canID + " 0 "  + "0 " + "0 " + ((motor.getInverted()) ? 1 : 0) + " " +this.currentLimit + " " + this.lowLimit + " " +this.highLimit + "0 " + "0";
+    public String getRegisterString(String subsystem, String swerveName){
+        return subsystem + " " + swerveName + " "+ this.canID + " 0 "  + "0.0 " + "0 " + ((motor.getInverted()) ? 1 : 0) + " 0 " + this.currentLimit + " " + this.lowLimit + " " +this.highLimit + " 0 " + "0";
     }
 
     @Override

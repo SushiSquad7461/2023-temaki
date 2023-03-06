@@ -1,6 +1,7 @@
 package frc.robot.subsystems.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
@@ -29,8 +30,7 @@ public class Neo extends Motor {
     } 
 
     public ArrayList<String> getErrors() {
-        ArrayList<String> ret = allErrors;
-        System.out.println("Clearing");
+        ArrayList<String> ret =  new ArrayList<>(allErrors);
         allErrors.removeAll(allErrors);
         return ret;
     }
@@ -107,6 +107,7 @@ public class Neo extends Motor {
         motor.disable();
     }
 
+    @Override
     public void checkElecErrors() {
         if (motor.getFault(CANSparkMax.FaultID.kBrownout)) {
             allErrors.add("\n" + motor.getDeviceId() + " brownout");
@@ -132,8 +133,8 @@ public class Neo extends Motor {
             allErrors.add("\n" + motor.getDeviceId() + " can rx");
         }
 
-        if (motor.getFault(CANSparkMax.FaultID.kCANRX)) {
-            allErrors.add("\n" + motor.getDeviceId() + CANSparkMax.FaultID.kCANRX.toString());
+        if (motor.getFault(CANSparkMax.FaultID.kCANTX)) {
+            allErrors.add("\n" + motor.getDeviceId() + " can tx");
         }
 
     }

@@ -1,20 +1,15 @@
 package frc.robot.subsystems.util;
 
-import edu.wpi.first.hal.can.CANMessageNotFoundException;
-import edu.wpi.first.networktables.*;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import frc.robot.subsystems.util.MotorTest;
-import frc.robot.subsystems.util.Motor;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity;
-import com.revrobotics.REVLibError;
-
-import SushiFrcLib.Motor.MotorHelper;
+import edu.wpi.first.networktables.BooleanSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringArrayPublisher;
+import edu.wpi.first.networktables.StringArraySubscriber;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class MotorTest {
   private NetworkTableInstance inst;
@@ -36,7 +31,7 @@ public class MotorTest {
   private List<DoubleSolenoid> solenoidList;
 
   private int numMotors;
-  private int allDevices;
+  private int numSolenoid;
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -63,40 +58,49 @@ public class MotorTest {
     motorList = new ArrayList<Motor>();
     solenoidList = new ArrayList<DoubleSolenoid>();
 
-    allDevices = 0;
     numMotors = 0;
-
+    numSolenoid = 0;
   }
 
   public void updateMotors() {
     tableArray = dataTable.get();
     if (running.get()) {
-      for (int i = 0; i < allDevices; i++) {
-        if (tableArray.length > i && !tableArray[i].equals("containsNull")) {
+      numMotors = 0;
+      numSolenoid = 0;      
+      for (int i = 0; i < tableArray.length; i++) {
+        String[] deviceArray = (tableArray[i]).split(" ");
+        if (tableArray.length > i) {
           if(!tableArray[i].contains("solenoid")){
+            if (deviceArray[deviceArray.length-1].equals("true")){
+              coastOrBrake(deviceArray);
+              invertMotor(deviceArray);
+              setCurrentLimit(deviceArray);
+              setEncoderLimit(deviceArray);
+              setSpeed(deviceArray);
+              motorList.get(numMotors).checkElecErrors();
+              errorList = motorList.get(numMotors).getErrors();        
+              if (errorList != null) {
+                errorArray.add(String.join(" ", errorList));
+              }
+            }
+            else {
+              motorList.get(numMotors).disable();
+            }
             numMotors++;
-            coastOrBrake(i);
-            invertMotor(i);
-            setCurrentLimit(i);
-            setEncoderLimit(i);
-            setSpeed(i);
-            motorList.get(i).checkElecErrors();
           }
           else{
-            setSolenoid(i-numMotors);
+            if(deviceArray[deviceArray.length-1].equals("true")){
+              setSolenoid(deviceArray);
+            }
+            numSolenoid++;
           }
           
-        } else {
-          motorList.get(i).disable();
-        }
-        errorList = motorList.get(i).getErrors(); // array list of strings
-        if (errorList != null) {
-          errorArray.add(String.join(" ", errorList));
         }
       }
 
       if (errorArray != null) {
         errorTable.set(errorArray.toArray(new String[motorList.size()]));
+        errorArray.removeAll(errorArray);
       }
     } else {
       isStop(tableArray);
@@ -110,58 +114,48 @@ public class MotorTest {
     }
   }
 
-  public void coastOrBrake(int idx) {
-    String[] motorArray = (tableArray[idx]).split(" ");
-    if ((motorArray[6]) == "false") {
-      motorList.get(idx).setIdle(Motor.IdleMode.BRAKE);
+  public void coastOrBrake(String[] deviceArray) { 
+    if ((deviceArray[6]) == "false") {
+      motorList.get(numMotors).setIdle(Motor.IdleMode.BRAKE);
     } else {
-      motorList.get(idx).setIdle(Motor.IdleMode.COAST);
+      motorList.get(numMotors).setIdle(Motor.IdleMode.COAST);
     }
   }
 
-  public void invertMotor(int idx) {
-    String[] motorArray = (tableArray[idx]).split(" ");
-    boolean isInverted = Boolean.parseBoolean(motorArray[7]);
-    motorList.get(idx).invertMotor(isInverted);
+  public void invertMotor(String[] deviceArray) {
+    boolean isInverted = Boolean.parseBoolean(deviceArray[7]);
+    motorList.get(numMotors).invertMotor(isInverted);
   }
 
-  public void setSpeed(int idx) {
-    if (tableArray[idx] != null) {
-      String[] motorArray = (tableArray[idx]).split(" ");
-      double constSpeed = (Double.parseDouble(motorArray[4]));
-      boolean isJoystick = (Boolean.parseBoolean(motorArray[5])); // make boolean
-      motorList.get(idx).setSpeed(constSpeed, isJoystick);
-    } else {
-      motorList.get(idx).disable();
-    }
+  public void setSpeed(String[] deviceArray) {
+    double constSpeed = (Double.parseDouble(deviceArray[4]));
+    boolean isJoystick = (Boolean.parseBoolean(deviceArray[5])); // make boolean
+    motorList.get(numMotors).setSpeed(constSpeed, isJoystick);
   }
 
   public void stopMotors(Motor motor) {
     motor.disable();
   }
 
-  public void setCurrentLimit(int idx) {
-    String[] motorArray = (tableArray[idx]).split(" ");
-    int currLimit = (int) (Double.parseDouble(motorArray[8]));
-    motorList.get(idx).setCurrentLimit(currLimit);
+  public void setCurrentLimit(String[] deviceArray) {
+    int currLimit = (int) (Double.parseDouble(deviceArray[8]));
+    motorList.get(numMotors).setCurrentLimit(currLimit);
   }
 
-  public void setEncoderLimit(int idx) {
-    String[] motorArray = (tableArray[idx]).split(" ");
-    double low = (Double.parseDouble(motorArray[9]));
-    double high = (Double.parseDouble(motorArray[10]));
-    motorList.get(idx).setEncoderLimit(low, high);
+  public void setEncoderLimit(String[] deviceArray) {
+    double low = (Double.parseDouble(deviceArray[9]));
+    double high = (Double.parseDouble(deviceArray[10]));
+    motorList.get(numMotors).setEncoderLimit(low, high);
   }
 
-  public void setSolenoid(int idx) {
-    String[] motorArray = (tableArray[idx]).split(" ");
+  public void setSolenoid(String[] deviceArray) {
     Value value;
-    if (Boolean.parseBoolean(motorArray[12])) {
+    if (Boolean.parseBoolean(deviceArray[12])) {
       value = Value.kForward;
     } else {
       value = Value.kReverse;
     }
-    solenoidList.get(idx).set(value);
+    solenoidList.get(numSolenoid).set(value);
   }
 
   public void register(Motor motor, DoubleSolenoid solenoid, String subsystem, String name) {
@@ -175,7 +169,6 @@ public class MotorTest {
     }
 
     motorTable.set(motorArray.toArray(new String[motorList.size() + solenoidList.size()]));
-    allDevices = motorList.size() + solenoidList.size();
   }
 
 }
