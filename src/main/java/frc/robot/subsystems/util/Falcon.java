@@ -12,11 +12,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-public class Falcon extends Motor{
+public class Falcon extends Motor {
     WPI_TalonFX motor;
     public int canID;
     public double currentLimit;
-    
+
     public Falcon(WPI_TalonFX motor) {
         this.motor = motor;
         this.oi = OI.getInstance();
@@ -37,9 +37,9 @@ public class Falcon extends Motor{
     public void invertMotor(boolean flipped) {
         motor.setInverted(flipped);
     }
-    
+
     @Override
-    public void setSpeed(double speed, boolean isJoystick){
+    public void setSpeed(double speed, boolean isJoystick) {
 
         double newSpeed;
         if (isJoystick) {
@@ -53,7 +53,7 @@ public class Falcon extends Motor{
 
         double position = motor.getSelectedSensorPosition();
 
-        if (((newSpeed > 0 && position >= highLimit) || ( newSpeed < 0 && position <= lowLimit))) {
+        if (((newSpeed > 0 && position >= highLimit) || (newSpeed < 0 && position <= lowLimit))) {
             newSpeed = 0;
         }
 
@@ -61,18 +61,21 @@ public class Falcon extends Motor{
         // System.out.println(motor.getSelectedSensorPosition() +"pos");
         // System.out.println(lowLimit);
 
-    }    
-    
-    // TODO: ask maanav
+    }
+
     @Override
     public void setCurrentLimit(double currentLimit) {
-        SupplyCurrentLimitConfiguration CurrentLimit = new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit,0.1);
+        SupplyCurrentLimitConfiguration CurrentLimit = new SupplyCurrentLimitConfiguration(true, currentLimit,
+                currentLimit, 0.1);
         motor.configSupplyCurrentLimit(CurrentLimit);
     }
 
-    // public void setCurrentLimit(double currentLimit1, double currentLimit2, double threshhold) {
-    //     SupplyCurrentLimitConfiguration CurrentLimit = new SupplyCurrentLimitConfiguration(true, currentLimit1, currentLimit2,threshhold);
-    //     motor.configSupplyCurrentLimit(CurrentLimit);
+    // public void setCurrentLimit(double currentLimit1, double currentLimit2,
+    // double threshhold) {
+    // SupplyCurrentLimitConfiguration CurrentLimit = new
+    // SupplyCurrentLimitConfiguration(true, currentLimit1,
+    // currentLimit2,threshhold);
+    // motor.configSupplyCurrentLimit(CurrentLimit);
     // }
 
     @Override
@@ -85,18 +88,20 @@ public class Falcon extends Motor{
 
         if (highLimit == 0) {
             this.highLimit = Double.MAX_VALUE;
-        } else{
+        } else {
             this.highLimit = highLimit * 1000;
         }
     }
 
     @Override
-    public void disable(){
+    public void disable() {
         motor.disable();
     }
 
-    public void checkElecErrors(){}
-    public ArrayList<String> getErrors(){
+    public void checkElecErrors() {
+    }
+
+    public ArrayList<String> getErrors() {
         return null;
     }
 }
