@@ -43,8 +43,6 @@ public class RobotContainer {
      */
     public RobotContainer() {
         SmartDashboard.putString("Robot Name", Constants.ROBOT_NAME.toString());
-
-        MotorTest motorTest = MotorTest.getInstance();
         swerve = Swerve.getInstance();
         oi = OI.getInstance();
         manipulator = Manipulator.getInstance();
