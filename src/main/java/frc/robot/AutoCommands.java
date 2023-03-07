@@ -15,14 +15,18 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kSwerve;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.intake.BetaIntake;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.util.CommandFactories;
+import frc.robot.subsystems.arm.BetaArm;
+import frc.robot.subsystems.indexer.BetaIndexer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,28 +49,56 @@ public class AutoCommands {
      * Define all auto commands.
      */
 
-    public AutoCommands() {
-        this.swerve = Swerve.getInstance();
-        this.indexer = Indexer.getInstance();
-        this.intake = Intake.getInstance();
-        this.manipulator = Manipulator.getInstance();
-        this.arm = AlphaArm.getInstance();
+    public AutoCommands(Swerve swerve, Indexer indexer, Intake intake, Manipulator manipulator, Arm arm) {
+        this.swerve = swerve;
+        this.indexer = indexer;
+        this.intake = intake;
+        this.manipulator = manipulator;
+        this.arm = arm;
 
-        eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake()));
+        eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake(), new ParallelCommandGroup(
+            indexer.runIndexer(), 
+            manipulator.cube()
+        )));
+
         eventMap.put("intakeUp", new SequentialCommandGroup(
             intake.retractIntake(), 
             new ParallelCommandGroup(
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(0.5), 
+            new WaitCommand(2.0), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 
                 manipulator.holdCube()
             )
         ));
-        eventMap.put("scoreCube", CommandFactories.getCubeScore(intake, (AlphaArm)arm, manipulator));
+
+        eventMap.put("scoreCube", new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L3_SCORING),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            manipulator.cubeReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
+        ));
+
+        eventMap.put("scoreCone", new SequentialCommandGroup(
+            manipulator.cone(),
+            new WaitCommand(0.1),
+            arm.moveArm(ArmPos.L3_SCORING),
+            new WaitCommand(1.0),
+            manipulator.coneReverse(),
+            new WaitCommand(0.1)
+            // arm.moveArm(ArmPos.LOWERED)
+        ));
+
+        eventMap.put("raiseArm", new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L2_SCORING)
+        ));
+
+        eventMap.put("lowerArm", new SequentialCommandGroup(
+            arm.moveArm(ArmPos.LOWERED)
+        ));
 
         autoBuilder = new SwerveAutoBuilder(
             swerve::getPose, // Pose2d supplier
@@ -88,7 +120,9 @@ public class AutoCommands {
 
         autoChooser.addOption("2 Piece Loading Zone", makeAuto("2_Piece_Loading_Zone"));
 
-        autoChooser.addOption("2 Piece Loading Zone and Charge", new SequentialCommandGroup(makeAuto("2_Piece_Loading_Zone"), makeAuto("Node_to_Charge")));
+        autoChooser.addOption("3 Piece Piece Loading Zone",new SequentialCommandGroup(makeAuto("2_Piece_Loading_Zone"), makeAuto("3_Piece_Loading_Zone")));
+
+
         autoChooser.addOption("Charge", makeAuto("Charge"));
         putAutoChooser();
     }

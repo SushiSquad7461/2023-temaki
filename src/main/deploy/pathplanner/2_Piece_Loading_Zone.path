@@ -2,38 +2,40 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7977873330924976,
-        "y": 4.91724692436546
+        "x": 1.784356272757968,
+        "y": 4.900306152635016
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.661766981165916,
-        "y": 4.928682382329101
+        "x": 3.615669289535882,
+        "y": 4.806392664595124
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "scoreCone"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.978049790621694,
-        "y": 4.597054101383525
+        "x": 7.659818868253777,
+        "y": 4.213563771343299
       },
       "prevControl": {
-        "x": 6.337664144657819,
-        "y": 4.574183185456243
+        "x": 6.921146439282477,
+        "y": 4.3465976255224845
       },
       "nextControl": {
-        "x": 6.337664144657819,
-        "y": 4.574183185456243
+        "x": 6.921146439282477,
+        "y": 4.3465976255224845
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -49,15 +51,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.7177391273470128,
-        "y": 4.528441353601681
+        "x": 1.84,
+        "y": 4.15
       },
       "prevControl": {
-        "x": 2.312382941456325,
-        "y": 5.363229784947445
+        "x": 2.9465356872516444,
+        "y": 4.964871675662443
       },
       "nextControl": null,
-      "holonomicAngle": -180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -66,7 +68,7 @@
         "names": [
           "scoreCube"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -83,6 +85,18 @@
       "position": 1.2654545454545103,
       "names": [
         "intakeUp"
+      ]
+    },
+    {
+      "position": 1.745454545454543,
+      "names": [
+        "raiseArm"
+      ]
+    },
+    {
+      "position": 0.08181818181818165,
+      "names": [
+        "lowerArm"
       ]
     }
   ]

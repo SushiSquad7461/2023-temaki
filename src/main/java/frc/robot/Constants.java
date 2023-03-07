@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import SushiFrcLib.DependencyInjection.RobotName;
 import SushiFrcLib.Swerve.SwerveModuleConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.auto.PIDConstants;
@@ -14,6 +13,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -43,32 +43,55 @@ public final class Constants {
         BETA
     }
 
-    public static final RobotNames ROBOT_NAME;
-
-    static {
-        switch (RobotName.getInstance().getName()) {
-          case "alpha":
-              ROBOT_NAME = RobotNames.ALPHA;
-              break;
-          default:
-              ROBOT_NAME = RobotNames.BETA;
-              break;
-        }
-    }
+    public static final RobotNames ROBOT_NAME = RobotNames.BETA;
 
     /**
      * Defines port values.
      */
     public static class kPorts {
         public static final String CANIVORE_NAME = "Sussy Squad";
+        public static final String PIGEON_CANIVORE_NAME;
+
+        static {
+            switch(ROBOT_NAME) {
+                case ALPHA:
+                    PIGEON_CANIVORE_NAME = "";
+                    break;
+                default:
+                    PIGEON_CANIVORE_NAME = "Sussy Squad";
+                    break;
+            }
+        }
+
         public static final int PIGEON_ID = 13;
         public static final int INDEXER_MOTOR = 21;
-        public static final int INTAKE_MOTOR_ID = 20;
-        public static final int PNEUMATIC_FORWARD_CHANNEL_LEFT = 7;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_LEFT = 4;
+        public static final int CONE_RAMP_MOTOR = 25;
+        public static final int INTAKE_BOTTOM_MOTOR_ID = 20;
+        public static final int INTAKE_TOP_MOTOR_ID = 26;
 
-        public static final int PNEUMATIC_FORWARD_CHANNEL_RIGHT = 6;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_RIGHT = 5;  
+        // intake pneumatic
+        public static final int PNEUMATIC_FORWARD_CHANNEL;
+        public static final int PNEUMATIC_REVERSE_CHANNEL;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  PNEUMATIC_FORWARD_CHANNEL = 5;
+                  PNEUMATIC_REVERSE_CHANNEL = 6;
+                  break;
+              default:
+                  PNEUMATIC_FORWARD_CHANNEL = 0;
+                  PNEUMATIC_REVERSE_CHANNEL = 1;
+                  break;
+            }
+        }
+
+        // arm pneumatic
+        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
+
+        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM2 = 4;
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM2 = 6;
 
         public static final int MANIPULATOR_MOTOR_ID = 24;
 
@@ -81,14 +104,27 @@ public final class Constants {
      * Constants for indexer.
      */
     public static class kIndexer {
-        public static final double SPEED = 0.7;
+        public static final double INDEXER_SPEED;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  INDEXER_SPEED = 0.7;
+                  break;
+              default:
+                  INDEXER_SPEED = -0.7;
+                  break;
+            }
+        }
+
+        public static final double CONE_RAMP_SPEED = 0.5;
     }
 
     /**
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.5;
+        public static final double MOTOR_SPEED = 0.3;
     }
     
     /**
@@ -155,10 +191,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.6, 0.6, 0.1);
+            VecBuilder.fill(1.2, 1.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(0.3, 0.3, 0.5);
+            VecBuilder.fill(1.8, 1.8, 1.2);
 
         /* Module Specific Constants */
 
@@ -167,7 +203,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 1;
             public static final int ANGLE_MOTOR_ID = 3;
             public static final int CAN_CODER_ID = 2;
-            public static final double ANGLE_OFFSET = 89.648438;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                  case ALPHA:
+                      ANGLE_OFFSET = 89.648438;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 2.109375 + 180;
+                      break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -178,7 +226,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 10;
             public static final int ANGLE_MOTOR_ID = 12;
             public static final int CAN_CODER_ID = 11;
-            public static final double ANGLE_OFFSET = 195.380859;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                  case ALPHA:
+                      ANGLE_OFFSET = 195.380859;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 229.130859 - 180;
+                      break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -189,7 +249,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 4;
             public static final int ANGLE_MOTOR_ID = 6;
             public static final int CAN_CODER_ID = 5;
-            public static final double ANGLE_OFFSET = 67.675781;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                  case ALPHA:
+                      ANGLE_OFFSET = 67.675781;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 16.083984 + 180;
+                      break;
+                }
+            }
+            
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -200,7 +272,19 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 7;
             public static final int ANGLE_MOTOR_ID = 9;
             public static final int CAN_CODER_ID = 8;
-            public static final double ANGLE_OFFSET = 69.785156;
+            public static final double ANGLE_OFFSET;
+
+            static {
+                switch (ROBOT_NAME) {
+                  case ALPHA:
+                      ANGLE_OFFSET = 69.785156;
+                      break;
+                  default:
+                      ANGLE_OFFSET = 303.574219 - 180;
+                      break;
+                }
+            }
+
             public static final SwerveModuleConstants CONSTANTS = new SwerveModuleConstants(
                 DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CAN_CODER_ID, ANGLE_OFFSET
             );
@@ -211,13 +295,25 @@ public final class Constants {
      * Auto align values.
      */
     public static final class kAutoAlign {
-        
-        /** PID tolerance */
-        public static final double X_TOLLERENCE = 0.03;
-        public static final double Y_TOLLERENCE = 0.03;
-        public static final double THETA_TOLLERENCE = 0.03;
+        public static final Rotation2d DEFAULT_ROTATION;
 
-        /** Pid values */
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
+                    break;
+                default:
+                    DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
+                    break;
+            }
+        }
+
+        /** PID tolerance */
+        public static final double X_TOLLERENCE = 0.01;
+        public static final double Y_TOLLERENCE = 0.02;
+        public static final double THETA_TOLLERENCE = 0.02;
+
+        /* Pid values */
         public static final double X_P = 10.0;
         public static final double X_I = 0.0;
         public static final double X_D = 0.75;
@@ -226,12 +322,12 @@ public final class Constants {
         public static final double Y_I = 0.0;
         public static final double Y_D = 0.75;
         
-        public static final double THETA_P = 12.0;
+        public static final double THETA_P = 8.0;
         public static final double THETA_I = 0.0;
         public static final double THETA_D = 0.9;
 
         /** Default offset value. */
-        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.1, 0);
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.0, 0);
     }
 
     /**
@@ -251,9 +347,24 @@ public final class Constants {
          * Slew rate limiters for anti tip.
          * Limits the acceleration essentially.
          */
-        public static final SlewRateLimiter DRIVE_X_LIMITER = new SlewRateLimiter(3);
-        public static final SlewRateLimiter DRIVE_Y_LIMITER = new SlewRateLimiter(3);
-        public static final SlewRateLimiter DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
+        public static final SlewRateLimiter DRIVE_X_LIMITER;
+        public static final SlewRateLimiter DRIVE_Y_LIMITER;
+        public static final SlewRateLimiter DRIVE_THETA_LIMITER;
+
+        static {
+            switch (ROBOT_NAME) {
+                case ALPHA:
+                    DRIVE_X_LIMITER = new SlewRateLimiter(3);
+                    DRIVE_Y_LIMITER = new SlewRateLimiter(3);
+                    DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
+                    break;
+                default:
+                    DRIVE_X_LIMITER = new SlewRateLimiter(3000);
+                    DRIVE_Y_LIMITER = new SlewRateLimiter(3000);
+                    DRIVE_THETA_LIMITER = new SlewRateLimiter(3000);
+                    break;
+            }
+        }
 
     }
 
@@ -261,10 +372,23 @@ public final class Constants {
      * Arm values.
      */
     public static final class kArm {
-        public static final double GEAR_RATIO = 72.00;
+        public static final double GEAR_RATIO;
 
-        public static final boolean LEFT_INVERSION = true;
-        public static final boolean RIGHT_INVERSION = true;
+        public static final boolean LEFT_INVERSION;
+        public static final boolean RIGHT_INVERSION;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  LEFT_INVERSION = true;
+                  RIGHT_INVERSION = true;
+                  break;
+              default:
+                  LEFT_INVERSION = false;
+                  RIGHT_INVERSION = false;
+                  break;
+            }
+        }
 
         public static final int LEFT_CURRENT_LIMIT = 25;
         public static final int RIGHT_CURRENT_LIMIT = 25;
@@ -272,30 +396,71 @@ public final class Constants {
         public static final IdleMode LEFT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode RIGHT_IDLE_MODE = IdleMode.kBrake;
 
-        public static final double KP = 0.0150000; // 0.015
-        public static final double KI = 0.0;
-        public static final double KD = 0.0;
-        public static final double KF = 0.0;
-        public static final double KS = 0.32245;
-        public static final double KG = 0.42; //0.42
-        public static final double KV = 0.018286;
-        public static final double KA = 0.0019367;
-
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 110.00; // in degrees
 
-        public static final double ENCODER_ANGLE_OFFSET = 233.6;
-        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - 233.6;
+        public static final double ENCODER_ANGLE_OFFSET;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  ENCODER_ANGLE_OFFSET = 233.6;
+                  break;
+              default:
+                  ENCODER_ANGLE_OFFSET = 198.428918;
+                  break;
+            }
+        }
+
+        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+
+        public static final double KP;
+        public static final double KI = 0.0;
+        public static final double KD = 0.0;
+        public static final double KF = 0.0;
+        public static final double KS;
+        public static final double KG;
+        public static final double KGR; // kG for beta retracted arm
+        public static final double KGE; // kG for beta extended arm
+        public static final double KV;
+        public static final double KA;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  GEAR_RATIO = 72.0;
+
+                  KP = 0.0100000;
+                  KS = 0.32245;
+                  KG = 0.42;
+                  KGE = 0;
+                  KGR = 0;
+                  KV = 0.018286;
+                  KA = 0.0019367;
+                  break;
+              default:
+                  GEAR_RATIO = 96.67;
+
+                  KP = 0.010;
+                  KS = 0.0;
+                  KG = 0.0;
+                  KGR = 0.6;
+                  KGE = 1.2;
+                  KV = 0.0;
+                  KA = 0.0;
+                  break;
+            }
+        }
 
         /**
          * Enum for arm angles.
          */
         public enum ArmPos {
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(100),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 95.5),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(80),
-            L3_SCORING(0);
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 81),
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 100);
 
             private double angle;
 
@@ -314,15 +479,17 @@ public final class Constants {
      * Times are in seconds.
      */
     public static final class kCommandTimmings {
-        public static final double PNEUMATIC_WAIT_TIME = 0.7;
-        public static final double MANIPULATOR_WAIT_TIME = 0.5;
+        public static final double PNEUMATIC_WAIT_TIME = 0.5;
+        public static final double MANIPULATOR_WAIT_TIME = 0.8;
     }
 
     /**
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 0.25;
+        public static final double SPEED = 0.75;
+        public static final int CURRENT_LIMITING = 40;
+        public static final int MAX_CURRENT = 30;
     }
 
     /** Vision constants. */
@@ -345,19 +512,39 @@ public final class Constants {
                 throw new Error(e);
             }
         }
-        
-        // X is forward, Y is left.
-        public static final Translation3d CAMERA_POS_METERS = new Translation3d(
-            Units.inchesToMeters(2.691), 
-            Units.inchesToMeters(6),
-            Units.inchesToMeters(26.75)
-        );
 
-        public static final Rotation3d CAMERA_ANGLE_DEGREES = new Rotation3d(
-            Units.degreesToRadians(0),
-            Units.degreesToRadians(12),
-            Units.degreesToRadians(0)
-        ).unaryMinus();
+        public static final Translation3d CAMERA_POS_METERS;
+        public static final Rotation3d CAMERA_ANGLE_DEGREES;
+
+        static {
+            switch(ROBOT_NAME) {
+                case ALPHA:
+                    // X is forward, Y is left.
+                     CAMERA_POS_METERS = new Translation3d(
+                        Units.inchesToMeters(2.691), 
+                        Units.inchesToMeters(6),
+                        Units.inchesToMeters(27.75)
+                    );
+                    CAMERA_ANGLE_DEGREES = new Rotation3d(
+                        Units.degreesToRadians(0),
+                        Units.degreesToRadians(12),
+                        Units.degreesToRadians(0)
+                    ).unaryMinus();
+                    break;
+                default:
+                    // X is forward, Y is left.
+                    CAMERA_POS_METERS = new Translation3d(
+                        Units.inchesToMeters(2.092), 
+                        Units.inchesToMeters(8.5),
+                        Units.inchesToMeters(31.161)
+                    );
+                    CAMERA_ANGLE_DEGREES = new Rotation3d(
+                        Units.degreesToRadians(0),
+                        Units.degreesToRadians(16.579),
+                        Units.degreesToRadians(180)
+                    ).unaryMinus();
+            }
+        }
 
         public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = new Transform3d(
             CAMERA_POS_METERS.unaryMinus(), 

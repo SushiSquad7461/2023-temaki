@@ -1,65 +1,66 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.indexer;
 
 import SushiFrcLib.Motor.MotorHelper;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kIndexer;
 import frc.robot.Constants.kPorts;
-import frc.robot.subsystems.util.MotorTest;
-import frc.robot.subsystems.util.Neo;
 
 /**
- * Controls indexer subsytem.
+ * Implements a indexer for temaki.
  */
-public class Indexer extends SubsystemBase {
+public class BetaIndexer extends Indexer {
     private final CANSparkMax indexerMotor;
-    private MotorTest motorTest;
+    private final CANSparkMax coneRamp;
 
-    private static Indexer instance;
+    private static BetaIndexer instance;
 
     /**
      * singleton get instance method.
      */
-    public static Indexer getInstance() {
+    public static BetaIndexer getInstance() {
         if (instance == null) {
-            instance = new Indexer();
+            instance = new BetaIndexer();
         }
         return instance;
     }
 
-    private Indexer() {
+    private BetaIndexer() {
         indexerMotor = MotorHelper.createSparkMax(kPorts.INDEXER_MOTOR, MotorType.kBrushless);
-        Neo neoIndexer = new Neo(indexerMotor);
-        motorTest = MotorTest.getInstance();
-        motorTest.registerMotor(neoIndexer, "Indexer Subsystem", "indexer", neoIndexer.canID, 0);
+        coneRamp = MotorHelper.createSparkMax(kPorts.CONE_RAMP_MOTOR, MotorType.kBrushless);
     }
 
     /**
      * Runs indexer in positive direction.
      */
+    @Override
     public Command runIndexer() {
         return runOnce(() -> {
-            indexerMotor.set(kIndexer.SPEED);
+            indexerMotor.set(kIndexer.INDEXER_SPEED);
+            coneRamp.set(kIndexer.CONE_RAMP_SPEED);
         });
     }
 
     /**
      * Stops indexer.
      */
+    @Override
     public Command stopIndexer() {
         return runOnce(() -> {
             indexerMotor.set(0);
+            coneRamp.set(0);
         });
     }
 
     /**
      * Reverses indexer.
      */
+    @Override
     public Command reverseIndexer() {
         return runOnce(() -> {
-            indexerMotor.set(kIndexer.SPEED * -1);
+            indexerMotor.set(kIndexer.INDEXER_SPEED * -1);
+            coneRamp.set(kIndexer.CONE_RAMP_SPEED * -1);
         });
     }
 }
