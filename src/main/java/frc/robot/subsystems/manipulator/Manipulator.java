@@ -14,7 +14,7 @@ import frc.robot.Constants.kPorts;
  * Controls the manipulator subsytem.
  */
 public abstract class Manipulator extends SubsystemBase {
-    private CANSparkMax motor;
+    protected CANSparkMax motor;
     private static BetaManipulator instance;
 
     protected Manipulator() {

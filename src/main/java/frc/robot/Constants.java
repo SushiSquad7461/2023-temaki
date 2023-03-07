@@ -105,19 +105,20 @@ public final class Constants {
      */
     public static class kIndexer {
         public static final double INDEXER_SPEED;
+        public static final double CONE_RAMP_SPEED;
 
         static {
             switch (ROBOT_NAME) {
               case ALPHA:
                   INDEXER_SPEED = 0.7;
+                  CONE_RAMP_SPEED = 0.5;
                   break;
               default:
                   INDEXER_SPEED = -0.7;
+                  CONE_RAMP_SPEED = -0.5;
                   break;
             }
         }
-
-        public static final double CONE_RAMP_SPEED = 0.5;
     }
 
     /**

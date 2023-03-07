@@ -15,7 +15,6 @@ import frc.robot.Constants.kPorts;
  * Controls the manipulator subsytem.
  */
 public class BetaManipulator extends Manipulator {
-    private CANSparkMax motor;
     private static BetaManipulator instance;
     private DigitalInput beamBreak;
 
@@ -36,10 +35,20 @@ public class BetaManipulator extends Manipulator {
 
 
     public Command release() {
-        return beamBreak.get() ? coneReverse() : cubeReverse();
+        return runOnce(() -> {
+            if (isBeamBreakBlocked()) {
+                cubeReverse().schedule();
+            } else {
+                coneReverse().schedule();
+            }
+        });
     }
 
     public void periodic() {
         SmartDashboard.putNumber("Manipulator Current", motor.getOutputCurrent());
+    }
+
+    public boolean isBeamBreakBlocked() {
+        return !beamBreak.get();
     }
 }
