@@ -32,10 +32,10 @@ public class AlphaIndexer extends Indexer {
         indexerMotor = MotorHelper.createSparkMax(kPorts.INDEXER_MOTOR, MotorType.kBrushless);
         Neo neoIndexer = new Neo(indexerMotor);
         motorTest = MotorTest.getInstance();
-        motorTest.registerMotor(neoIndexer, "Indexer Subsystem", "indexer", neoIndexer.canID, 0);
+        motorTest.registerMotor(neoIndexer, "IndexerSubsystem", "indexer", neoIndexer.canID, neoIndexer.currentLimit, 0);
     }
 
-    /**
+    /**o
      * Runs indexer in positive direction.
      */
     @Override

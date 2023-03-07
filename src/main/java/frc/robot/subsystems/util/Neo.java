@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.kOI;
+import frc.robot.OI;
+
 public class Neo extends Motor {
     CANSparkMax motor;
+
     public int canID;
     public double currentLimit;
 
     public Neo(CANSparkMax motor) {
         this.motor = motor;
+        this.oi = OI.getInstance();
         this.canID = motor.getDeviceId();
         this.currentLimit = motor.getOutputCurrent();
     }
@@ -45,19 +51,22 @@ public class Neo extends Motor {
     public void setSpeed(double speed, boolean isJoystick) {
         double newSpeed;
         if (isJoystick) {
-            //newSpeed = oi.getDriveTrainTranslationY()
-            newSpeed = 0;
+            newSpeed = oi.getDriveTrainTranslationY();
+            if (newSpeed < .09 && newSpeed > -.09) {
+                newSpeed = 0;
+            }
         } else {
             newSpeed = speed;
         }
-       
+
         double position = motor.getEncoder().getPosition();
-        if (highLimit != 0){
-            if (!((speed < 0 && position >= lowLimit) || position <= highLimit)){
-                newSpeed = 0;
-            }
+        if (((newSpeed > 0 && position >= highLimit) || ( newSpeed < 0 && position <= lowLimit))) {
+            newSpeed = 0;
         }
+
         motor.set(newSpeed);
+        //System.out.println(motor.getEncoder().getPosition() +"pos");
+        //System.out.println(motor.getEncoder().getPosition()+"pos");
     }
 
     @Override
@@ -74,10 +83,16 @@ public class Neo extends Motor {
 
     @Override
     public void setEncoderLimit(double lowLimit, double highLimit) {
-        this.lowLimit = lowLimit;
-        if (highLimit != 0) {
-            motor.getEncoder().setPosition(0);
-            this.highLimit = highLimit;
+        if (lowLimit == -2) {
+            this.lowLimit = Double.MAX_VALUE * -1;
+        } else {
+            this.lowLimit = lowLimit * 1000;
+        }
+
+        if (highLimit == 0) {
+            this.highLimit = Double.MAX_VALUE;
+        } else{
+            this.highLimit = highLimit * 1000;
         }
     }
 
@@ -85,7 +100,7 @@ public class Neo extends Motor {
         motor.disable();
     }
 
-    public void checkElecErrors() { //add to string array in motor test
+    public void checkElecErrors() {
         if (motor.getFault(CANSparkMax.FaultID.kBrownout)){
             allErrors.add("\n" + motor.getDeviceId() + " brownout");
         }

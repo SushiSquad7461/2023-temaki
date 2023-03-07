@@ -2,6 +2,8 @@ package frc.robot.subsystems.util;
 
 import java.util.ArrayList;
 
+import frc.robot.OI;
+
 public abstract class Motor {
     enum IdleMode {
         COAST,
@@ -16,7 +18,7 @@ public abstract class Motor {
     public abstract void checkElecErrors();
     public abstract ArrayList<String> getErrors();
 
-    Object oi;
+    OI oi;
     double lowLimit = Double.MIN_VALUE;
     double highLimit = Double.MAX_VALUE;
     ArrayList<String> allErrors = new ArrayList<String>();

@@ -26,8 +26,8 @@ import frc.robot.Constants.kSwerve;
 public class SwerveModule {
     public int moduleNumber;
     private double angleOffset;
-    private TalonFX angleMotor;
-    private TalonFX driveMotor;
+    public TalonFX angleMotor;
+    public TalonFX driveMotor;
     private CANCoder angleEncoder;
     private double lastAngle;
 

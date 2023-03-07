@@ -14,6 +14,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.BetaArm;
+import frc.robot.subsystems.util.MotorTest;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,6 +28,8 @@ public class Robot extends TimedRobot {
     private Arm arm;
     private RobotContainer robotContainer;
     private Swerve swerve;
+    private MotorTest motorTest;
+
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -47,9 +50,10 @@ public class Robot extends TimedRobot {
         }
 
         swerve = Swerve.getInstance();
-
+        motorTest = MotorTest.getInstance();
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
+        LiveWindow.enableAllTelemetry();
     }
 
     /**
@@ -112,5 +116,7 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically during test mode. */
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+        motorTest.updateMotors();
+    }
 }

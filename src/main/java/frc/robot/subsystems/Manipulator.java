@@ -9,13 +9,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kManipulator;
 import frc.robot.Constants.kPorts;
+import frc.robot.subsystems.util.MotorTest;
+import frc.robot.subsystems.util.Neo;
 
 /**
  * Controls the manipulator subsytem.
  */
 public class Manipulator extends SubsystemBase {
-    private CANSparkMax motor;
+    private CANSparkMax manipulatorMotor;
     private static Manipulator instance;
+    private MotorTest motorTest;
 
     /**
      * Gets the current manipular instance. for singleton support.
@@ -28,11 +31,13 @@ public class Manipulator extends SubsystemBase {
     }
 
     private Manipulator() {
-        motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
-        motor.setSmartCurrentLimit(kManipulator.CURRENT_LIMITING);
-        motor.setInverted(true);
-        motor.burnFlash();
+        manipulatorMotor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
+        manipulatorMotor.setInverted(true);
+        manipulatorMotor.burnFlash();
 
+        Neo neoManipulator = new Neo(manipulatorMotor);
+        motorTest = MotorTest.getInstance();
+        motorTest.registerMotor(neoManipulator, "ManipulatorSubsystem", "manipulator", neoManipulator.canID, 2);
     }
 
     /**
@@ -40,7 +45,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cone() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * -1.0);
+            manipulatorMotor.set(kManipulator.SPEED * -1.0);
         });
     }
 
@@ -49,7 +54,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command coneReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED*3);
+            manipulatorMotor.set(kManipulator.SPEED*3);
         });
     }
 
@@ -58,7 +63,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cube() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED);
+            manipulatorMotor.set(kManipulator.SPEED);
         });
     }
 
@@ -67,7 +72,7 @@ public class Manipulator extends SubsystemBase {
      */
     public Command cubeReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * -3.0);
+            manipulatorMotor.set(kManipulator.SPEED * -3.0);
         });
     }
 
@@ -76,17 +81,17 @@ public class Manipulator extends SubsystemBase {
      */
     public Command stop() {
         return runOnce(() -> {
-            motor.set(0);
+            manipulatorMotor.set(0);
         });
     }
 
     public Command holdCube() {
         return runOnce(() -> {
-            motor.set(-0.01);
+            manipulatorMotor.set(-0.01);
         });
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Manipulator Current", motor.getOutputCurrent());
+        SmartDashboard.putNumber("Manipulator Current", manipulatorMotor.getOutputCurrent());
     }
 }

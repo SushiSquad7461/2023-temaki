@@ -11,6 +11,8 @@ import java.util.List;
 
 import com.revrobotics.REVLibError;
 
+import SushiFrcLib.Motor.MotorHelper;
+
 public class MotorTest {
   private NetworkTableInstance inst;
   private NetworkTable table;
@@ -44,8 +46,7 @@ public class MotorTest {
       dataTable = table.getStringArrayTopic("tableValues").subscribe(null);
       running = table.getBooleanTopic("Running?").subscribe(false);
       tableArray = dataTable.get();
-
-      numMotors = motorList.size();
+      
       motorTable = table.getStringArrayTopic("motors").publish();
       motorArray = new ArrayList<String>();
 
@@ -55,11 +56,13 @@ public class MotorTest {
   
       instance = null;
       motorList = new ArrayList<Motor>();
+      numMotors = 0;
+
+      //numMotors = motorList.size();
     }
 
     public void updateMotors() {
       tableArray = dataTable.get();
-      //try {
         if (running.get()) {
           for (int i = 0; i < motorList.size(); i++) {
             if (tableArray.length > i && !tableArray[i].equals("containsNull")) {
@@ -108,7 +111,6 @@ public class MotorTest {
     }
     
     public void setSpeed(int idx) {
-      System.out.println("in set speed");
       if (tableArray[idx] != null) {
         String[] motorArray = (tableArray[idx]).split(" ");
         double constSpeed = (Double.parseDouble(motorArray[4]));
@@ -135,9 +137,9 @@ public class MotorTest {
       motorList.get(idx).setEncoderLimit(low, high);
     }
 
-    public void registerMotor(Motor motor, String subsystem, String motorName, int id, int pdhPort) {
+    public void registerMotor(Motor motor, String subsystem, String motorName, int id, double currentLimit, int pdhPort) {
       motorList.add(motor);
-      motorArray.add(subsystem + " " + motorName + " " + id + " " + pdhPort + " 0.0 0 0 0 0.0 0.0 0.0 0");
+      motorArray.add(subsystem + " " + motorName + " " + id + " " + pdhPort + " " + currentLimit + " 0 0 0 0.0 -2.0 0.0 0");
       motorTable.set(motorArray.toArray(new String[motorList.size()]));
       numMotors = motorList.size();
     }

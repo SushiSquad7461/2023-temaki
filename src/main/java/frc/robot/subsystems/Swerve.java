@@ -20,12 +20,18 @@ import frc.robot.Constants.kAutoAlign;
 import frc.robot.Constants.kPorts;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
+import frc.robot.subsystems.util.Falcon;
+import frc.robot.subsystems.util.MotorTest;
+import frc.robot.subsystems.util.Neo;
 import frc.robot.util.SwerveModule;
 import frc.robot.util.Vision;
 import frc.robot.util.VisionMeasurement;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 
 /**
  * Class that controls falcon swerve drivetrain.
@@ -37,6 +43,7 @@ public class Swerve extends SubsystemBase {
     private final Field2d field;
     
     private static Swerve instance;
+    private MotorTest motorTest;
 
     private boolean locationLock;
     private PIDController locationLockPID;
@@ -82,6 +89,15 @@ public class Swerve extends SubsystemBase {
 
         locationLock = false;
         locationLockPID = new PIDController(0.1d, 0, 0);
+        motorTest = MotorTest.getInstance();
+        for (int i = 0; i < swerveMods.length; i++) {
+            SwerveModule sModule = swerveMods[i];
+            Falcon falconDrive = new Falcon((WPI_TalonFX) sModule.driveMotor);
+            Falcon falconAngle = new Falcon((WPI_TalonFX) sModule.angleMotor);
+            motorTest.registerMotor(falconDrive, "SwerveSubsystem", ("driveSwerve:"+i), falconDrive.canID, i*2+3);
+            motorTest.registerMotor(falconAngle, "SwerveSubsystem", ("angleSwerve:"+i), falconAngle.canID, i*2+4);
+        }
+
 
         SmartDashboard.putData("Field", field);
     }
