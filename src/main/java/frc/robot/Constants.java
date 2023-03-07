@@ -127,6 +127,11 @@ public final class Constants {
     public static class kIntake {
         public static final double MOTOR_SPEED = 0.3;
     }
+
+    public static class kAutoBalance {
+        public static final double FLATNESS_THRESHOLD_DEGREES = 2;
+        public static final double MAX_SPEED = Constants.kSwerve.MAX_SPEED * 0.0035;
+    }
     
     /**
      * Constants for swerve drive.

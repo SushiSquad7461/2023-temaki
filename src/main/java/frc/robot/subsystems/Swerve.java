@@ -86,6 +86,10 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putData("Field", field);
     }
 
+    public Pigeon getGyro() {
+        return gyro;
+    }
+
     public void turnOnLocationLock(double angle) {
         locationLock = true;
         locationLockPID.setSetpoint(angle);
