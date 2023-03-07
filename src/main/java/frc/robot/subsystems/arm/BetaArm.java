@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.subsystems.util.MotorTest;
 import frc.robot.Constants.kPorts;
 
 /**
@@ -25,6 +26,7 @@ public class BetaArm extends Arm {
     private final ArmFeedforward armFeedforwardExtended;
 
     private static BetaArm instance;
+    private static MotorTest motorTest;
 
     /**
      * Gets current instance of arm implements singelton.

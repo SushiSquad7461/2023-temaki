@@ -6,20 +6,26 @@ import java.util.Arrays;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kOI;
 import frc.robot.OI;
 
 public class Neo extends Motor {
     CANSparkMax motor;
-
+    public static ErrorHandler errorHandler;
     public int canID;
+
     public double currentLimit;
     private double startingEncoder;
     private double endingEncoder;
 
     public Neo(CANSparkMax motor) {
+        errorHandler = ErrorHandler.getInstance();
         this.motor = motor;
         this.oi = OI.getInstance();
         this.canID = motor.getDeviceId();
@@ -27,10 +33,31 @@ public class Neo extends Motor {
     }
 
     @Override
-    public void startTwitch() {
-        startingEncoder = motor.getEncoder().getPosition();
-        setSpeed(.1, false);
+    public Command runTwitchTest() {
+        return new SequentialCommandGroup(
+            new InstantCommand(()-> {
+                startTwitch();
+            }),
+            new WaitCommand(0.1),
+            new InstantCommand(() -> {
+                endTwitch();
+                checkEncoderErrors();
+            })
+        );
+        // return (findTotalErrors().toArray(new String[findTotalErrors().size()]));
     }
+
+    @Override
+    public void startTwitch() {
+        startTwitch(.1);
+    }
+
+    @Override
+    public void startTwitch(double speed) {
+        startingEncoder = motor.getEncoder().getPosition();
+        setSpeed(speed, false);
+    }
+
 
     @Override
     public void endTwitch() {
@@ -39,26 +66,10 @@ public class Neo extends Motor {
     }
 
     @Override
-    public boolean checkEncoderErrors() {
-        if (endingEncoder > startingEncoder + 40) {
-            return true;
+    public void checkEncoderErrors() {
+        if (endingEncoder < startingEncoder + 40) {
+            errorHandler.add("The motor isn't spinning");
         }
-        return false;
-    }
-
-    @Override
-    public ArrayList<String> findErrors() {
-        checkElecErrors();
-        return getErrors();
-    }
-
-    @Override
-    public ArrayList<String> findTotalErrors() {
-        ArrayList<String> output = findErrors();
-        if (!checkEncoderErrors()) {
-            output.add("The motor isn't working");
-        }
-        return output;
     }
 
     @Override
@@ -67,11 +78,11 @@ public class Neo extends Motor {
                 + " 0 " + this.currentLimit + " " + this.lowLimit + " " + this.highLimit + " 0 " + "0";
     }
 
-    public ArrayList<String> getErrors() {
-        ArrayList<String> ret = new ArrayList<>(allErrors);
-        allErrors.removeAll(allErrors);
-        return ret;
-    }
+    // public ArrayList<String> getErrors() {
+    //     ArrayList<String> ret = new ArrayList<>(allErrors);
+    //     allErrors.removeAll(allErrors);
+    //     return ret;
+    // }
 
     @Override
     public void setIdle(IdleMode idle) {
@@ -83,7 +94,7 @@ public class Neo extends Motor {
         }
 
         if (errorChecker != REVLibError.kOk) {
-            allErrors.add("\n coast/brake of " + motor.getDeviceId() + " is " + errorChecker.toString());
+            errorHandler.add("\n coast/brake of " + motor.getDeviceId() + " is " + errorChecker.toString());
         }
     }
 
@@ -120,7 +131,7 @@ public class Neo extends Motor {
         }
 
         if (errorChecker != REVLibError.kOk) {
-            allErrors.add("\n current limit of " + motor.getDeviceId() + " is " + errorChecker.toString());
+            errorHandler.add("\n current limit of " + motor.getDeviceId() + " is " + errorChecker.toString());
         }
     }
 
@@ -146,31 +157,32 @@ public class Neo extends Motor {
     @Override
     public void checkElecErrors() {
         if (motor.getFault(CANSparkMax.FaultID.kBrownout)) {
-            allErrors.add("\n" + motor.getDeviceId() + " brownout");
+            errorHandler.add("\n" + motor.getDeviceId() + " brownout");
+            
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kMotorFault)) {
-            allErrors.add("\n" + motor.getDeviceId() + " motor fault");
+            errorHandler.add("\n" + motor.getDeviceId() + " motor fault");
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kOvercurrent)) {
-            allErrors.add("\n" + motor.getDeviceId() + " over current");
+            errorHandler.add("\n" + motor.getDeviceId() + " over current");
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kStall)) {
-            allErrors.add("\n" + motor.getDeviceId() + " stalling");
+            errorHandler.add("\n" + motor.getDeviceId() + " stalling");
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kHasReset)) {
-            allErrors.add("\n" + motor.getDeviceId() + " has reset");
+            errorHandler.add("\n" + motor.getDeviceId() + " has reset");
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kCANRX)) {
-            allErrors.add("\n" + motor.getDeviceId() + " can rx");
+            errorHandler.add("\n" + motor.getDeviceId() + " can rx");
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kCANTX)) {
-            allErrors.add("\n" + motor.getDeviceId() + " can tx");
+            errorHandler.add("\n" + motor.getDeviceId() + " can tx");
         }
 
     }

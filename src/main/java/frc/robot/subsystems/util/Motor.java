@@ -2,6 +2,7 @@ package frc.robot.subsystems.util;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 
 public abstract class Motor {
@@ -24,22 +25,20 @@ public abstract class Motor {
 
     public abstract void checkElecErrors();
 
-    public abstract ArrayList<String> getErrors();
-
     public abstract String getRegisterString(String subsystem, String name);
 
     public abstract void endTwitch();
 
+    public abstract void startTwitch(double speed);
+
     public abstract void startTwitch();
 
-    public abstract boolean checkEncoderErrors();
+    public abstract void checkEncoderErrors();
 
-    public abstract ArrayList<String> findErrors();
+    public abstract Command runTwitchTest();
 
-    public abstract ArrayList<String> findTotalErrors();
 
     OI oi;
     double lowLimit = Double.MAX_VALUE * -1;
     double highLimit = Double.MAX_VALUE;
-    ArrayList<String> allErrors = new ArrayList<String>();
 }

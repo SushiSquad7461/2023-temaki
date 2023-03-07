@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.text.Highlighter.Highlight;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kOI;
 import frc.robot.OI;
@@ -15,11 +16,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 public class Falcon extends Motor {
     WPI_TalonFX motor;
     public int canID;
+    public ErrorHandler errorHandler;
     public double currentLimit;
     private double startingEncoder;
     private double endingEncoder;
 
     public Falcon(WPI_TalonFX motor) {
+        errorHandler = ErrorHandler.getInstance();
         this.motor = motor;
         this.oi = OI.getInstance();
         this.canID = motor.getDeviceID();
@@ -39,26 +42,10 @@ public class Falcon extends Motor {
     }
 
     @Override
-    public boolean checkEncoderErrors() {
-        if (endingEncoder > startingEncoder + 40) {
-            return true;
+    public void checkEncoderErrors() {
+        if (endingEncoder < startingEncoder + 40) {
+            errorHandler.add("The motor isn't spinning");
         }
-        return false;
-    }
-
-    @Override
-    public ArrayList<String> findErrors() {
-        checkElecErrors();
-        return getErrors();
-    }
-
-    @Override
-    public ArrayList<String> findTotalErrors() {
-        ArrayList<String> output = findErrors();
-        if (!checkEncoderErrors()) {
-            output.add("The motor isn't working");
-        }
-        return output;
     }
 
     @Override
@@ -133,7 +120,14 @@ public class Falcon extends Motor {
     public void checkElecErrors() {
     }
 
-    public ArrayList<String> getErrors() {
+    @Override
+    public void startTwitch(double speed) {        
+        
+    }
+
+    @Override
+    public Command runTwitchTest() {
+        // TODO Auto-generated method stub
         return null;
     }
 }

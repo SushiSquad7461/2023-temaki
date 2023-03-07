@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kPorts;
+import frc.robot.subsystems.util.MotorTest;
+import frc.robot.subsystems.util.Neo;
 
 /**
  * Class that controls a cube intake.
@@ -13,7 +15,8 @@ import frc.robot.Constants.kPorts;
 public class BetaIntake extends Intake {
     private CANSparkMax bottom;
     private CANSparkMax top;
-
+    
+    private static MotorTest motorTest;
     private static BetaIntake instance;
 
     /**
@@ -36,6 +39,10 @@ public class BetaIntake extends Intake {
         top = new CANSparkMax(kPorts.INTAKE_TOP_MOTOR_ID, MotorType.kBrushless);
         top.setInverted(false);
         top.burnFlash();
+
+        MotorTest.getInstance();
+        motorTest.register(new Neo(bottom), null, "intake", "bottomMotor");
+        motorTest.register(new Neo(top), null, "intake", "topMotor");
     }
 
     /**

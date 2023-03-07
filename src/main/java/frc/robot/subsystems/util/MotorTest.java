@@ -22,9 +22,12 @@ public class MotorTest {
 
   private StringArraySubscriber dataTable;
   private BooleanSubscriber running;
+  private BooleanSubscriber twitchTest;
 
   private StringArrayPublisher motorTable;
   private StringArrayPublisher errorTable;
+
+  private ErrorHandler errorHandler;
 
   static MotorTest instance;
   private List<Motor> motorList;
@@ -32,6 +35,7 @@ public class MotorTest {
 
   private int numMotors;
   private int numSolenoid;
+  
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -45,14 +49,14 @@ public class MotorTest {
     table = inst.getTable("dataTable");
     dataTable = table.getStringArrayTopic("tableValues").subscribe(null);
     running = table.getBooleanTopic("Running?").subscribe(false);
+    twitchTest = table.getBooleanTopic("twitchTest?").subscribe(false);
     tableArray = dataTable.get();
 
     motorTable = table.getStringArrayTopic("motors").publish();
     motorArray = new ArrayList<String>();
 
     errorTable = table.getStringArrayTopic("errors").publish();
-    errorList = new ArrayList<String>();
-    errorArray = new ArrayList<String>();
+    errorHandler = ErrorHandler.getInstance();
 
     instance = null;
     motorList = new ArrayList<Motor>();
@@ -60,6 +64,14 @@ public class MotorTest {
 
     numMotors = 0;
     numSolenoid = 0;
+  }
+
+  public void runTwitchTest() {
+    if (twitchTest.get()){
+      for (int i = 0; i < motorList.size(); i++) {
+        motorList.get(i).runTwitchTest();
+      }
+    }
   }
 
   public void updateMotors() {
@@ -78,10 +90,6 @@ public class MotorTest {
               setEncoderLimit(deviceArray);
               setSpeed(deviceArray);
               motorList.get(numMotors).checkElecErrors();
-              errorList = motorList.get(numMotors).getErrors();
-              if (errorList != null) {
-                errorArray.add(String.join(" ", errorList));
-              }
             } else {
               motorList.get(numMotors).disable();
             }
@@ -96,10 +104,12 @@ public class MotorTest {
         }
       }
 
-      if (errorArray != null) {
-        errorTable.set(errorArray.toArray(new String[motorList.size()]));
-        errorArray.removeAll(errorArray);
+      if (errorHandler.getAllErrors() != null) {
+        ArrayList<String> errors = errorHandler.getAllErrors();
+        errorTable.set(errors.toArray(new String[errors.size()]));
+        errorHandler.clear();
       }
+
     } else {
       isStop(tableArray);
     }
