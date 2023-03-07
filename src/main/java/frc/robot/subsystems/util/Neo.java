@@ -16,6 +16,8 @@ public class Neo extends Motor {
 
     public int canID;
     public double currentLimit;
+    private double startingEncoder;
+    private double endingEncoder;
 
     public Neo(CANSparkMax motor) {
         this.motor = motor;
@@ -25,12 +27,48 @@ public class Neo extends Motor {
     }
 
     @Override
-    public String getRegisterString(String subsystem, String neoName){
-        return subsystem + " " + neoName + " "+ this.canID + " 0 "  + "0.0 " + "0 " + ((motor.getInverted()) ? 1 : 0) + " 0 " + this.currentLimit + " " + this.lowLimit + " " +this.highLimit + " 0 " + "0";
-    } 
+    public void startTwitch() {
+        startingEncoder = motor.getEncoder().getPosition();
+        setSpeed(.1, false);
+    }
+
+    @Override
+    public void endTwitch() {
+        disable();
+        endingEncoder = motor.getEncoder().getPosition();
+    }
+
+    @Override
+    public boolean checkEncoderErrors() {
+        if (endingEncoder > startingEncoder + 40) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<String> findErrors() {
+        checkElecErrors();
+        return getErrors();
+    }
+
+    @Override
+    public ArrayList<String> findTotalErrors() {
+        ArrayList<String> output = findErrors();
+        if (!checkEncoderErrors()) {
+            output.add("The motor isn't working");
+        }
+        return output;
+    }
+
+    @Override
+    public String getRegisterString(String subsystem, String neoName) {
+        return subsystem + " " + neoName + " " + this.canID + " 0 " + "0.0 " + "0 " + ((motor.getInverted()) ? 1 : 0)
+                + " 0 " + this.currentLimit + " " + this.lowLimit + " " + this.highLimit + " 0 " + "0";
+    }
 
     public ArrayList<String> getErrors() {
-        ArrayList<String> ret =  new ArrayList<>(allErrors);
+        ArrayList<String> ret = new ArrayList<>(allErrors);
         allErrors.removeAll(allErrors);
         return ret;
     }
@@ -72,8 +110,6 @@ public class Neo extends Motor {
         }
 
         motor.set(newSpeed);
-        // System.out.println(motor.getEncoder().getPosition() +"pos");
-        // System.out.println(motor.getEncoder().getPosition()+"pos");
     }
 
     @Override

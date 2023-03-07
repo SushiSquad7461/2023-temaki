@@ -16,6 +16,8 @@ public class Falcon extends Motor {
     WPI_TalonFX motor;
     public int canID;
     public double currentLimit;
+    private double startingEncoder;
+    private double endingEncoder;
 
     public Falcon(WPI_TalonFX motor) {
         this.motor = motor;
@@ -25,8 +27,44 @@ public class Falcon extends Motor {
     }
 
     @Override
-    public String getRegisterString(String subsystem, String swerveName){
-        return subsystem + " " + swerveName + " "+ this.canID + " 0 "  + "0.0 " + "0 " + ((motor.getInverted()) ? 1 : 0) + " 0 " + this.currentLimit + " " + this.lowLimit + " " +this.highLimit + " 0 " + "0";
+    public void startTwitch() {
+        startingEncoder = motor.getSelectedSensorPosition();
+        setSpeed(.1, false);
+    }
+
+    @Override
+    public void endTwitch() {
+        disable();
+        endingEncoder = motor.getSelectedSensorPosition();
+    }
+
+    @Override
+    public boolean checkEncoderErrors() {
+        if (endingEncoder > startingEncoder + 40) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<String> findErrors() {
+        checkElecErrors();
+        return getErrors();
+    }
+
+    @Override
+    public ArrayList<String> findTotalErrors() {
+        ArrayList<String> output = findErrors();
+        if (!checkEncoderErrors()) {
+            output.add("The motor isn't working");
+        }
+        return output;
+    }
+
+    @Override
+    public String getRegisterString(String subsystem, String swerveName) {
+        return subsystem + " " + swerveName + " " + this.canID + " 0 " + "0.0 " + "0 " + ((motor.getInverted()) ? 1 : 0)
+                + " 0 " + this.currentLimit + " " + this.lowLimit + " " + this.highLimit + " 0 " + "0";
     }
 
     @Override
@@ -63,9 +101,6 @@ public class Falcon extends Motor {
         }
 
         motor.set(newSpeed);
-        // System.out.println(motor.getSelectedSensorPosition() +"pos");
-        // System.out.println(lowLimit);
-
     }
 
     @Override
@@ -74,14 +109,6 @@ public class Falcon extends Motor {
                 currentLimit, 0.1);
         motor.configSupplyCurrentLimit(CurrentLimit);
     }
-
-    // public void setCurrentLimit(double currentLimit1, double currentLimit2,
-    // double threshhold) {
-    // SupplyCurrentLimitConfiguration CurrentLimit = new
-    // SupplyCurrentLimitConfiguration(true, currentLimit1,
-    // currentLimit2,threshhold);
-    // motor.configSupplyCurrentLimit(CurrentLimit);
-    // }
 
     @Override
     public void setEncoderLimit(double lowLimit, double highLimit) {

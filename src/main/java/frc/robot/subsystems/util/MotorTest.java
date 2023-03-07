@@ -66,35 +66,33 @@ public class MotorTest {
     tableArray = dataTable.get();
     if (running.get()) {
       numMotors = 0;
-      numSolenoid = 0;      
+      numSolenoid = 0;
       for (int i = 0; i < tableArray.length; i++) {
         String[] deviceArray = (tableArray[i]).split(" ");
         if (tableArray.length > i) {
-          if(!tableArray[i].contains("solenoid")){
-            if (deviceArray[deviceArray.length-1].equals("true")){
+          if (!tableArray[i].contains("solenoid")) {
+            if (deviceArray[deviceArray.length - 1].equals("true")) {
               coastOrBrake(deviceArray);
               invertMotor(deviceArray);
               setCurrentLimit(deviceArray);
               setEncoderLimit(deviceArray);
               setSpeed(deviceArray);
               motorList.get(numMotors).checkElecErrors();
-              errorList = motorList.get(numMotors).getErrors();        
+              errorList = motorList.get(numMotors).getErrors();
               if (errorList != null) {
                 errorArray.add(String.join(" ", errorList));
               }
-            }
-            else {
+            } else {
               motorList.get(numMotors).disable();
             }
             numMotors++;
-          }
-          else{
-            if(deviceArray[deviceArray.length-1].equals("true")){
+          } else {
+            if (deviceArray[deviceArray.length - 1].equals("true")) {
               setSolenoid(deviceArray);
             }
             numSolenoid++;
           }
-          
+
         }
       }
 
@@ -114,7 +112,7 @@ public class MotorTest {
     }
   }
 
-  public void coastOrBrake(String[] deviceArray) { 
+  public void coastOrBrake(String[] deviceArray) {
     if ((deviceArray[6]) == "false") {
       motorList.get(numMotors).setIdle(Motor.IdleMode.BRAKE);
     } else {
@@ -164,7 +162,7 @@ public class MotorTest {
       motorArray.add(motor.getRegisterString(subsystem, name));
       motorList.add(motor);
     } else {
-      motorArray.add(subsystem + " " + name +  " 0 0 0 0 0 0 0.0 -2.0 0.0 0 0");
+      motorArray.add(subsystem + " " + name + " 0 0 0 0 0 0 0.0 -2.0 0.0 0 0");
       solenoidList.add(solenoid);
     }
 

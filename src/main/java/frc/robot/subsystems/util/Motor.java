@@ -28,6 +28,16 @@ public abstract class Motor {
 
     public abstract String getRegisterString(String subsystem, String name);
 
+    public abstract void endTwitch();
+
+    public abstract void startTwitch();
+
+    public abstract boolean checkEncoderErrors();
+
+    public abstract ArrayList<String> findErrors();
+
+    public abstract ArrayList<String> findTotalErrors();
+
     OI oi;
     double lowLimit = Double.MAX_VALUE * -1;
     double highLimit = Double.MAX_VALUE;
