@@ -40,7 +40,7 @@ public class BetaIntake extends Intake {
         top.setInverted(false);
         top.burnFlash();
 
-        MotorTest.getInstance();
+        motorTest = MotorTest.getInstance();
         motorTest.register(new Neo(bottom), null, "intake", "bottomMotor");
         motorTest.register(new Neo(top), null, "intake", "topMotor");
     }

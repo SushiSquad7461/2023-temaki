@@ -36,7 +36,7 @@ public class BetaIndexer extends Indexer {
         indexerMotor = MotorHelper.createSparkMax(kPorts.INDEXER_MOTOR, MotorType.kBrushless);
         coneRamp = MotorHelper.createSparkMax(kPorts.CONE_RAMP_MOTOR, MotorType.kBrushless);
 
-        MotorTest.getInstance();
+        motorTest = MotorTest.getInstance();
         motorTest.register(new Neo(indexerMotor), null, "indexer", "indexerMotor");
         motorTest.register(new Neo(coneRamp), null, "indexer", "coneRamp");
 

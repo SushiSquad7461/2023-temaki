@@ -20,6 +20,8 @@ public class Falcon extends Motor {
     public double currentLimit;
     private double startingEncoder;
     private double endingEncoder;
+    private String subsystem;
+    private String name;
 
     public Falcon(WPI_TalonFX motor) {
         errorHandler = ErrorHandler.getInstance();
@@ -30,9 +32,33 @@ public class Falcon extends Motor {
     }
 
     @Override
+    public void setSubsystem(String subsystem) {
+        this.subsystem = subsystem;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getSubsystem() {
+        return subsystem;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public void startTwitch() {
+        startTwitch(.1);
+    }
+
+    @Override
+    public void startTwitch(double speed) {
         startingEncoder = motor.getSelectedSensorPosition();
-        setSpeed(.1, false);
+        setSpeed(speed, false);
     }
 
     @Override
@@ -120,14 +146,4 @@ public class Falcon extends Motor {
     public void checkElecErrors() {
     }
 
-    @Override
-    public void startTwitch(double speed) {        
-        
-    }
-
-    @Override
-    public Command runTwitchTest() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

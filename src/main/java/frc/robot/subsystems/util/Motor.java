@@ -35,8 +35,13 @@ public abstract class Motor {
 
     public abstract void checkEncoderErrors();
 
-    public abstract Command runTwitchTest();
+    public abstract void setSubsystem(String name);
 
+    public abstract String getSubsystem();
+
+    public abstract void setName(String name);
+
+    public abstract String getName();
 
     OI oi;
     double lowLimit = Double.MAX_VALUE * -1;

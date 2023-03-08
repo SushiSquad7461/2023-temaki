@@ -1,8 +1,13 @@
 package frc.robot.subsystems.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -10,6 +15,13 @@ import edu.wpi.first.networktables.StringArrayPublisher;
 import edu.wpi.first.networktables.StringArraySubscriber;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Swerve;
 
 public class MotorTest {
   private NetworkTableInstance inst;
@@ -17,15 +29,12 @@ public class MotorTest {
 
   private String[] tableArray;
   private ArrayList<String> motorArray;
-  private ArrayList<String> errorArray;
-  private ArrayList<String> errorList;
 
   private StringArraySubscriber dataTable;
   private BooleanSubscriber running;
   private BooleanSubscriber twitchTest;
 
   private StringArrayPublisher motorTable;
-  private StringArrayPublisher errorTable;
 
   private ErrorHandler errorHandler;
 
@@ -35,7 +44,9 @@ public class MotorTest {
 
   private int numMotors;
   private int numSolenoid;
-  
+
+  private Map<String, List<Motor>> motorsMap;
+  private CommandBase commandBase;
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -47,15 +58,16 @@ public class MotorTest {
   public MotorTest() {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("dataTable");
+
     dataTable = table.getStringArrayTopic("tableValues").subscribe(null);
     running = table.getBooleanTopic("Running?").subscribe(false);
     twitchTest = table.getBooleanTopic("twitchTest?").subscribe(false);
+
     tableArray = dataTable.get();
 
     motorTable = table.getStringArrayTopic("motors").publish();
     motorArray = new ArrayList<String>();
 
-    errorTable = table.getStringArrayTopic("errors").publish();
     errorHandler = ErrorHandler.getInstance();
 
     instance = null;
@@ -64,13 +76,71 @@ public class MotorTest {
 
     numMotors = 0;
     numSolenoid = 0;
+
+    motorsMap = new HashMap<String, List<Motor>>();
+    commandBase = new CommandBase() {
+    };
+  }
+
+  public Command runSubsystemTwitch(String subsystem, double waitTime, double speed) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
+            Motor motor = motorsMap.get(subsystem).get(i);
+            if (motor.getName().equals("rightArm")) {
+              continue;
+            }
+            motor.startTwitch(speed);
+          }
+        }),
+        new WaitCommand(waitTime),
+        new InstantCommand(() -> {
+          for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
+            Motor motor = motorsMap.get(subsystem).get(i);
+            motor.endTwitch();
+            motor.checkEncoderErrors();
+          }
+          errorHandler.sendAllErrors();
+        }));
+  }
+
+  public Command runSwerveTwitch() {
+    Swerve swerve = Swerve.getInstance();
+    SwerveModuleState[] swerveStatesBefore = swerve.getStates();
+    Rotation2d[] initialRotations = new Rotation2d[swerveStatesBefore.length];
+        for( int i=0; i< swerveStatesBefore.length; i++){
+          initialRotations[i] = swerveStatesBefore[i].angle;
+        }
+    SequentialCommandGroup swerveGroup = new SequentialCommandGroup(
+      new InstantCommand(() -> {
+        swerve.drive(new Translation2d(), 1, false, true);
+      }),
+      new WaitCommand(.1),
+      
+      new InstantCommand(() -> {
+        SwerveModuleState[] swerveStates = swerve.getStates();
+        for( SwerveModuleState state: swerveStates){
+          if(state.angle > initial){
+
+          }
+        }
+        swerve.drive(new Translation2d(), 0, false, true);
+      }));
+    swerveGroup.addRequirements(swerve);
+    return swerveGroup;
+  }
+
+  public Command runTwitch() {
+    return new ParallelCommandGroup(
+        runSubsystemTwitch("intake", 0.1, 0.5),
+        runSubsystemTwitch("manipulator", 0.1, 0.5),
+        runSubsystemTwitch("indexer", 0.1, 0.2),
+        runSubsystemTwitch("arm", 0.1, 0.01));
   }
 
   public void runTwitchTest() {
-    if (twitchTest.get()){
-      for (int i = 0; i < motorList.size(); i++) {
-        motorList.get(i).runTwitchTest();
-      }
+    if (twitchTest.get()) {
+      runTwitch();
     }
   }
 
@@ -100,16 +170,8 @@ public class MotorTest {
             }
             numSolenoid++;
           }
-
         }
       }
-
-      if (errorHandler.getAllErrors() != null) {
-        ArrayList<String> errors = errorHandler.getAllErrors();
-        errorTable.set(errors.toArray(new String[errors.size()]));
-        errorHandler.clear();
-      }
-
     } else {
       isStop(tableArray);
     }
@@ -167,16 +229,22 @@ public class MotorTest {
   }
 
   public void register(Motor motor, DoubleSolenoid solenoid, String subsystem, String name) {
-
     if (solenoid == null) {
       motorArray.add(motor.getRegisterString(subsystem, name));
       motorList.add(motor);
+      motor.setSubsystem(subsystem);
+      motor.setName(name);
     } else {
       motorArray.add(subsystem + " " + name + " 0 0 0 0 0 0 0.0 -2.0 0.0 0 0");
       solenoidList.add(solenoid);
     }
 
     motorTable.set(motorArray.toArray(new String[motorList.size() + solenoidList.size()]));
+    if (!motorsMap.containsKey(subsystem)) {
+      motorsMap.put(subsystem, new ArrayList<Motor>());
+    }
+
+    ((ArrayList<Motor>) motorsMap.get(subsystem)).add(motor);
   }
 
 }

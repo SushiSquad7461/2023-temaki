@@ -23,6 +23,9 @@ public class Neo extends Motor {
     public double currentLimit;
     private double startingEncoder;
     private double endingEncoder;
+    private String subsystem;
+    private String name;
+
 
     public Neo(CANSparkMax motor) {
         errorHandler = ErrorHandler.getInstance();
@@ -33,18 +36,22 @@ public class Neo extends Motor {
     }
 
     @Override
-    public Command runTwitchTest() {
-        return new SequentialCommandGroup(
-            new InstantCommand(()-> {
-                startTwitch();
-            }),
-            new WaitCommand(0.1),
-            new InstantCommand(() -> {
-                endTwitch();
-                checkEncoderErrors();
-            })
-        );
-        // return (findTotalErrors().toArray(new String[findTotalErrors().size()]));
+    public void setSubsystem(String subsystem) {
+        this.subsystem = subsystem;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getSubsystem() {
+        return subsystem;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -57,7 +64,6 @@ public class Neo extends Motor {
         startingEncoder = motor.getEncoder().getPosition();
         setSpeed(speed, false);
     }
-
 
     @Override
     public void endTwitch() {
@@ -79,9 +85,9 @@ public class Neo extends Motor {
     }
 
     // public ArrayList<String> getErrors() {
-    //     ArrayList<String> ret = new ArrayList<>(allErrors);
-    //     allErrors.removeAll(allErrors);
-    //     return ret;
+    // ArrayList<String> ret = new ArrayList<>(allErrors);
+    // allErrors.removeAll(allErrors);
+    // return ret;
     // }
 
     @Override
@@ -158,7 +164,7 @@ public class Neo extends Motor {
     public void checkElecErrors() {
         if (motor.getFault(CANSparkMax.FaultID.kBrownout)) {
             errorHandler.add("\n" + motor.getDeviceId() + " brownout");
-            
+
         }
 
         if (motor.getFault(CANSparkMax.FaultID.kMotorFault)) {

@@ -35,9 +35,8 @@ public class Manipulator extends SubsystemBase {
         manipulatorMotor.setInverted(true);
         manipulatorMotor.burnFlash();
 
-        Neo neoManipulator = new Neo(manipulatorMotor);
         motorTest = MotorTest.getInstance();
-        motorTest.register(neoManipulator, null, "ManipulatorSubsystem", "manipulator");
+        motorTest.register(new Neo(manipulatorMotor), null, "manipulator", "manipulatorMotor");
     }
 
     /**

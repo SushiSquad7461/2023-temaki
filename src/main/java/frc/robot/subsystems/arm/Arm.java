@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.subsystems.util.MotorTest;
+import frc.robot.subsystems.util.Neo;
 import frc.robot.Constants.kPorts;
 
 /**
@@ -26,6 +28,7 @@ public abstract class Arm extends SubsystemBase {
     protected final CANSparkMax leftMotor;
     protected final CANSparkMax rightMotor;
     private SparkMaxPIDController leftMotorPid;
+    private MotorTest motorTest;
 
     private final DutyCycleEncoder absoluteEncoder;
 
@@ -63,6 +66,10 @@ public abstract class Arm extends SubsystemBase {
             armD.get(), 
             armF.get()
         );
+
+        motorTest.getInstance();
+        motorTest.register(new Neo(leftMotor), null, "arm", "leftArm");
+        motorTest.register(new Neo(rightMotor), null, "arm", "rightArm");
 
         leftMotorPid = leftMotor.getPIDController();
 
