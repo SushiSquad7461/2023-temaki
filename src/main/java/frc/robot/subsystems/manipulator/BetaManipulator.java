@@ -7,7 +7,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kManipulator;
 import frc.robot.Constants.kPorts;
 
@@ -34,14 +38,12 @@ public class BetaManipulator extends Manipulator {
     }
 
 
-    public Command release() {
-        return runOnce(() -> {
-            if (isBeamBreakBlocked()) {
-                cubeReverse().schedule();
-            } else {
-                coneReverse().schedule();
-            }
-        });
+    public void release() {
+        if (isBeamBreakBlocked()) {
+            new SequentialCommandGroup(cubeReverse(), new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME), stop()).schedule();
+        } else {
+            new SequentialCommandGroup(coneReverse(), new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME), stop()).schedule();
+        }
     }
 
     public void periodic() {

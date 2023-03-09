@@ -87,10 +87,10 @@ public class AutoCommands {
             manipulator.cone(),
             new WaitCommand(0.1),
             arm.moveArm(ArmPos.L3_SCORING),
-            new WaitCommand(1.0),
+            new WaitCommand(0.5),
             manipulator.coneReverse(),
-            new WaitCommand(0.1)
-            // arm.moveArm(ArmPos.LOWERED)
+            new WaitCommand(0.1),
+            manipulator.stop()
         ));
 
         eventMap.put("raiseArm", new SequentialCommandGroup(
@@ -121,8 +121,13 @@ public class AutoCommands {
 
         autoChooser.addOption("2 Piece Loading Zone", makeAuto("2_Piece_Loading_Zone"));
 
-        autoChooser.addOption("3 Piece Piece Loading Zone",new SequentialCommandGroup(makeAuto("2_Piece_Loading_Zone"), makeAuto("3_Piece_Loading_Zone")));
-
+        autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("2_Piece_Loading_Zone"),
+            scoreCube(),
+            makeAuto("3_Piece_Loading_Zone"),
+            scoreCube()
+        ));
 
         autoChooser.addOption("Charge", makeAuto("Charge"));
         putAutoChooser();
@@ -141,6 +146,27 @@ public class AutoCommands {
 
     private Command makeAuto(String path) {
         return autoBuilder.fullAuto(PathPlanner.loadPathGroup(path, kSwerve.MAX_SPEED, kSwerve.MAX_ACCELERATION));
+    }
+
+    private Command scoreCube() {
+        return new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L3_SCORING),
+            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            manipulator.cubeReverse(),
+            new WaitCommand(0.2)
+        );
+    }
+
+    private Command scoreCone() {
+        return new SequentialCommandGroup(
+            manipulator.cone(),
+            new WaitCommand(0.1),
+            arm.moveArm(ArmPos.L3_SCORING),
+            new WaitCommand(0.5),
+            manipulator.coneReverse(),
+            new WaitCommand(0.1),
+            manipulator.stop()
+        );
     }
 
     private Pose2d getInitialPose(PathPlannerTrajectory path) {

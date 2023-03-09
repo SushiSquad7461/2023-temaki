@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
+import frc.robot.Constants.kSwerve;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -117,11 +118,7 @@ public class RobotContainer {
     public void configureBetaButtonBindings() {
         
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            ((BetaManipulator) manipulator).release(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        oi.getOperatorController().x().onTrue(new InstantCommand(() -> ((BetaManipulator) manipulator).release()));
 
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
@@ -244,11 +241,21 @@ public class RobotContainer {
             swerve.resetOdometryToBestAprilTag()
         );
 
+        // oi.getDriverController().rightStick().onTrue(new InstantCommand(() -> {
+        //     kSwerve.SPEED_MULTIPLER = 0.15;
+        // })).onFalse(new InstantCommand(() -> {
+        //     kSwerve.SPEED_MULTIPLER = 1.0;
+        // }));
+
         // TODO: add alliance based substation selection
-        oi.getDriverController().povUp().onTrue(
-            new SequentialCommandGroup(
-                swerve.moveToAprilTag(4, new Translation2d(1.1, -0.2))
-            )
+        oi.getDriverController().povUp().whileTrue(
+            // new SequentialCommandGroup(
+                // swerve.moveToAprilTag(4, new Translation2d(2.5, -0.7)),
+                // arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+                // manipulator.cone(),
+                // new WaitCommand(0.5),
+                swerve.moveToAprilTag(4, new Translation2d(1.0, -0.61))
+            //)
         );
 
         oi.getDriverController().povLeft().whileTrue(
