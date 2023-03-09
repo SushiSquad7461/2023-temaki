@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
+import frc.robot.Constants.kSwerve;
 import frc.robot.commands.TeleopSwerveDrive;
-import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
@@ -25,6 +25,9 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.AlphaIntake;
 import frc.robot.subsystems.intake.BetaIntake;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.manipulator.AlphaManipulator;
+import frc.robot.subsystems.manipulator.BetaManipulator;
+import frc.robot.subsystems.manipulator.Manipulator;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -46,19 +49,20 @@ public class RobotContainer {
 
         swerve = Swerve.getInstance();
         oi = OI.getInstance();
-        manipulator = Manipulator.getInstance();
 
         switch (Constants.ROBOT_NAME) {
           case ALPHA:
               arm = AlphaArm.getInstance();
               indexer = AlphaIndexer.getInstance();
               intake = AlphaIntake.getInstance();
+              manipulator = AlphaManipulator.getInstance();
               configureAlphaButtonBindings();
               break;
           default:
               arm = BetaArm.getInstance();
               indexer = BetaIndexer.getInstance();
               intake = BetaIntake.getInstance();
+              manipulator = BetaManipulator.getInstance();
               configureBetaButtonBindings();
               break;
         }
@@ -92,12 +96,30 @@ public class RobotContainer {
             new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             arm.moveArm(ArmPos.L2_SCORING)
         ));
+
+        
+        // Score item to relese cube
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            manipulator.cubeReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
+
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
     }
 
     /**
      * Configures button bindings for beta.
      */
     public void configureBetaButtonBindings() {
+        
+        // Score item to relese cube
+        oi.getOperatorController().x().onTrue(new InstantCommand(() -> ((BetaManipulator) manipulator).release()));
+
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
                 indexer.reverseIndexer(),
@@ -193,19 +215,6 @@ public class RobotContainer {
             )
         );
 
-        // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
-
-        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
-            manipulator.coneReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
-
         oi.getOperatorController().povLeft().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.L2_SCORING)
         ));
@@ -232,11 +241,21 @@ public class RobotContainer {
             swerve.resetOdometryToBestAprilTag()
         );
 
+        // oi.getDriverController().rightStick().onTrue(new InstantCommand(() -> {
+        //     kSwerve.SPEED_MULTIPLER = 0.15;
+        // })).onFalse(new InstantCommand(() -> {
+        //     kSwerve.SPEED_MULTIPLER = 1.0;
+        // }));
+
         // TODO: add alliance based substation selection
-        oi.getDriverController().povUp().onTrue(
-            new SequentialCommandGroup(
-                swerve.moveToAprilTag(4, new Translation2d(1.1, -0.2))
-            )
+        oi.getDriverController().povUp().whileTrue(
+            // new SequentialCommandGroup(
+                // swerve.moveToAprilTag(4, new Translation2d(2.5, -0.7)),
+                // arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+                // manipulator.cone(),
+                // new WaitCommand(0.5),
+                swerve.moveToAprilTag(4, new Translation2d(1.0, -0.61))
+            //)
         );
 
         oi.getDriverController().povLeft().whileTrue(

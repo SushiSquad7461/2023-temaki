@@ -16,10 +16,8 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "scoreCone"
-        ],
-        "executionBehavior": "sequential",
+        "names": [],
+        "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -51,12 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.790225865760461,
-        "y": 3.250950518934395
+        "x": 1.725068769286476,
+        "y": 2.67919195412859
       },
       "prevControl": {
-        "x": 3.29284167439875,
-        "y": 6.361834810255852
+        "x": 2.0732926572236132,
+        "y": 6.538081161268706
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -72,5 +70,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.4090909090909091,
+      "names": [
+        "lowerArm"
+      ]
+    },
+    {
+      "position": 1.6636363636363596,
+      "names": [
+        "raiseArm"
+      ]
+    }
+  ]
 }

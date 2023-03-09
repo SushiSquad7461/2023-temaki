@@ -105,19 +105,20 @@ public final class Constants {
      */
     public static class kIndexer {
         public static final double INDEXER_SPEED;
+        public static final double CONE_RAMP_SPEED;
 
         static {
             switch (ROBOT_NAME) {
               case ALPHA:
                   INDEXER_SPEED = 0.7;
+                  CONE_RAMP_SPEED = 0.5;
                   break;
               default:
                   INDEXER_SPEED = -0.7;
+                  CONE_RAMP_SPEED = -0.5;
                   break;
             }
         }
-
-        public static final double CONE_RAMP_SPEED = 0.5;
     }
 
     /**
@@ -133,6 +134,8 @@ public final class Constants {
     public static final class kSwerve {
         public static final boolean OPEN_LOOP = false;
         public static final boolean FEILD_RELATIVE = false;
+
+        public static final double SPEED_MULTIPLER = 1.0;
 
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
@@ -191,10 +194,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(1.2, 1.2, 0.1);
+            VecBuilder.fill(4.2, 4.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(1.8, 1.8, 1.2);
+            VecBuilder.fill(20.0, 20.0,20.0);
 
         /* Module Specific Constants */
 
@@ -314,15 +317,15 @@ public final class Constants {
         public static final double THETA_TOLLERENCE = 0.02;
 
         /* Pid values */
-        public static final double X_P = 10.0;
+        public static final double X_P = 3.0;
         public static final double X_I = 0.0;
         public static final double X_D = 0.75;
 
-        public static final double Y_P = 10.0;
+        public static final double Y_P = 3.0;
         public static final double Y_I = 0.0;
         public static final double Y_D = 0.75;
         
-        public static final double THETA_P = 8.0;
+        public static final double THETA_P = 6.0;
         public static final double THETA_I = 0.0;
         public static final double THETA_D = 0.9;
 

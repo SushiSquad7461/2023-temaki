@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.manipulator;
 
 import SushiFrcLib.Motor.MotorHelper;
 import com.revrobotics.CANSparkMax;
@@ -13,30 +13,19 @@ import frc.robot.Constants.kPorts;
 /**
  * Controls the manipulator subsytem.
  */
-public class Manipulator extends SubsystemBase {
-    private CANSparkMax motor;
-    private static Manipulator instance;
+public abstract class Manipulator extends SubsystemBase {
+    protected CANSparkMax motor;
+    private static BetaManipulator instance;
 
-    /**
-     * Gets the current manipular instance. for singleton support.
-     */
-    public static Manipulator getInstance() {
-        if (instance == null) {
-            instance = new Manipulator();
-        }
-        return instance;
-    }
-
-    private Manipulator() {
+    protected Manipulator() {
         motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
         motor.setSmartCurrentLimit(kManipulator.CURRENT_LIMITING);
         motor.setInverted(true);
         motor.burnFlash();
-
     }
 
     /**
-     * Runs indexer in positive direction.
+     * Draw cone into claw
      */
     public Command cone() {
         return runOnce(() -> {
@@ -84,9 +73,5 @@ public class Manipulator extends SubsystemBase {
         return runOnce(() -> {
             motor.set(-0.01);
         });
-    }
-
-    public void periodic() {
-        SmartDashboard.putNumber("Manipulator Current", motor.getOutputCurrent());
     }
 }

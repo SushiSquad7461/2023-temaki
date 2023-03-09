@@ -2,8 +2,11 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,6 +28,7 @@ public class BetaArm extends Arm {
     private final ArmFeedforward armFeedforwardExtended;
 
     private static BetaArm instance;
+    private static DigitalInput limitSwitch;
 
     /**
      * Gets current instance of arm implements singelton.
@@ -63,6 +67,8 @@ public class BetaArm extends Arm {
             kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM2
         );
 
+        limitSwitch = new DigitalInput(3);
+
         solenoidLeft.set(Value.kReverse);
         solenoidRight.set(Value.kReverse);
     }
@@ -88,18 +94,17 @@ public class BetaArm extends Arm {
     @Override
     public Command moveArm(ArmPos angle) {
         return new SequentialCommandGroup(
-            new InstantCommand(
+            run(
                 () -> {
                     if (angle != ArmPos.L3_SCORING) {
                         retractArm();
                     }
                 }
-            ),
-            angle == ArmPos.LOWERED ? new WaitCommand(1) : new WaitCommand(0), 
+            ).until(() -> armClosed()),
             run(() -> {
                 moveArm(angle.getAngle());
             }).until(() -> isAtPos(angle.getAngle())),
-            new InstantCommand(
+            runOnce(
                 () -> {
                     if (angle == ArmPos.L3_SCORING) {
                         moveArm(angle.getAngle()); // Make sure to update with new kG
@@ -122,6 +127,10 @@ public class BetaArm extends Arm {
         }
     }
 
+    private boolean armClosed() {
+        return !limitSwitch.get();
+    }
+
     /**
      * Toggles solenoids on the arm.
      */
@@ -137,5 +146,6 @@ public class BetaArm extends Arm {
         }
 
         update();
+        SmartDashboard.putBoolean("Arm limit switch", limitSwitch.get());
     }
 }

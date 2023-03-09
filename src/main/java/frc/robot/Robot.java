@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        LiveWindow.enableAllTelemetry();
         robotContainer = new RobotContainer();
         
         switch (Constants.ROBOT_NAME) {
