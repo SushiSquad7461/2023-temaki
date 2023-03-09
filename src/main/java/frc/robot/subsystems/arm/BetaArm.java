@@ -3,15 +3,12 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.kArm;
 import frc.robot.Constants.kArm.ArmPos;
@@ -67,7 +64,7 @@ public class BetaArm extends Arm {
             kPorts.PNEUMATIC_REVERSE_CHANNEL_ARM2
         );
 
-        limitSwitch = new DigitalInput(3);
+        limitSwitch = new DigitalInput(kPorts.ARM_LIMIT_SWITCH);
 
         solenoidLeft.set(Value.kReverse);
         solenoidRight.set(Value.kReverse);

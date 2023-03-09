@@ -4,7 +4,6 @@ import SushiFrcLib.Math.Normalization;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kSwerve;
@@ -62,7 +61,7 @@ public class TeleopSwerveDrive extends CommandBase {
         );
 
         leftRight = Normalization.cube(
-            Math.abs(leftRight) < Constants.STICK_DEADBAND ? 0 :  ((leftRight - ((leftRight < 0 ? -1 : 1) * Constants.STICK_DEADBAND)) / (1 - Constants.STICK_DEADBAND))
+            Math.abs(leftRight) < Constants.STICK_DEADBAND ? 0 : ((leftRight - ((leftRight < 0 ? -1 : 1) * Constants.STICK_DEADBAND)) / (1 - Constants.STICK_DEADBAND))
         );
 
         Translation2d translation = new Translation2d(forwardBack, leftRight)

@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Swerve;
@@ -37,12 +36,12 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
         
         switch (Constants.ROBOT_NAME) {
-            case ALPHA:
-                arm = AlphaArm.getInstance();
-                break;
-            default:
-                arm = BetaArm.getInstance();
-                break;
+          case ALPHA:
+              arm = AlphaArm.getInstance();
+              break;
+          default:
+              arm = BetaArm.getInstance();
+              break;
         }
 
         swerve = Swerve.getInstance();
