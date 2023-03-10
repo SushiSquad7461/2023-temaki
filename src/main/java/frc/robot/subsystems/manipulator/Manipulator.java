@@ -3,8 +3,6 @@ package frc.robot.subsystems.manipulator;
 import SushiFrcLib.Motor.MotorHelper;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kManipulator;
@@ -15,7 +13,6 @@ import frc.robot.Constants.kPorts;
  */
 public abstract class Manipulator extends SubsystemBase {
     protected CANSparkMax motor;
-    private static BetaManipulator instance;
 
     protected Manipulator() {
         motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
@@ -25,7 +22,7 @@ public abstract class Manipulator extends SubsystemBase {
     }
 
     /**
-     * Draw cone into claw
+     * Draw cone into claw.
      */
     public Command cone() {
         return runOnce(() -> {
@@ -38,7 +35,7 @@ public abstract class Manipulator extends SubsystemBase {
      */
     public Command coneReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED*3);
+            motor.set(kManipulator.SPEED);
         });
     }
 
@@ -56,7 +53,7 @@ public abstract class Manipulator extends SubsystemBase {
      */
     public Command cubeReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * -3.0);
+            motor.set(kManipulator.SPEED);
         });
     }
 
@@ -69,6 +66,9 @@ public abstract class Manipulator extends SubsystemBase {
         });
     }
 
+    /**
+     * Holds cube in maniupulator.
+     */
     public Command holdCube() {
         return runOnce(() -> {
             motor.set(-0.01);
