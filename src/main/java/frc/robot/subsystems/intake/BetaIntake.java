@@ -41,10 +41,12 @@ public class BetaIntake extends Intake {
         top.burnFlash();
 
         motorTest = MotorTest.getInstance();
-        motorTest.register(new Neo(bottom), null, "intake", "bottomMotor");
-        motorTest.register(new Neo(top), null, "intake", "topMotor");
     }
 
+    public void registerMotors() {
+        motorTest.registerMotor(bottom, getName(), bottom.toString());
+        motorTest.registerMotor(top, getName(), top.toString());
+    }
     /**
      * Makes sure intake is extended and turns on motor.
      */

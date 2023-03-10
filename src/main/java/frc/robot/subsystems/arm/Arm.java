@@ -68,8 +68,8 @@ public abstract class Arm extends SubsystemBase {
         );
 
         motorTest.getInstance();
-        motorTest.register(new Neo(leftMotor), null, "arm", "leftArm");
-        motorTest.register(new Neo(rightMotor), null, "arm", "rightArm");
+        motorTest.registerMotor(leftMotor, getName(), leftMotor.toString());
+        motorTest.registerMotor(rightMotor, getName(), rightMotor.toString());
 
         leftMotorPid = leftMotor.getPIDController();
 

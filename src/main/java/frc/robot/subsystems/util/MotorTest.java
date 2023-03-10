@@ -102,28 +102,33 @@ public class MotorTest {
   public Command runSwerveTwitch() {
     Swerve swerve = Swerve.getInstance();
     SwerveModuleState[] swerveStatesBefore = swerve.getStates();
-    Rotation2d[] initialRotations = new Rotation2d[swerveStatesBefore.length];
+    Double[] initialSpeeds = new Double[swerveStatesBefore.length];
         for( int i=0; i< swerveStatesBefore.length; i++){
-          initialRotations[i] = swerveStatesBefore[i].angle;
+          initialSpeeds[i] = swerveStatesBefore[i].speedMetersPerSecond;
         }
     SequentialCommandGroup swerveGroup = new SequentialCommandGroup(
       new InstantCommand(() -> {
         swerve.drive(new Translation2d(), 1, false, true);
       }),
-      new WaitCommand(.1),
+      new WaitCommand(.09),
       
       new InstantCommand(() -> {
         SwerveModuleState[] swerveStates = swerve.getStates();
-        for( SwerveModuleState state: swerveStates){
-          if(state.angle > initial){
-
+        for(SwerveModuleState state: swerveStates){
+          for (Double initialSpeed: initialSpeeds){
+            if (state.speedMetersPerSecond <= initialSpeed) {
+              errorHandler.add(state.toString() + " not working");
+            }
           }
+
         }
-        swerve.drive(new Translation2d(), 0, false, true);
       }));
-    swerveGroup.addRequirements(swerve);
-    return swerveGroup;
-  }
+        swerve.drive(new Translation2d(), 0, false, true);
+        swerveGroup.addRequirements(swerve);
+        errorHandler.sendAllErrors();
+        return swerveGroup;    
+    };
+
 
   public Command runTwitch() {
     return new ParallelCommandGroup(
@@ -167,6 +172,7 @@ public class MotorTest {
           }
         }
       }
+      errorHandler.sendAllErrors();
     } else {
       isStop(tableArray);
     }
@@ -249,5 +255,10 @@ public class MotorTest {
     }
 
     motorsMap.get(subsystem).add(motor);
+  }
+
+  public void unRegisterAlllMotors(){
+    motorList.removeAll(motorList);
+    motorsMap.clear();
   }
 }
