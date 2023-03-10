@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -41,12 +44,9 @@ public class MotorTest {
   static MotorTest instance;
   private List<Motor> motorList;
   private List<DoubleSolenoid> solenoidList;
-
-  private int numMotors;
-  private int numSolenoid;
-
   private Map<String, List<Motor>> motorsMap;
-  private CommandBase commandBase;
+  
+  private ArrayList<String> unwantedMotors;
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -55,7 +55,7 @@ public class MotorTest {
     return instance;
   }
 
-  public MotorTest() {
+  private MotorTest() {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("dataTable");
 
@@ -69,17 +69,12 @@ public class MotorTest {
     motorArray = new ArrayList<String>();
 
     errorHandler = ErrorHandler.getInstance();
-
-    instance = null;
     motorList = new ArrayList<Motor>();
     solenoidList = new ArrayList<DoubleSolenoid>();
 
-    numMotors = 0;
-    numSolenoid = 0;
-
     motorsMap = new HashMap<String, List<Motor>>();
-    commandBase = new CommandBase() {
-    };
+    unwantedMotors = new ArrayList<String>();
+    unwantedMotors.add("rightArm");
   }
 
   public Command runSubsystemTwitch(String subsystem, double waitTime, double speed) {
@@ -87,7 +82,7 @@ public class MotorTest {
         new InstantCommand(() -> {
           for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
             Motor motor = motorsMap.get(subsystem).get(i);
-            if (motor.getName().equals("rightArm")) {
+            if (unwantedMotors.contains(motor.getName())) {
               continue;
             }
             motor.startTwitch(speed);
@@ -140,25 +135,25 @@ public class MotorTest {
 
   public void runTwitchTest() {
     if (twitchTest.get()) {
-      runTwitch();
+      runTwitch().schedule();;
     }
   }
 
   public void updateMotors() {
     tableArray = dataTable.get();
     if (running.get()) {
-      numMotors = 0;
-      numSolenoid = 0;
+      int numMotors = 0;
+      int numSolenoid = 0;
       for (int i = 0; i < tableArray.length; i++) {
         String[] deviceArray = (tableArray[i]).split(" ");
         if (tableArray.length > i) {
           if (!tableArray[i].contains("solenoid")) {
             if (deviceArray[deviceArray.length - 1].equals("true")) {
-              coastOrBrake(deviceArray);
-              invertMotor(deviceArray);
-              setCurrentLimit(deviceArray);
-              setEncoderLimit(deviceArray);
-              setSpeed(deviceArray);
+              coastOrBrake(deviceArray, numMotors);
+              invertMotor(deviceArray, numMotors);
+              setCurrentLimit(deviceArray, numMotors);
+              setEncoderLimit(deviceArray, numMotors);
+              setSpeed(deviceArray, numMotors);
               motorList.get(numMotors).checkElecErrors();
             } else {
               motorList.get(numMotors).disable();
@@ -166,7 +161,7 @@ public class MotorTest {
             numMotors++;
           } else {
             if (deviceArray[deviceArray.length - 1].equals("true")) {
-              setSolenoid(deviceArray);
+              setSolenoid(deviceArray, numSolenoid);
             }
             numSolenoid++;
           }
@@ -184,22 +179,22 @@ public class MotorTest {
     }
   }
 
-  public void coastOrBrake(String[] deviceArray) {
-    if ((deviceArray[6]) == "false") {
+  public void coastOrBrake(String[] deviceArray, int numMotors) {
+    if ((deviceArray[DiagnosticConstants.COAST_IDX]) == "false") {
       motorList.get(numMotors).setIdle(Motor.IdleMode.BRAKE);
     } else {
       motorList.get(numMotors).setIdle(Motor.IdleMode.COAST);
     }
   }
 
-  public void invertMotor(String[] deviceArray) {
-    boolean isInverted = Boolean.parseBoolean(deviceArray[7]);
+  public void invertMotor(String[] deviceArray, int numMotors) {
+    boolean isInverted = Boolean.parseBoolean(deviceArray[DiagnosticConstants.INVERT_IDX]);
     motorList.get(numMotors).invertMotor(isInverted);
   }
 
-  public void setSpeed(String[] deviceArray) {
-    double constSpeed = (Double.parseDouble(deviceArray[4]));
-    boolean isJoystick = (Boolean.parseBoolean(deviceArray[5])); // make boolean
+  public void setSpeed(String[] deviceArray, int numMotors) {
+    double constSpeed = (Double.parseDouble(deviceArray[DiagnosticConstants.CONSTANT_SPEED_IDX]));
+    boolean isJoystick = (Boolean.parseBoolean(deviceArray[DiagnosticConstants.JOYSTICK_IDX]));
     motorList.get(numMotors).setSpeed(constSpeed, isJoystick);
   }
 
@@ -207,44 +202,52 @@ public class MotorTest {
     motor.disable();
   }
 
-  public void setCurrentLimit(String[] deviceArray) {
-    int currLimit = (int) (Double.parseDouble(deviceArray[8]));
+  public void setCurrentLimit(String[] deviceArray, int numMotors) {
+    int currLimit = (int) (Double.parseDouble(deviceArray[DiagnosticConstants.CURR_LIMIT_IDX]));
     motorList.get(numMotors).setCurrentLimit(currLimit);
   }
 
-  public void setEncoderLimit(String[] deviceArray) {
-    double low = (Double.parseDouble(deviceArray[9]));
-    double high = (Double.parseDouble(deviceArray[10]));
+  public void setEncoderLimit(String[] deviceArray, int numMotors) {
+    double low = (Double.parseDouble(deviceArray[DiagnosticConstants.ENCODER_LOW_IDX]));
+    double high = (Double.parseDouble(deviceArray[DiagnosticConstants.ENCODER_HIGH_IDX]));
     motorList.get(numMotors).setEncoderLimit(low, high);
   }
 
-  public void setSolenoid(String[] deviceArray) {
+  public void setSolenoid(String[] deviceArray, int numSolenoid) {
     Value value;
-    if (Boolean.parseBoolean(deviceArray[12])) {
+    if (Boolean.parseBoolean(deviceArray[DiagnosticConstants.SWITCH_SOLENOID_IDX])) {
       value = Value.kForward;
     } else {
       value = Value.kReverse;
     }
     solenoidList.get(numSolenoid).set(value);
   }
-
-  public void register(Motor motor, DoubleSolenoid solenoid, String subsystem, String name) {
-    if (solenoid == null) {
-      motorArray.add(motor.getRegisterString(subsystem, name));
-      motorList.add(motor);
-      motor.setSubsystem(subsystem);
-      motor.setName(name);
-    } else {
-      motorArray.add(subsystem + " " + name + " 0 0 0 0 0 0 0.0 -2.0 0.0 0 0");
-      solenoidList.add(solenoid);
-    }
-
+  
+  public void registerSolenoid(DoubleSolenoid solenoid, String subsystem, String name) {
+    motorArray.add(subsystem + " " + name + " 0 0 0 0 0 0 0.0 -2.0 0.0 0 0");
+    solenoidList.add(solenoid);
     motorTable.set(motorArray.toArray(new String[motorList.size() + solenoidList.size()]));
+  }
+
+  public void registerMotor(CANSparkMax motor, String subsystem, String name) {
+    registerMotor(new Neo(motor), subsystem, name);
+  }
+
+  public void registerMotor(WPI_TalonFX motor, String subsystem, String name) {
+    registerMotor(new Falcon(motor), subsystem, name);
+  }
+
+  public void registerMotor(Motor motor, String subsystem, String name) {
+    motorArray.add(motor.getRegisterString(subsystem, name));
+    motorList.add(motor);
+    motor.setSubsystem(subsystem);
+    motor.setName(name);
+    motorTable.set(motorArray.toArray(new String[motorList.size() + solenoidList.size()]));
+
     if (!motorsMap.containsKey(subsystem)) {
       motorsMap.put(subsystem, new ArrayList<Motor>());
     }
 
-    ((ArrayList<Motor>) motorsMap.get(subsystem)).add(motor);
+    motorsMap.get(subsystem).add(motor);
   }
-
 }

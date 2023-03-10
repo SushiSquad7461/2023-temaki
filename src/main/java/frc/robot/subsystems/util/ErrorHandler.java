@@ -14,11 +14,9 @@ public class ErrorHandler {
     static ErrorHandler instance;
     private StringArrayPublisher errorTable;
 
-    public ErrorHandler() {
+    private ErrorHandler() {
         inst = NetworkTableInstance.getDefault();
-        table = inst.getTable("dataTable");
-    
-        instance = null;
+        table = inst.getTable("dataTable");    
         errorTable = table.getStringArrayTopic("errors").publish();
     }
 

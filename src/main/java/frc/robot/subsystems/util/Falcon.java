@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import SushiFrcLib.Motor.MotorHelper;
+
 public class Falcon extends Motor {
     WPI_TalonFX motor;
     public int canID;
@@ -100,7 +102,7 @@ public class Falcon extends Motor {
         double newSpeed;
         if (isJoystick) {
             newSpeed = oi.getDriveTrainTranslationY();
-            if (newSpeed < .08 && newSpeed > -.08) {
+            if (newSpeed < DiagnosticConstants.JOYSTICK_SPEED_BOUNDARIES && newSpeed > DiagnosticConstants.JOYSTICK_SPEED_BOUNDARIES * -1) {
                 newSpeed = 0;
             }
         } else {
@@ -118,23 +120,21 @@ public class Falcon extends Motor {
 
     @Override
     public void setCurrentLimit(double currentLimit) {
-        SupplyCurrentLimitConfiguration CurrentLimit = new SupplyCurrentLimitConfiguration(true, currentLimit,
-                currentLimit, 0.1);
-        motor.configSupplyCurrentLimit(CurrentLimit);
+        motor.configSupplyCurrentLimit(MotorHelper.createCurrentLimt((int) currentLimit));
     }
 
     @Override
     public void setEncoderLimit(double lowLimit, double highLimit) {
-        if (lowLimit == -2) {
+        if (lowLimit == DiagnosticConstants.LOW_LIMIT_VALUE) {
             this.lowLimit = Double.MAX_VALUE * -1;
         } else {
-            this.lowLimit = lowLimit * 1000;
+            this.lowLimit = lowLimit * DiagnosticConstants.ENCODER_MULTIPLIER;
         }
 
-        if (highLimit == 0) {
+        if (highLimit == DiagnosticConstants.HIGH_LIMIT_VALUE) {
             this.highLimit = Double.MAX_VALUE;
         } else {
-            this.highLimit = highLimit * 1000;
+            this.highLimit = highLimit * DiagnosticConstants.ENCODER_MULTIPLIER;
         }
     }
 
