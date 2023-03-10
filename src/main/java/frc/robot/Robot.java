@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
 
         swerve = Swerve.getInstance();
         compressor = new Compressor(1, PneumaticsModuleType.REVPH);
+        compressor.enableDigital();
 
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
@@ -66,7 +67,9 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putNumber("compressor pressure", compressor.getPressure());
+        SmartDashboard.putNumber("Compressor Pressure", compressor.getPressure());
+        SmartDashboard.putBoolean("Compress Full", !compressor.getPressureSwitchValue());
+
     }
 
     @Override
