@@ -51,6 +51,8 @@ public class BetaManipulator extends Manipulator {
 
     public void periodic() {
         SmartDashboard.putNumber("Manipulator Current", motor.getOutputCurrent());
+        SmartDashboard.putBoolean("Beam Break", isBeamBreakBlocked());
+
     }
 
     public boolean isBeamBreakBlocked() {

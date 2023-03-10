@@ -53,7 +53,7 @@ public abstract class Manipulator extends SubsystemBase {
      */
     public Command cubeReverse() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED);
+            motor.set(kManipulator.SPEED * -1);
         });
     }
 

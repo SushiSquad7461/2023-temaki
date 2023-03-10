@@ -273,15 +273,14 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     intake.retractIntake(), 
                     new ParallelCommandGroup(
-                        indexer.runIndexer(), 
+                        indexer.runIndexer(),
                         manipulator.cube()
                     ), 
                     new WaitCommand(1.5), 
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
-                        indexer.stopIndexer(), 
+                        indexer.stopIndexer(),
                         manipulator.holdCube()
-
                     )
                 )
             ).schedule();
