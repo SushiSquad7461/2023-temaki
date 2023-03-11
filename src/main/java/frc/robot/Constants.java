@@ -117,7 +117,7 @@ public final class Constants {
                   break;
               default:
                   INDEXER_SPEED = -0.7;
-                  CONE_RAMP_SPEED = -0.5;
+                  CONE_RAMP_SPEED = -1;
                   break;
             }
         }
@@ -205,11 +205,7 @@ public final class Constants {
             VecBuilder.fill(3.2, 3.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-<<<<<<< HEAD
             VecBuilder.fill(25.0, 25.0, 40.0);
-=======
-            VecBuilder.fill(20.0, 20.0, 20.0);
->>>>>>> 7632af9f805386cdf6dc444170d023e7472cb6da
 
         /* Module Specific Constants */
 

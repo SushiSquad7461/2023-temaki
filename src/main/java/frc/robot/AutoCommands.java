@@ -57,7 +57,7 @@ public class AutoCommands {
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(1.0), 
+            new WaitCommand(1.5), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 
@@ -118,7 +118,7 @@ public class AutoCommands {
             scoreCone(),
             makeAuto("2_Piece_Loading_Zone"),
             scoreCube(),
-            makeAuto("2_piece _ball"),
+            makeAuto("2_piece_bal"),
             new WaitCommand(1.0),
             new AutoBalance()
         ));
@@ -138,6 +138,24 @@ public class AutoCommands {
             new WaitCommand(1.0),
             new AutoBalance()
         ));
+
+        autoChooser.addOption("2 piece burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("2_Piece_Loading_Zone_Burm", 2.0),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("2 piece burm + bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("2_Piece_Loading_Zone_Burm", 2.0),
+            scoreCube(),
+            makeAuto("2_piece_bal_burm"),
+            new WaitCommand(0.5),
+            new AutoBalance()
+        ));
+
+
+
         putAutoChooser();
     }
 
@@ -155,6 +173,12 @@ public class AutoCommands {
     private Command makeAuto(String path) {
         return autoBuilder.fullAuto(
             PathPlanner.loadPathGroup(path, kSwerve.MAX_SPEED, kSwerve.MAX_ACCELERATION)
+        );
+    }
+
+    private Command makeAuto(String path, double speed) {
+        return autoBuilder.fullAuto(
+            PathPlanner.loadPathGroup(path, speed, kSwerve.MAX_ACCELERATION)
         );
     }
 

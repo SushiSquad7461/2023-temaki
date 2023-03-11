@@ -52,7 +52,7 @@ public class AutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return initialTilt.getNorm() - tilt.getNorm() > 2;
+    return initialTilt.getNorm() - tilt.getNorm() > 4 || tilt.getNorm() < 1;
   }
 
   private double getRoll() {
