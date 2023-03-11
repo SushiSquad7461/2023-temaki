@@ -190,7 +190,7 @@ public class RobotContainer {
             )
         );
 
-        oi.getDriverController().rightTrigger().whileTrue(new AutoBalancePID());
+        oi.getDriverController().rightTrigger().onTrue(new AutoBalance());
 
         oi.getDriverController().b().onTrue(new InstantCommand(() -> {
             swerve.turnOnLocationLock(180);

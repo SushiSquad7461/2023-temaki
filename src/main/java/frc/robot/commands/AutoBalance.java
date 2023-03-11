@@ -17,6 +17,7 @@ public class AutoBalance extends CommandBase {
 
   Swerve swerve;
   Translation2d tilt;
+  Translation2d initialTilt;
   
 
   public AutoBalance() {
@@ -26,7 +27,9 @@ public class AutoBalance extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+      initialTilt = new Translation2d(getRoll(), getPitch());
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -36,7 +39,7 @@ public class AutoBalance extends CommandBase {
     SmartDashboard.putNumber("pitch", getPitch());
 
     tilt = new Translation2d(getRoll(), getPitch()); // TODO: switch them?? 
-
+    SmartDashboard.putNumber("autobalance norm", tilt.getNorm());
     swerve.drive(tilt.times(Constants.kAutoBalance.MAX_SPEED), 0, true, false);
   }
 
@@ -49,7 +52,7 @@ public class AutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (tilt.getNorm()<2); //TODO: make constants
+    return initialTilt.getNorm() - tilt.getNorm() > 2;
   }
 
   private double getRoll() {
