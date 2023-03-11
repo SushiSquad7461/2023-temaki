@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.commands.AutoBalance;
 import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Swerve;
@@ -113,6 +114,15 @@ public class AutoCommands {
             scoreCube()
         ));
 
+        autoChooser.addOption("2 Piece Loading Zone + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("2_Piece_Loading_Zone"),
+            scoreCube(),
+            makeAuto("2_piece _ball"),
+            new WaitCommand(1.0),
+            new AutoBalance()
+        ));
+
         autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
             makeAuto("2_Piece_Loading_Zone"),
@@ -123,7 +133,9 @@ public class AutoCommands {
 
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
+            arm.moveArm(ArmPos.LOWERED),
             makeAuto("Charge"),
+            new WaitCommand(1.0),
             new AutoBalance()
         ));
         putAutoChooser();

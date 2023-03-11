@@ -202,10 +202,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(4.2, 4.2, 0.1);
+            VecBuilder.fill(3.2, 3.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(20.0, 20.0, 20.0);
+            VecBuilder.fill(25.0, 25.0, 40.0);
 
         /* Module Specific Constants */
 
