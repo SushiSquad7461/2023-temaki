@@ -84,7 +84,7 @@ public class BetaIntake extends Intake {
     public Command cubeShoot() {
         return runOnce(() -> {
             bottom.set(kIntake.MOTOR_SPEED);
-            top.set(-kIntake.MOTOR_SPEED);
+            top.set(-kIntake.CUBE_SHOOT_TOP_SPEED);
         });
     }
 
