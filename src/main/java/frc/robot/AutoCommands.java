@@ -56,7 +56,7 @@ public class AutoCommands {
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(2.0), 
+            new WaitCommand(1.0), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 
@@ -107,7 +107,11 @@ public class AutoCommands {
             System.out.println("YOUR A CLOWN");
         }));
 
-        autoChooser.addOption("2 Piece Loading Zone", makeAuto("2_Piece_Loading_Zone"));
+        autoChooser.addOption("2 Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("2_Piece_Loading_Zone"),
+            scoreCube()
+        ));
 
         autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
@@ -117,7 +121,11 @@ public class AutoCommands {
             scoreCube()
         ));
 
-        autoChooser.addOption("Charge", makeAuto("Charge"));
+        autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("Charge"),
+            new AutoBalance()
+        ));
         putAutoChooser();
     }
 
@@ -152,9 +160,9 @@ public class AutoCommands {
             manipulator.cone(),
             new WaitCommand(0.1),
             arm.moveArm(ArmPos.L3_SCORING),
-            new WaitCommand(0.5),
+            new WaitCommand(0.7),
             manipulator.coneReverse(),
-            new WaitCommand(0.1),
+            new WaitCommand(0.2),
             manipulator.stop()
         );
     }

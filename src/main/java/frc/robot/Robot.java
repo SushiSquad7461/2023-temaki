@@ -69,8 +69,8 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         SmartDashboard.putNumber("Compressor Pressure", compressor.getPressure());
         SmartDashboard.putBoolean("Compress Full", !compressor.getPressureSwitchValue());
-
     }
+
 
     @Override
     public void disabledInit() {

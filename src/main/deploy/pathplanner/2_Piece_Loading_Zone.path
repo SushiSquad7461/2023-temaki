@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.615669289535882,
-        "y": 4.806392664595124
+        "x": 4.930149860299721,
+        "y": 4.8253881614146215
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.659818868253777,
-        "y": 4.213563771343299
+        "x": 7.410356735607088,
+        "y": 4.704575792130308
       },
       "prevControl": {
-        "x": 6.921146439282477,
-        "y": 4.3465976255224845
+        "x": 6.671684306635789,
+        "y": 4.8376096463094935
       },
       "nextControl": {
-        "x": 6.921146439282477,
-        "y": 4.3465976255224845
+        "x": 6.671684306635789,
+        "y": 4.8376096463094935
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -49,12 +49,37 @@
     },
     {
       "anchorPoint": {
-        "x": 1.84,
-        "y": 4.15
+        "x": 3.0326850015402167,
+        "y": 4.71878901204611
       },
       "prevControl": {
-        "x": 2.9465356872516444,
-        "y": 4.964871675662443
+        "x": 3.629595333907549,
+        "y": 4.728992607471193
+      },
+      "nextControl": {
+        "x": 2.201211636465827,
+        "y": 4.704575792130308
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.02,
+        "y": 4.42
+      },
+      "prevControl": {
+        "x": 2.3682238879371376,
+        "y": 4.540812369284312
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -70,6 +95,9 @@
       }
     }
   ],
+  "maxVelocity": 4.0,
+  "maxAcceleration": 4.0,
+  "isReversed": null,
   "markers": [
     {
       "position": 0.21818181818182228,
@@ -84,13 +112,13 @@
       ]
     },
     {
-      "position": 1.745454545454543,
+      "position": 1.85,
       "names": [
         "raiseArm"
       ]
     },
     {
-      "position": 0.08181818181818165,
+      "position": 0.01,
       "names": [
         "lowerArm"
       ]
