@@ -21,4 +21,6 @@ public abstract class Indexer extends SubsystemBase {
      * Reverses indexer.
      */
     public abstract Command reverseIndexer();
+
+    public abstract void registerMotors();
 }

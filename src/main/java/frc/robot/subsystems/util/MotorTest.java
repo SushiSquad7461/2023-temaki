@@ -48,6 +48,8 @@ public class MotorTest {
   
   private ArrayList<String> unwantedMotors;
 
+  private boolean runningTwitchTest = true;
+
   public static MotorTest getInstance() {
     if (instance == null) {
       instance = new MotorTest();
@@ -58,6 +60,8 @@ public class MotorTest {
   private MotorTest() {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("dataTable");
+
+    runningTwitchTest = true;
 
     dataTable = table.getStringArrayTopic("tableValues").subscribe(null);
     running = table.getBooleanTopic("Running?").subscribe(false);
@@ -78,10 +82,20 @@ public class MotorTest {
   }
 
   public Command runSubsystemTwitch(String subsystem, double waitTime, double speed) {
+    System.out.println("Inside runSubsystemTwitch");
+    System.out.println(subsystem +" "+ motorsMap.get(subsystem).size());
+    // for(Map.Entry map: motorsMap.entrySet()){
+    //   System.out.println(map.getKey() + " " + map.getValue());
+    // }
+
+    //System.out.println(motorsMap.toString());
+
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
+          System.out.println("Before for loop");
           for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
             Motor motor = motorsMap.get(subsystem).get(i);
+            System.out.println("Inside for loop");
             if (unwantedMotors.contains(motor.getName())) {
               continue;
             }
@@ -131,16 +145,21 @@ public class MotorTest {
 
 
   public Command runTwitch() {
+    System.out.println("Inside runTwitch");
     return new ParallelCommandGroup(
-        runSubsystemTwitch("intake", 0.1, 0.5),
-        runSubsystemTwitch("manipulator", 0.1, 0.5),
-        runSubsystemTwitch("indexer", 0.1, 0.2),
-        runSubsystemTwitch("arm", 0.1, 0.01));
+        //runSubsystemTwitch("intake", 0.1, 0.5),
+        runSubsystemTwitch("Manipulator", 0.1, 0.5)
+        // runSubsystemTwitch("AlphaIndexer", 0.1, 0.2));
+        //runSubsystemTwitch("arm", 0.1, 0.01));
+    );
   }
 
   public void runTwitchTest() {
     if (twitchTest.get()) {
-      runTwitch().schedule();;
+      System.out.println("Inside runTwitchTest");
+      runTwitch().schedule();
+      System.out.println("After runTwitchTest");
+      runningTwitchTest = false;
     }
   }
 
@@ -253,12 +272,13 @@ public class MotorTest {
     if (!motorsMap.containsKey(subsystem)) {
       motorsMap.put(subsystem, new ArrayList<Motor>());
     }
-
     motorsMap.get(subsystem).add(motor);
+    System.out.println(subsystem +" "+ motorsMap.get(subsystem).size());
   }
 
   public void unRegisterAlllMotors(){
     motorList.removeAll(motorList);
     motorsMap.clear();
+    solenoidList.clear();
   }
 }

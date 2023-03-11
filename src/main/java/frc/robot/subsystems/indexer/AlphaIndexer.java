@@ -30,9 +30,11 @@ public class AlphaIndexer extends Indexer {
 
     private AlphaIndexer() {
         indexerMotor = MotorHelper.createSparkMax(kPorts.INDEXER_MOTOR, MotorType.kBrushless);
-        Neo neoIndexer = new Neo(indexerMotor);
         motorTest = MotorTest.getInstance();
-        motorTest.registerMotor(neoIndexer, getName(), indexerMotor.toString());
+    }
+
+    public void registerMotors() {
+        motorTest.registerMotor(indexerMotor, getName(), indexerMotor.toString());
     }
 
     /**o

@@ -17,6 +17,7 @@ public abstract class Intake extends SubsystemBase {
     /**
      * Creates a solenoid intake.
      */
+    public abstract void registerMotors();
     public Intake() {
         solenoid = new DoubleSolenoid(
             PneumaticsModuleType.REVPH, 

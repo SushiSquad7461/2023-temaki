@@ -91,6 +91,11 @@ public class Swerve extends SubsystemBase {
         locationLockPID = new PIDController(0.1d, 0, 0);
         
         motorTest = MotorTest.getInstance();
+        
+        SmartDashboard.putData("Field", field);
+    }
+
+    public void registerMotors() {
         for (int i = 0; i < swerveMods.length; i++) {
             SwerveModule sModule = swerveMods[i];
             WPI_TalonFX falconDrive = ((WPI_TalonFX) sModule.driveMotor);
@@ -98,8 +103,6 @@ public class Swerve extends SubsystemBase {
             motorTest.registerMotor(falconDrive, getName(), (falconDrive.toString()+i));
             motorTest.registerMotor(falconAngle, getName(), (falconAngle.toString()+i));
         }
-        
-        SmartDashboard.putData("Field", field);
     }
 
     public void turnOnLocationLock(double angle) {

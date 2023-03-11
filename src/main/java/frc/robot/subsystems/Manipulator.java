@@ -36,6 +36,9 @@ public class Manipulator extends SubsystemBase {
         manipulatorMotor.burnFlash();
 
         motorTest = MotorTest.getInstance();
+    }
+
+    public void registerMotors() {
         motorTest.registerMotor(manipulatorMotor, getName(), manipulatorMotor.toString());
     }
 

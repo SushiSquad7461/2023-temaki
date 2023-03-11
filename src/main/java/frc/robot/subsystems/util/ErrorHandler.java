@@ -16,6 +16,7 @@ public class ErrorHandler {
 
     private ErrorHandler() {
         inst = NetworkTableInstance.getDefault();
+        allErrors = new ArrayList<String>();
         table = inst.getTable("dataTable");    
         errorTable = table.getStringArrayTopic("errors").publish();
     }

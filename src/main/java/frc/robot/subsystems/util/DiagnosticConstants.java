@@ -18,5 +18,6 @@ public class DiagnosticConstants {
     public static final double JOYSTICK_SPEED_BOUNDARIES = 0.09;
     public static final double TWITCH_BASE_SPEED = 0.1;
 
+/* all motor and subsystem names need to be constant */
 
 }

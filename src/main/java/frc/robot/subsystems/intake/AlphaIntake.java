@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kPorts;
+import frc.robot.subsystems.util.MotorTest;
 
 /**
  * Class that controls a cube intake.
@@ -13,7 +14,7 @@ public class AlphaIntake extends Intake {
     private CANSparkMax motorIntake;
 
     private static AlphaIntake instance;
-
+    private static MotorTest motorTest;
     /**
      * Gets instance for singleton.
      */
@@ -24,12 +25,16 @@ public class AlphaIntake extends Intake {
         return instance;
     }
 
+    public void registerMotors() {
+        motorTest.registerMotor(motorIntake, getName(), motorIntake.toString());
+    }
 
     private AlphaIntake() {
         super();
         motorIntake = new CANSparkMax(kPorts.INTAKE_BOTTOM_MOTOR_ID, MotorType.kBrushless);
         motorIntake.setInverted(true);
         motorIntake.burnFlash();
+        motorTest = MotorTest.getInstance();
     }
 
     /**

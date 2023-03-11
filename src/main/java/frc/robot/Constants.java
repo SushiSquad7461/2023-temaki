@@ -43,7 +43,7 @@ public final class Constants {
         BETA
     }
 
-    public static final RobotNames ROBOT_NAME = RobotNames.BETA;
+    public static final RobotNames ROBOT_NAME = RobotNames.ALPHA;
 
     /**
      * Defines port values.

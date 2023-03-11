@@ -69,9 +69,11 @@ public class BetaArm extends Arm {
         solenoidRight.set(Value.kReverse);
 
         motorTest = MotorTest.getInstance();
+    }
+
+    public void registerMotors() {
         motorTest.registerSolenoid(solenoidLeft, getName(), solenoidLeft.toString());
         motorTest.registerSolenoid(solenoidRight, getName(), solenoidRight.toString());
-
     }
 
     @Override

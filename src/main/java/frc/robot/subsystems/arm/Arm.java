@@ -32,6 +32,7 @@ public abstract class Arm extends SubsystemBase {
 
     private final DutyCycleEncoder absoluteEncoder;
 
+
     Arm() {
         armP = new TunableNumber("Arm P", kArm.KP, Constants.TUNING_MODE);
         armI = new TunableNumber("Arm I", kArm.KI, Constants.TUNING_MODE);
@@ -67,9 +68,9 @@ public abstract class Arm extends SubsystemBase {
             armF.get()
         );
 
-        motorTest.getInstance();
-        motorTest.registerMotor(leftMotor, getName(), leftMotor.toString());
-        motorTest.registerMotor(rightMotor, getName(), rightMotor.toString());
+        // motorTest.getInstance();
+        // motorTest.registerMotor(leftMotor, getName(), leftMotor.toString());
+        // motorTest.registerMotor(rightMotor, getName(), rightMotor.toString());
 
         leftMotorPid = leftMotor.getPIDController();
 
