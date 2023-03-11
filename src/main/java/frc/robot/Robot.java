@@ -41,12 +41,12 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
         
         switch (Constants.ROBOT_NAME) {
-            case ALPHA:
-                arm = AlphaArm.getInstance();
-                break;
-            default:
-                arm = BetaArm.getInstance();
-                break;
+          case ALPHA:
+              arm = AlphaArm.getInstance();
+              break;
+          default:
+              arm = BetaArm.getInstance();
+              break;
         }
 
         swerve = Swerve.getInstance();

@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -53,13 +52,13 @@ public final class Constants {
         public static final String PIGEON_CANIVORE_NAME;
 
         static {
-            switch(ROBOT_NAME) {
-                case ALPHA:
-                    PIGEON_CANIVORE_NAME = "";
-                    break;
-                default:
-                    PIGEON_CANIVORE_NAME = "Sussy Squad";
-                    break;
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  PIGEON_CANIVORE_NAME = "";
+                  break;
+              default:
+                  PIGEON_CANIVORE_NAME = "Sussy Squad";
+                  break;
             }
         }
 
@@ -98,6 +97,9 @@ public final class Constants {
         public static final int LEFT_MOTOR_ID = 23;
         public static final int RIGHT_MOTOR_ID = 22;
         public static final int ENCODER_CHANNEL = 0;
+
+        public static final int MANIPULATOR_BEAM_BREAk = 1;
+        public static final int ARM_LIMIT_SWITCH = 3;
     }
 
     /**
@@ -197,7 +199,7 @@ public final class Constants {
             VecBuilder.fill(4.2, 4.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(20.0, 20.0,20.0);
+            VecBuilder.fill(20.0, 20.0, 0.0);
 
         /* Module Specific Constants */
 
@@ -302,16 +304,16 @@ public final class Constants {
 
         static {
             switch (ROBOT_NAME) {
-                case ALPHA:
-                    DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
-                    break;
-                default:
-                    DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
-                    break;
+              case ALPHA:
+                  DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
+                  break;
+              default:
+                  DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
+                  break;
             }
         }
 
-        /** PID tolerance */
+        /** PID tolerance. */
         public static final double X_TOLLERENCE = 0.01;
         public static final double Y_TOLLERENCE = 0.02;
         public static final double THETA_TOLLERENCE = 0.02;
@@ -356,16 +358,16 @@ public final class Constants {
 
         static {
             switch (ROBOT_NAME) {
-                case ALPHA:
-                    DRIVE_X_LIMITER = new SlewRateLimiter(3);
-                    DRIVE_Y_LIMITER = new SlewRateLimiter(3);
-                    DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
-                    break;
-                default:
-                    DRIVE_X_LIMITER = new SlewRateLimiter(3000);
-                    DRIVE_Y_LIMITER = new SlewRateLimiter(3000);
-                    DRIVE_THETA_LIMITER = new SlewRateLimiter(3000);
-                    break;
+              case ALPHA:
+                  DRIVE_X_LIMITER = new SlewRateLimiter(3);
+                  DRIVE_Y_LIMITER = new SlewRateLimiter(3);
+                  DRIVE_THETA_LIMITER = new SlewRateLimiter(3);
+                  break;
+              default:
+                  DRIVE_X_LIMITER = new SlewRateLimiter(3000);
+                  DRIVE_Y_LIMITER = new SlewRateLimiter(3000);
+                  DRIVE_THETA_LIMITER = new SlewRateLimiter(3000);
+                  break;
             }
         }
 
@@ -520,32 +522,32 @@ public final class Constants {
         public static final Rotation3d CAMERA_ANGLE_DEGREES;
 
         static {
-            switch(ROBOT_NAME) {
-                case ALPHA:
-                    // X is forward, Y is left.
-                     CAMERA_POS_METERS = new Translation3d(
-                        Units.inchesToMeters(2.691), 
-                        Units.inchesToMeters(6),
-                        Units.inchesToMeters(27.75)
-                    );
-                    CAMERA_ANGLE_DEGREES = new Rotation3d(
-                        Units.degreesToRadians(0),
-                        Units.degreesToRadians(12),
-                        Units.degreesToRadians(0)
-                    ).unaryMinus();
-                    break;
-                default:
-                    // X is forward, Y is left.
-                    CAMERA_POS_METERS = new Translation3d(
-                        Units.inchesToMeters(2.092), 
-                        Units.inchesToMeters(8.5),
-                        Units.inchesToMeters(31.161)
-                    );
-                    CAMERA_ANGLE_DEGREES = new Rotation3d(
-                        Units.degreesToRadians(0),
-                        Units.degreesToRadians(16.579),
-                        Units.degreesToRadians(180)
-                    ).unaryMinus();
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                  // X is forward, Y is left.
+                  CAMERA_POS_METERS = new Translation3d(
+                      Units.inchesToMeters(2.691), 
+                      Units.inchesToMeters(6),
+                      Units.inchesToMeters(27.75)
+                  );
+                  CAMERA_ANGLE_DEGREES = new Rotation3d(
+                      Units.degreesToRadians(0),
+                      Units.degreesToRadians(12),
+                      Units.degreesToRadians(0)
+                  ).unaryMinus();
+                  break;
+              default:
+                  // X is forward, Y is left.
+                  CAMERA_POS_METERS = new Translation3d(
+                      Units.inchesToMeters(2.092), 
+                      Units.inchesToMeters(8.5),
+                      Units.inchesToMeters(31.161)
+                  );
+                  CAMERA_ANGLE_DEGREES = new Rotation3d(
+                      Units.degreesToRadians(0),
+                      Units.degreesToRadians(16.579),
+                      Units.degreesToRadians(180)
+                  ).unaryMinus();
             }
         }
 

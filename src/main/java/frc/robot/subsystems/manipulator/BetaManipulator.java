@@ -1,18 +1,10 @@
 package frc.robot.subsystems.manipulator;
 
-import SushiFrcLib.Motor.MotorHelper;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kCommandTimmings;
-import frc.robot.Constants.kManipulator;
 import frc.robot.Constants.kPorts;
 
 /**
@@ -34,20 +26,33 @@ public class BetaManipulator extends Manipulator {
 
     private BetaManipulator() {
         super();
-        beamBreak = new DigitalInput(1);
+        beamBreak = new DigitalInput(kPorts.MANIPULATOR_BEAM_BREAk);
     }
 
 
+    /**
+     * Relase cube or cone.
+     */
     public void release() {
         if (isBeamBreakBlocked()) {
-            new SequentialCommandGroup(cubeReverse(), new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME), stop()).schedule();
+            new SequentialCommandGroup(
+                cubeReverse(), 
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME), 
+                stop()
+            ).schedule();
         } else {
-            new SequentialCommandGroup(coneReverse(), new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME), stop()).schedule();
+            new SequentialCommandGroup(
+                coneReverse(),
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME), 
+                stop()
+            ).schedule();
         }
     }
 
     public void periodic() {
         SmartDashboard.putNumber("Manipulator Current", motor.getOutputCurrent());
+        SmartDashboard.putBoolean("Beam Break", isBeamBreakBlocked());
+
     }
 
     public boolean isBeamBreakBlocked() {
