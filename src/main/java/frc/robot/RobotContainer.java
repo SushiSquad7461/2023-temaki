@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
+import frc.robot.commands.AutoBalance;
+import frc.robot.commands.AutoBalancePID;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -185,6 +187,8 @@ public class RobotContainer {
                 false
             )
         );
+
+        oi.getDriverController().rightTrigger().onTrue(new AutoBalance());
 
         oi.getDriverController().b().onTrue(new InstantCommand(() -> {
             swerve.turnOnLocationLock(180);
