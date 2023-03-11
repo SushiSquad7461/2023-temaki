@@ -71,7 +71,7 @@ public abstract class Manipulator extends SubsystemBase {
      */
     public Command holdCube() {
         return runOnce(() -> {
-            motor.set(-0.01);
+            motor.set(kManipulator.SPEED * 0.2);
         });
     }
 }

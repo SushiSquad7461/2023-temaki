@@ -221,12 +221,12 @@ public class Swerve extends SubsystemBase {
 
                 drive(
                     new Translation2d(
-                        xaxisPid.calculate(swerveOdometry.getEstimatedPosition().getX()) * 0.6,
-                        yaxisPid.calculate(swerveOdometry.getEstimatedPosition().getY()) * 0.6
+                        xaxisPid.calculate(swerveOdometry.getEstimatedPosition().getX()),
+                        yaxisPid.calculate(swerveOdometry.getEstimatedPosition().getY())
                     ),
                     thetaPid.calculate(
                         swerveOdometry.getEstimatedPosition().getRotation().getRadians()
-                    ) * 0.6, 
+                    ),
                     true, 
                     false
                 );
