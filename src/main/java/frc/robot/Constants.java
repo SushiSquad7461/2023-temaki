@@ -205,7 +205,7 @@ public final class Constants {
             VecBuilder.fill(4.2, 4.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(20.0, 20.0, 0.0);
+            VecBuilder.fill(20.0, 20.0, 20.0);
 
         /* Module Specific Constants */
 
@@ -499,6 +499,8 @@ public final class Constants {
      */
     public static final class kManipulator {
         public static final double SPEED = 0.75;
+        public static final double CUBE_REVERSE_SPEED = -0.4;
+        public static final double CONE_REVERSE_SPEED = 0.5;
         public static final int CURRENT_LIMITING = 40;
         public static final int MAX_CURRENT = 30;
     }
