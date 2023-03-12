@@ -92,6 +92,13 @@ public class Swerve extends SubsystemBase {
     }
 
     public void turnOnLocationLock(double angle) {
+        var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+        boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+
+        if (isRedAlliance) {
+            angle += 180;
+        }
+
         locationLock = true;
         locationLockPID.setSetpoint(angle);
         locationLockPID.calculate(gyro.getAngle().getDegrees());
