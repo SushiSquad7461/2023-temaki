@@ -263,7 +263,7 @@ public class RobotContainer {
 
         // TODO: add alliance based substation selection
         oi.getDriverController().povUp().whileTrue(
-            swerve.moveToAprilTag(4, new Translation2d(1.0, -0.61))
+            swerve.moveToDoubleSuby(new Translation2d(1.0, -0.61))
         );
 
         oi.getDriverController().povLeft().whileTrue(

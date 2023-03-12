@@ -482,8 +482,8 @@ public final class Constants {
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 92.5),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 81),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 90);
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 79),
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95);
 
             private double angle;
 
@@ -513,7 +513,7 @@ public final class Constants {
         public static final double SPEED = 1.0;
         public static final double CUBE_REVERSE_SPEED = -0.4;
         public static final double CONE_REVERSE_SPEED = 0.5;
-        public static final int CURRENT_LIMITING = 40;
+        public static final int CURRENT_LIMITING = 30;
         public static final int MAX_CURRENT = 30;
     }
 
