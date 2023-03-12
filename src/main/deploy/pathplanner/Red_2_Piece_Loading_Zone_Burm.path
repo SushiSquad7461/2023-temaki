@@ -95,5 +95,30 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "lowerArm"
+      ]
+    },
+    {
+      "position": 0.4,
+      "names": [
+        "intakeDown"
+      ]
+    },
+    {
+      "position": 1.2,
+      "names": [
+        "IntakeUp"
+      ]
+    },
+    {
+      "position": 1.83,
+      "names": [
+        "raiseArm"
+      ]
+    }
+  ]
 }
