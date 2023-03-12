@@ -14,9 +14,10 @@ import frc.robot.subsystems.util.Neo;
  */
 public class AlphaIndexer extends Indexer {
     private final CANSparkMax indexerMotor;
-    private MotorTest motorTest;
 
     private static AlphaIndexer instance;
+    private MotorTest motorTest;
+    
 
     /**
      * singleton get instance method.

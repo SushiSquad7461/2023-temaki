@@ -20,11 +20,14 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.indexer.AlphaIndexer;
+import frc.robot.subsystems.intake.AlphaIntake;
 
 public class MotorTest {
   private NetworkTableInstance inst;
@@ -41,14 +44,14 @@ public class MotorTest {
 
   private ErrorHandler errorHandler;
 
-  static MotorTest instance;
+  private static MotorTest instance;
   private List<Motor> motorList;
   private List<DoubleSolenoid> solenoidList;
   private Map<String, List<Motor>> motorsMap;
   
   private ArrayList<String> unwantedMotors;
 
-  private boolean runningTwitchTest = true;
+  private boolean runningTwitchTest;
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -61,7 +64,7 @@ public class MotorTest {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("dataTable");
 
-    runningTwitchTest = true;
+    runningTwitchTest = false;
 
     dataTable = table.getStringArrayTopic("tableValues").subscribe(null);
     running = table.getBooleanTopic("Running?").subscribe(false);
@@ -79,11 +82,12 @@ public class MotorTest {
     motorsMap = new HashMap<String, List<Motor>>();
     unwantedMotors = new ArrayList<String>();
     unwantedMotors.add("rightArm");
+    unwantedMotors.add("AlphaIntake");
   }
 
   public Command runSubsystemTwitch(String subsystem, double waitTime, double speed) {
     System.out.println("Inside runSubsystemTwitch");
-    System.out.println(subsystem +" "+ motorsMap.get(subsystem).size());
+    //System.out.println(subsystem +" "+ motorsMap.get(subsystem).size());
     // for(Map.Entry map: motorsMap.entrySet()){
     //   System.out.println(map.getKey() + " " + map.getValue());
     // }
@@ -91,27 +95,54 @@ public class MotorTest {
     //System.out.println(motorsMap.toString());
 
     return new SequentialCommandGroup(
+        // new InstantCommand(() -> {
+        //   System.out.println("Before for loop");
+        //   for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
+        //     Motor motor = motorsMap.get(subsystem).get(i);
+        //     System.out.println("Inside for loop");
+        //     // if (unwantedMotors.contains(motor.getName())) {
+        //     //   continue;
+        //     // }
+        //     motor.startTwitch(speed);
+        //   }
+        // } ),
+        // new WaitCommand(waitTime),
+
+        // new InstantCommand(() -> {
+        //   for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
+        //     Motor motor = motorsMap.get(subsystem).get(i);
+        //     motor.endTwitch();
+        //     motor.checkEncoderErrors();
+        //   }
+        //   errorHandler.sendAllErrors();
+        // })
+        
         new InstantCommand(() -> {
-          System.out.println("Before for loop");
-          for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
-            Motor motor = motorsMap.get(subsystem).get(i);
-            System.out.println("Inside for loop");
-            if (unwantedMotors.contains(motor.getName())) {
-              continue;
-            }
-            motor.startTwitch(speed);
-          }
+          (motorsMap.get(subsystem).get(0)).startTwitch(speed);
+          //motorList.get(1).setSpeed(0.5, false);
         }),
-        new WaitCommand(waitTime),
+        //new WaitCommand(5.0), //right now this isnt working btw
         new InstantCommand(() -> {
-          for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
-            Motor motor = motorsMap.get(subsystem).get(i);
-            motor.endTwitch();
-            motor.checkEncoderErrors();
-          }
-          errorHandler.sendAllErrors();
-        }));
+          (motorsMap.get(subsystem).get(0)).endTwitch();
+        })
+        );
   }
+
+  // public Command testMotor() {
+  //   return new InstantCommand(() -> {
+  //     (motorsMap.get("Manipulator").get(0)).setSpeed(.5, false);
+  //     //motorList.get(1).setSpeed(0.5, false);
+  //     System.out.println("Motor is spinning");
+  //   });
+  // }
+
+  // public Command stopMotor() {
+  //   return new InstantCommand(() -> {
+  //     (motorsMap.get("Manipulator").get(0)).setSpeed(0, false);
+  //     //motorList.get(1).setSpeed(0.5, false);
+  //     System.out.println("Motor is not spinning");
+  //   });
+  //}
 
   public Command runSwerveTwitch() {
     Swerve swerve = Swerve.getInstance();
@@ -147,19 +178,17 @@ public class MotorTest {
   public Command runTwitch() {
     System.out.println("Inside runTwitch");
     return new ParallelCommandGroup(
-        //runSubsystemTwitch("intake", 0.1, 0.5),
-        runSubsystemTwitch("Manipulator", 0.1, 0.5)
-        // runSubsystemTwitch("AlphaIndexer", 0.1, 0.2));
-        //runSubsystemTwitch("arm", 0.1, 0.01));
+        runSubsystemTwitch("Manipulator", 3.0, 0.5),
+        //runSubsystemTwitch("AlphaIntake", 3.0, 0.5),
+        runSubsystemTwitch("AlphaIndexer", 3.0, 0.5)
+        //runSubsystemTwitch("arm", 0.1, 0.01),
     );
   }
 
   public void runTwitchTest() {
-    if (twitchTest.get()) {
-      System.out.println("Inside runTwitchTest");
+    if (twitchTest.get() && !runningTwitchTest) {
+      //runningTwitchTest = true;
       runTwitch().schedule();
-      System.out.println("After runTwitchTest");
-      runningTwitchTest = false;
     }
   }
 

@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -42,7 +46,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        LiveWindow.enableAllTelemetry();
         robotContainer = new RobotContainer();
         
         switch (Constants.ROBOT_NAME) {
@@ -80,8 +83,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        // arm.resetArm();
-        //swerve.updateEncoders();
+        arm.resetArm();
+        swerve.updateEncoders();
     }
 
     @Override
@@ -116,15 +119,15 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
         // Cancels all running commands at the start of test mode.
-        //CommandScheduler.getInstance().cancelAll();
-        Intake intake = AlphaIntake.getInstance();
-        intake.registerMotors();
+        CommandScheduler.getInstance().cancelAll();
+        CommandScheduler.getInstance().enable();
 
-        Manipulator manipulator = Manipulator.getInstance();
-        manipulator.registerMotors();
-
-        Indexer indexer = AlphaIndexer.getInstance();
-        indexer.registerMotors();
+        robotContainer.intake.registerMotors();
+        robotContainer.manipulator.registerMotors();
+        robotContainer.indexer.registerMotors();
+        //AlphaIndexer.getInstance().runIndexer().schedule();
+        //motorTest.testMotor().schedule();
+        
     }
 
     /** This function is called periodically during test mode. */
@@ -132,5 +135,6 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
         motorTest.updateMotors();
         motorTest.runTwitchTest();
+        //motorTest.testMotor().schedule();
     }
 }

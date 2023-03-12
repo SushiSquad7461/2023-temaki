@@ -61,7 +61,7 @@ public class Neo extends Motor {
 
     @Override
     public void startTwitch(double speed) {
-        System.out.println("Inside start twitch; setting speed");
+        System.out.println("Inside start twitch");
         startingEncoder = motor.getEncoder().getPosition();
         setSpeed(speed, false);
     }
@@ -70,6 +70,7 @@ public class Neo extends Motor {
     public void endTwitch() {
         disable();
         endingEncoder = motor.getEncoder().getPosition();
+        System.out.println("Inside end twitch");
     }
 
     @Override

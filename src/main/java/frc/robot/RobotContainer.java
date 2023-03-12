@@ -30,13 +30,13 @@ import frc.robot.subsystems.intake.Intake;
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
  */
 public class RobotContainer {
-    private final Swerve swerve;
-    private final Intake intake;
-    private final OI oi;
-    private final AutoCommands autos;
-    private final Arm arm;
-    private final Indexer indexer;
-    private final Manipulator manipulator;
+    public final Swerve swerve;
+    public final Intake intake;
+    public final OI oi;
+    public final AutoCommands autos;
+    public final Arm arm;
+    public final Indexer indexer;
+    public final Manipulator manipulator;
 
     /**
      * Instaite subsystems and commands.
