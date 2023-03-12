@@ -418,12 +418,24 @@ public final class Constants {
                   ENCODER_ANGLE_OFFSET = 233.6;
                   break;
               default:
-                  ENCODER_ANGLE_OFFSET = 198.428918;
+                  ENCODER_ANGLE_OFFSET = 166.789129;
                   break;
             }
         }
 
-        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+        public static final double PARLLELE_ZERO_ANGLED = 84.602423; // Angle of arm parllele to ground when zeroed at the bottom
+        public static final double FEEDFORWARD_ANGLE_OFFSET;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+                break;
+              default:
+                FEEDFORWARD_ANGLE_OFFSET = PARLLELE_ZERO_ANGLED;
+                break;
+            }
+        }
 
         public static final double KP;
         public static final double KI = 0.0;
@@ -452,11 +464,11 @@ public final class Constants {
               default:
                   GEAR_RATIO = 96.67;
 
-                  KP = 0.010;
+                  KP = 0.020000; //0.01
                   KS = 0.0;
                   KG = 0.0;
-                  KGR = 0.6;
-                  KGE = 1.2;
+                  KGR = 0.58; //0.6, 2.5
+                  KGE = 1.5;
                   KV = 0.0;
                   KA = 0.0;
                   break;
