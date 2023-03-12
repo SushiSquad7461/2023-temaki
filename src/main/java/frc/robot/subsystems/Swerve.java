@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -113,6 +114,12 @@ public class Swerve extends SubsystemBase {
             () -> kVision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
             tagOffset
         );
+    }
+
+    public Command moveToDoubleSuby(Translation2d tagOffset) {
+        var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+        boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+        return moveToAprilTag(isRedAlliance ? 7 : 4, tagOffset);
     }
 
     /**
@@ -316,6 +323,7 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.resetPosition(pose.getRotation(), getPositions(), pose);
     }
 
+
     /**
      * Returns current swerve module states.
      */
@@ -347,6 +355,8 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());
+
+        SmartDashboard.putNumber("Gyro Angle", gyro.getAngle().getDegrees());
 
         for (SwerveModule m : swerveMods) {
             SmartDashboard.putNumber("Module Angle " + m.moduleNumber, m.getDriveSpeed());

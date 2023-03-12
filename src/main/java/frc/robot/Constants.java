@@ -325,11 +325,11 @@ public final class Constants {
         public static final double THETA_TOLLERENCE = 0.02;
 
         /* Pid values */
-        public static final double X_P = 3.0;
+        public static final double X_P = 5.0;
         public static final double X_I = 0.0;
         public static final double X_D = 0.75;
 
-        public static final double Y_P = 3.0;
+        public static final double Y_P = 5.0;
         public static final double Y_I = 0.0;
         public static final double Y_D = 0.75;
         
@@ -480,10 +480,10 @@ public final class Constants {
          */
         public enum ArmPos {
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 95.5),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 92.5),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 81),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 100);
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 90);
 
             private double angle;
 
@@ -510,7 +510,7 @@ public final class Constants {
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 0.75;
+        public static final double SPEED = 1.0;
         public static final double CUBE_REVERSE_SPEED = -0.4;
         public static final double CONE_REVERSE_SPEED = 0.5;
         public static final int CURRENT_LIMITING = 40;

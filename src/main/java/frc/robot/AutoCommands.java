@@ -4,6 +4,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -98,7 +99,7 @@ public class AutoCommands {
             kSwerve.ANGLE_CONTROLLER, // PID constants to correct for rotation error (used to create the rotation controller)
             swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true // The drive subsystem. Used to properly set the requirements of path following commands
+            false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true // The drive subsystem. Used to properly set the requirements of path following commands
             swerve
         );
 
@@ -110,9 +111,16 @@ public class AutoCommands {
 
         autoChooser.addOption("2 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto("2_Piece_Loading_Zone"),
+            makeAuto(getAutoPath("2_Piece_Loading_Zone")),
             scoreCube()
         ));
+
+        autoChooser.addOption("2 Piece Loading Zone Red", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto("Red_2_Piece_Loading_Zone"),
+            scoreCube()
+        ));
+
 
         autoChooser.addOption("2 Piece Loading Zone + Bal", new SequentialCommandGroup(
             scoreCone(),
@@ -157,6 +165,15 @@ public class AutoCommands {
 
 
         putAutoChooser();
+    }
+
+    private String getAutoPath(String pathName) {
+        var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+        boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+       
+        System.out.println((isRedAlliance ? "Red_" : "") + pathName);
+        return (isRedAlliance ? "Red_" : "") + pathName;
+        // return pathName;
     }
 
     private void putAutoChooser() {

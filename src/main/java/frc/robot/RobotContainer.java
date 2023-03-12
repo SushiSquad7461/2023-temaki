@@ -119,9 +119,21 @@ public class RobotContainer {
     public void configureBetaButtonBindings() {
         
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(
-            new InstantCommand(() -> ((BetaManipulator) manipulator).release())
-        );
+        // oi.getOperatorController().x().onTrue(
+        //     new InstantCommand(() -> ((BetaManipulator) manipulator).release())
+        // );
+
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            manipulator.cubeReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
+
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
 
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
@@ -255,11 +267,11 @@ public class RobotContainer {
         );
 
         oi.getDriverController().povLeft().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.8, 0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
         );
 
         oi.getDriverController().povRight().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.8, -0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
         );
     }
 
