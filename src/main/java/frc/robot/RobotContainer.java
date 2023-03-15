@@ -177,6 +177,13 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        oi.logAllControllers().onTrue(
+            new InstantCommand(
+                () -> {
+                }
+            )
+        );
+
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
                 swerve, 
