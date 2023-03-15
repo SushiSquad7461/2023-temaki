@@ -48,8 +48,8 @@ public class AutoCommands {
         this.arm = arm;
 
         eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake(), new ParallelCommandGroup(
-            indexer.runIndexer(), 
-            manipulator.cube()
+            indexer.runIndexer()
+            // manipulator.cube()
         )));
 
         eventMap.put("intakeUp", new SequentialCommandGroup(
@@ -111,22 +111,37 @@ public class AutoCommands {
 
         autoChooser.addOption("2 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(getAutoPath("2_Piece_Loading_Zone")),
+            makeAuto(("2_Piece_Loading_Zone")),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("Red 2 Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
             scoreCube()
         ));
 
         autoChooser.addOption("2 Piece Loading Zone + Bal", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(getAutoPath("2_Piece_Loading_Zone")),
+            makeAuto(("2_Piece_Loading_Zone")),
             scoreCube(),
-            makeAuto(getAutoPath("2_piece_bal")),
+            makeAuto(("2_piece_bal")),
+            new WaitCommand(1.0),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 2 Piece Loading Zone + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            scoreCube(),
+            makeAuto(("Red_2_piece_bal")),
             new WaitCommand(1.0),
             new AutoBalance()
         ));
 
         autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(getAutoPath("2_Piece_Loading_Zone")),
+            makeAuto(("2_Piece_Loading_Zone")),
             scoreCube(),
             makeAuto(("3_Piece_Loading_Zone")),
             scoreCube()
@@ -135,22 +150,44 @@ public class AutoCommands {
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(getAutoPath("Charge")),
+            makeAuto(("Charge")),
+            new WaitCommand(1.0),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 1 piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            arm.moveArm(ArmPos.LOWERED),
+            makeAuto(("Red_Charge")),
             new WaitCommand(1.0),
             new AutoBalance()
         ));
 
         autoChooser.addOption("2 piece burm", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(getAutoPath("2_Piece_Loading_Zone_Burm"), 2.0),
+            makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("Red 2 piece burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
             scoreCube()
         ));
 
         autoChooser.addOption("2 piece burm + bal", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(getAutoPath("2_Piece_Loading_Zone_Burm"), 2.0),
+            makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
             scoreCube(),
-            makeAuto(getAutoPath("2_piece_bal_burm")),
+            makeAuto(("2_piece_bal_burm")),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 2 piece burm + bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            scoreCube(),
+            makeAuto(("Red_2_piece_bal_burm")),
             new AutoBalance()
         ));
 
@@ -159,14 +196,14 @@ public class AutoCommands {
         putAutoChooser();
     }
 
-    private String getAutoPath(String pathName) {
-        var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
-        boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+    // private String getAutoPath(String pathName) {
+    //     var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+    //     boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
        
-        System.out.println((isRedAlliance ? "Red_" : "") + pathName);
-        return (isRedAlliance ? "Red_" : "") + pathName;
-        // return pathName;
-    }
+    //     System.out.println((isRedAlliance ? "Red_" : "") + pathName);
+    //     return (isRedAlliance ? "Red_" : "") + pathName;
+    //     // return pathName;
+    // }
 
     private void putAutoChooser() {
         SmartDashboard.putData("Auto Selector", autoChooser); 
@@ -196,7 +233,7 @@ public class AutoCommands {
             // arm.moveArm(ArmPos.L3_SCORING),
             // new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             manipulator.cubeReverse(),
-            new WaitCommand(0.2)
+            new WaitCommand(0.4)
         );
     }
 
