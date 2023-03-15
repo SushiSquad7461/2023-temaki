@@ -35,7 +35,7 @@ public class AlphaIndexer extends Indexer {
     }
 
     public void registerMotors() {
-        motorTest.registerMotor(indexerMotor, getName(), indexerMotor.toString());
+        motorTest.registerMotor(indexerMotor, getName(), "indexerMotor");
     }
 
     /**o

@@ -61,22 +61,24 @@ public class Neo extends Motor {
 
     @Override
     public void startTwitch(double speed) {
-        System.out.println("Inside start twitch");
         startingEncoder = motor.getEncoder().getPosition();
         setSpeed(speed, false);
     }
 
     @Override
     public void endTwitch() {
-        disable();
+        checkElecErrors();
+        setSpeed(0,false);
         endingEncoder = motor.getEncoder().getPosition();
-        System.out.println("Inside end twitch");
+        checkEncoderErrors();
     }
 
     @Override
     public void checkEncoderErrors() {
         if (endingEncoder < startingEncoder + DiagnosticConstants.ENCODER_TWITCH_BUFFER) {
             errorHandler.add("The motor isn't spinning");
+        } else{
+            errorHandler.add("The motor is working!!!");
         }
     }
 
@@ -153,7 +155,7 @@ public class Neo extends Motor {
     }
 
     public void disable() {
-        motor.disable();
+        motor.set(0.0);
     }
 
     @Override

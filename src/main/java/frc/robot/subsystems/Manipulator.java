@@ -39,7 +39,7 @@ public class Manipulator extends SubsystemBase {
     }
 
     public void registerMotors() {
-        motorTest.registerMotor(manipulatorMotor, getName(), manipulatorMotor.toString());
+        motorTest.registerMotor(manipulatorMotor, getName(), "manipulatorMotor");
     }
 
     /**

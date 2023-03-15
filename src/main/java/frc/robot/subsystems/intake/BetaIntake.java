@@ -44,8 +44,8 @@ public class BetaIntake extends Intake {
     }
 
     public void registerMotors() {
-        motorTest.registerMotor(bottom, getName(), bottom.toString());
-        motorTest.registerMotor(top, getName(), top.toString());
+        motorTest.registerMotor(bottom, getName(), "bottom");
+        motorTest.registerMotor(top, getName(), "top");
     }
     /**
      * Makes sure intake is extended and turns on motor.

@@ -100,8 +100,8 @@ public class Swerve extends SubsystemBase {
             SwerveModule sModule = swerveMods[i];
             WPI_TalonFX falconDrive = ((WPI_TalonFX) sModule.driveMotor);
             WPI_TalonFX falconAngle = ((WPI_TalonFX) sModule.angleMotor);
-            motorTest.registerMotor(falconDrive, getName(), (falconDrive.toString()+i));
-            motorTest.registerMotor(falconAngle, getName(), (falconAngle.toString()+i));
+            motorTest.registerMotor(falconDrive, getName(), ("falconDrive"+i));
+            motorTest.registerMotor(falconAngle, getName(), ("falconAngle"+i));
         }
     }
 

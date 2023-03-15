@@ -68,10 +68,6 @@ public abstract class Arm extends SubsystemBase {
             armF.get()
         );
 
-        // motorTest.getInstance();
-        // motorTest.registerMotor(leftMotor, getName(), leftMotor.toString());
-        // motorTest.registerMotor(rightMotor, getName(), rightMotor.toString());
-
         leftMotorPid = leftMotor.getPIDController();
 
         absoluteEncoder = new DutyCycleEncoder(kPorts.ENCODER_CHANNEL);
@@ -111,6 +107,12 @@ public abstract class Arm extends SubsystemBase {
         }
     }
 
+    public void registerMotors() {
+        motorTest = MotorTest.getInstance();
+        motorTest.registerMotor(leftMotor, getName(), "leftMotor");
+        motorTest.registerMotor(rightMotor, getName(), "rightMotor");
+    }
+    
     protected double getError(double target) {
         return target - getAbsolutePosition();
     }

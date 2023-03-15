@@ -65,8 +65,10 @@ public class Falcon extends Motor {
 
     @Override
     public void endTwitch() {
-        disable();
+        checkElecErrors();
+        setSpeed(0,false);
         endingEncoder = motor.getSelectedSensorPosition();
+        checkEncoderErrors();
     }
 
     @Override

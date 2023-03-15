@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -34,7 +36,7 @@ import frc.robot.subsystems.util.MotorTest;
 
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
-    private Arm arm;
+    // private Arm arm;
     private RobotContainer robotContainer;
     private Swerve swerve;
     private MotorTest motorTest;
@@ -48,20 +50,20 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
         
-        switch (Constants.ROBOT_NAME) {
-            case ALPHA:
-                arm = AlphaArm.getInstance();
-                break;
-            default:
-                arm = BetaArm.getInstance();
-                break;
-        }
+        // switch (Constants.ROBOT_NAME) {
+        //     case ALPHA:
+        //         arm = AlphaArm.getInstance();
+        //         break;
+        //     default:
+        //         arm = BetaArm.getInstance();
+        //         break;
+        // }
 
         swerve = Swerve.getInstance();
         motorTest = MotorTest.getInstance();
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
-        LiveWindow.enableAllTelemetry();
+        // LiveWindow.enableAllTelemetry();
     }
 
     /**
@@ -83,13 +85,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        arm.resetArm();
+        // arm.resetArm();
         swerve.updateEncoders();
     }
 
     @Override
     public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
+        // autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -125,16 +127,16 @@ public class Robot extends TimedRobot {
         robotContainer.intake.registerMotors();
         robotContainer.manipulator.registerMotors();
         robotContainer.indexer.registerMotors();
-        //AlphaIndexer.getInstance().runIndexer().schedule();
-        //motorTest.testMotor().schedule();
+        robotContainer.arm.registerMotors();
         
     }
 
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
-        motorTest.updateMotors();
-        motorTest.runTwitchTest();
-        //motorTest.testMotor().schedule();
+        motorTest.periodic();
+        // motorTest.updateMotors();
+        // motorTest.runTwitchTest();
+        // motorTest.testMotor().schedule();
     }
 }

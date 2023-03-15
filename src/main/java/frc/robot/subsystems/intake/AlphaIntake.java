@@ -26,7 +26,7 @@ public class AlphaIntake extends Intake {
     }
 
     public void registerMotors() {
-        motorTest.registerMotor(motorIntake, getName(), motorIntake.toString());
+        motorTest.registerMotor(motorIntake, getName(), "intakeMotor");
     }
 
     private AlphaIntake() {

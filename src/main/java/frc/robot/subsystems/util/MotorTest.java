@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -41,6 +42,8 @@ public class MotorTest {
   private BooleanSubscriber twitchTest;
 
   private StringArrayPublisher motorTable;
+  private BooleanPublisher isRunningTwitchTest;
+
 
   private ErrorHandler errorHandler;
 
@@ -51,7 +54,7 @@ public class MotorTest {
   
   private ArrayList<String> unwantedMotors;
 
-  private boolean runningTwitchTest;
+  private boolean isRunning;
 
   public static MotorTest getInstance() {
     if (instance == null) {
@@ -64,7 +67,7 @@ public class MotorTest {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("dataTable");
 
-    runningTwitchTest = false;
+    isRunning = false;
 
     dataTable = table.getStringArrayTopic("tableValues").subscribe(null);
     running = table.getBooleanTopic("Running?").subscribe(false);
@@ -81,74 +84,49 @@ public class MotorTest {
 
     motorsMap = new HashMap<String, List<Motor>>();
     unwantedMotors = new ArrayList<String>();
-    unwantedMotors.add("rightArm");
-    unwantedMotors.add("AlphaIntake");
+    unwantedMotors.add("rightMotor");
+
+    isRunningTwitchTest = table.getBooleanTopic("twitchTest?").publish();
+  }
+
+  public void periodic() {
+    if (twitchTest.get() && !isRunning) {
+      isRunning = true;
+      isRunningTwitchTest.set(true);
+      runTwitch().schedule();
+    } else if (!isRunning) {
+      updateMotors();
+    }
   }
 
   public Command runSubsystemTwitch(String subsystem, double waitTime, double speed) {
-    System.out.println("Inside runSubsystemTwitch");
-    //System.out.println(subsystem +" "+ motorsMap.get(subsystem).size());
-    // for(Map.Entry map: motorsMap.entrySet()){
-    //   System.out.println(map.getKey() + " " + map.getValue());
-    // }
-
-    //System.out.println(motorsMap.toString());
-
     return new SequentialCommandGroup(
-        // new InstantCommand(() -> {
-        //   System.out.println("Before for loop");
-        //   for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
-        //     Motor motor = motorsMap.get(subsystem).get(i);
-        //     System.out.println("Inside for loop");
-        //     // if (unwantedMotors.contains(motor.getName())) {
-        //     //   continue;
-        //     // }
-        //     motor.startTwitch(speed);
-        //   }
-        // } ),
-        // new WaitCommand(waitTime),
-
-        // new InstantCommand(() -> {
-        //   for (int i = 0; i < (motorsMap.get(subsystem)).size(); i++) {
-        //     Motor motor = motorsMap.get(subsystem).get(i);
-        //     motor.endTwitch();
-        //     motor.checkEncoderErrors();
-        //   }
-        //   errorHandler.sendAllErrors();
-        // })
-        
         new InstantCommand(() -> {
-          (motorsMap.get(subsystem).get(0)).startTwitch(speed);
-          //motorList.get(1).setSpeed(0.5, false);
+          for (int i=0; i<motorsMap.get(subsystem).size(); i++){
+            Motor motor = motorsMap.get(subsystem).get(i);
+            if (!unwantedMotors.contains(motor.getName())){
+              (motor).startTwitch(speed);
+            }
+          }
         }),
-        //new WaitCommand(5.0), //right now this isnt working btw
+        new WaitCommand(waitTime),
         new InstantCommand(() -> {
-          (motorsMap.get(subsystem).get(0)).endTwitch();
+          for (int i=0; i<motorsMap.get(subsystem).size(); i++){
+            Motor motor = motorsMap.get(subsystem).get(i);
+            if (!unwantedMotors.contains(motor.getName())){
+              (motorsMap.get(subsystem).get(i)).endTwitch();
+            }
+          }
+          errorHandler.sendAllErrors();
         })
-        );
+      );
   }
-
-  // public Command testMotor() {
-  //   return new InstantCommand(() -> {
-  //     (motorsMap.get("Manipulator").get(0)).setSpeed(.5, false);
-  //     //motorList.get(1).setSpeed(0.5, false);
-  //     System.out.println("Motor is spinning");
-  //   });
-  // }
-
-  // public Command stopMotor() {
-  //   return new InstantCommand(() -> {
-  //     (motorsMap.get("Manipulator").get(0)).setSpeed(0, false);
-  //     //motorList.get(1).setSpeed(0.5, false);
-  //     System.out.println("Motor is not spinning");
-  //   });
-  //}
 
   public Command runSwerveTwitch() {
     Swerve swerve = Swerve.getInstance();
     SwerveModuleState[] swerveStatesBefore = swerve.getStates();
     Double[] initialSpeeds = new Double[swerveStatesBefore.length];
-        for( int i=0; i< swerveStatesBefore.length; i++){
+        for( int i=0; i< swerveStatesBefore.length; i++) {
           initialSpeeds[i] = swerveStatesBefore[i].speedMetersPerSecond;
         }
     SequentialCommandGroup swerveGroup = new SequentialCommandGroup(
@@ -163,6 +141,8 @@ public class MotorTest {
           for (Double initialSpeed: initialSpeeds){
             if (state.speedMetersPerSecond <= initialSpeed) {
               errorHandler.add(state.toString() + " not working");
+            } else{
+              errorHandler.add("swerve test succeeded");
             }
           }
 
@@ -170,26 +150,24 @@ public class MotorTest {
       }));
         swerve.drive(new Translation2d(), 0, false, true);
         swerveGroup.addRequirements(swerve);
-        errorHandler.sendAllErrors();
         return swerveGroup;    
     };
 
 
   public Command runTwitch() {
-    System.out.println("Inside runTwitch");
-    return new ParallelCommandGroup(
-        runSubsystemTwitch("Manipulator", 3.0, 0.5),
-        //runSubsystemTwitch("AlphaIntake", 3.0, 0.5),
-        runSubsystemTwitch("AlphaIndexer", 3.0, 0.5)
-        //runSubsystemTwitch("arm", 0.1, 0.01),
+    return new SequentialCommandGroup(
+      new ParallelCommandGroup(
+        runSubsystemTwitch("Manipulator", 3.0, 0.3),
+        runSwerveTwitch(),
+        runSubsystemTwitch("AlphaIndexer", 3.0, 0.3),
+        runSubsystemTwitch("AlphaArm", 0.1, 0.01)
+      ),
+      new InstantCommand(() -> {
+        isRunning = false;
+        isRunningTwitchTest.set(false);
+      }),
+      runSwerveTwitch()
     );
-  }
-
-  public void runTwitchTest() {
-    if (twitchTest.get() && !runningTwitchTest) {
-      //runningTwitchTest = true;
-      runTwitch().schedule();
-    }
   }
 
   public void updateMotors() {
@@ -306,6 +284,7 @@ public class MotorTest {
   }
 
   public void unRegisterAlllMotors(){
+    motorArray.removeAll(motorArray);
     motorList.removeAll(motorList);
     motorsMap.clear();
     solenoidList.clear();

@@ -72,8 +72,8 @@ public class BetaArm extends Arm {
     }
 
     public void registerMotors() {
-        motorTest.registerSolenoid(solenoidLeft, getName(), solenoidLeft.toString());
-        motorTest.registerSolenoid(solenoidRight, getName(), solenoidRight.toString());
+        motorTest.registerSolenoid(solenoidLeft, getName(), "solenoidLeft");
+        motorTest.registerSolenoid(solenoidRight, getName(), "solenoidRight");
     }
 
     @Override

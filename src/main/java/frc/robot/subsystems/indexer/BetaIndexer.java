@@ -38,14 +38,8 @@ public class BetaIndexer extends Indexer {
     }
 
     public void registerMotors() {
-        motorTest.registerMotor(indexerMotor, getName(), indexerMotor.toString());
-        motorTest.registerMotor(coneRamp, getName(), coneRamp.toString());
-    }
-
-    public Command twitchIndexer() {
-        return runOnce(() -> {
-            motorTest.runTwitchTest();
-        });
+        motorTest.registerMotor(indexerMotor, getName(), "indexerMotor");
+        motorTest.registerMotor(coneRamp, getName(), "coneRamp");
     }
     
     /**
