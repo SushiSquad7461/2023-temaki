@@ -29,6 +29,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.manipulator.AlphaManipulator;
 import frc.robot.subsystems.manipulator.BetaManipulator;
 import frc.robot.subsystems.manipulator.Manipulator;
+import frc.robot.util.CommandFactories;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -189,6 +190,9 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        oi.getDriverController().back().onTrue(CommandFactories.resetRobot(intake, indexer, arm, manipulator));
+        oi.getOperatorController().back().onTrue(CommandFactories.resetRobot(intake, indexer, arm, manipulator));
+
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
                 swerve, 
