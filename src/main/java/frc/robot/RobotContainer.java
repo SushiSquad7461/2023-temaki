@@ -120,21 +120,21 @@ public class RobotContainer {
     public void configureBetaButtonBindings() {
         
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(
-            new InstantCommand(() -> ((BetaManipulator) manipulator).release())
-        );
+        // oi.getOperatorController().x().onTrue(
+        //     new InstantCommand(() -> ((BetaManipulator) manipulator).release())
+        // );
 
-        // oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-        //     manipulator.cubeReverse(),
-        //     new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-        //     manipulator.stop()
-        // ));
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            manipulator.cubeReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
 
-        // oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
-        //     manipulator.coneReverse(),
-        //     new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-        //     manipulator.stop()
-        // ));
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
 
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
