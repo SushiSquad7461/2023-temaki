@@ -139,8 +139,7 @@ public class RobotContainer {
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
                 indexer.reverseIndexer(),
-                int
-                ake.extendIntake(),
+                intake.extendIntake(),
                 ((BetaIntake) intake).cubeShoot()
             )
         ).onFalse(
