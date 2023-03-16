@@ -53,12 +53,12 @@ public class AutoCommands {
         )));
 
         eventMap.put("intakeUp", new SequentialCommandGroup(
-            intake.retractIntake(), 
+            intake.retractIntake(),
             new ParallelCommandGroup(
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(1.5), 
+            new WaitCommand(2.0), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 
@@ -112,38 +112,44 @@ public class AutoCommands {
         autoChooser.addOption("2 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
         autoChooser.addOption("Red 2 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
         autoChooser.addOption("2 Piece Loading Zone + Bal", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
             scoreCube(),
             makeAuto(("2_piece_bal")),
-            new WaitCommand(1.0),
+            new WaitCommand(0.3),
             new AutoBalance()
         ));
 
         autoChooser.addOption("Red 2 Piece Loading Zone + Bal", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
             scoreCube(),
             makeAuto(("Red_2_piece_bal")),
-            new WaitCommand(1.0),
+            new WaitCommand(0.3),
             new AutoBalance()
         ));
 
         autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
             scoreCube(),
             makeAuto(("3_Piece_Loading_Zone")),
+            new WaitCommand(0.2),
             scoreCube()
         ));
 
@@ -180,6 +186,7 @@ public class AutoCommands {
             makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
             scoreCube(),
             makeAuto(("2_piece_bal_burm")),
+            new WaitCommand(0.2),
             new AutoBalance()
         ));
 
@@ -188,6 +195,7 @@ public class AutoCommands {
             makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
             scoreCube(),
             makeAuto(("Red_2_piece_bal_burm")),
+            new WaitCommand(0.2),
             new AutoBalance()
         ));
 
