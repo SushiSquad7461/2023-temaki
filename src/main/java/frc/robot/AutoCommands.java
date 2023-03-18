@@ -35,6 +35,8 @@ public class AutoCommands {
     private final SwerveAutoBuilder autoBuilder;
     private final SendableChooser<Command> autoChooser;
     HashMap<String, Command> eventMap = new HashMap<String, Command>();
+    private final double chargeSpeed;
+    private final double autoBalanceWait;
 
     /**
      * Define all auto commands.
@@ -46,6 +48,8 @@ public class AutoCommands {
         this.intake = intake;
         this.manipulator = manipulator;
         this.arm = arm;
+        chargeSpeed = 2.0;
+        autoBalanceWait = 0.5;
 
         eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake(), new ParallelCommandGroup(
             indexer.runIndexer()
@@ -128,8 +132,8 @@ public class AutoCommands {
             makeAuto(("2_Piece_Loading_Zone")),
             new WaitCommand(0.5),
             scoreCube(),
-            makeAuto(("2_piece_bal")),
-            new WaitCommand(0.3),
+            makeAuto(("2_piece_bal"), chargeSpeed),
+            new WaitCommand(autoBalanceWait),
             new AutoBalance()
         ));
 
@@ -138,8 +142,8 @@ public class AutoCommands {
             makeAuto(("Red_2_Piece_Loading_Zone")),
             new WaitCommand(0.5),
             scoreCube(),
-            makeAuto(("Red_2_piece_bal")),
-            new WaitCommand(0.3),
+            makeAuto(("Red_2_piece_bal"), chargeSpeed),
+            new WaitCommand(autoBalanceWait),
             new AutoBalance()
         ));
 
@@ -156,16 +160,16 @@ public class AutoCommands {
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(("Charge")),
-            new WaitCommand(1.0),
+            makeAuto(("Charge"), chargeSpeed),
+            new WaitCommand(autoBalanceWait),
             new AutoBalance()
         ));
 
         autoChooser.addOption("Red 1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(("Red_Charge")),
-            new WaitCommand(1.0),
+            makeAuto(("Red_Charge"), chargeSpeed),
+            new WaitCommand(autoBalanceWait),
             new AutoBalance()
         ));
 
@@ -185,7 +189,7 @@ public class AutoCommands {
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
             scoreCube(),
-            makeAuto(("2_piece_bal_burm")),
+            makeAuto(("2_piece_bal_burm"), chargeSpeed),
             new WaitCommand(0.2),
             new AutoBalance()
         ));
@@ -194,7 +198,7 @@ public class AutoCommands {
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
             scoreCube(),
-            makeAuto(("Red_2_piece_bal_burm")),
+            makeAuto(("Red_2_piece_bal_burm"), chargeSpeed),
             new WaitCommand(0.2),
             new AutoBalance()
         ));
