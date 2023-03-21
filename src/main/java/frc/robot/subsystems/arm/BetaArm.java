@@ -21,8 +21,8 @@ public class BetaArm extends Arm {
     private final DoubleSolenoid solenoidLeft;
     private final DoubleSolenoid solenoidRight;
 
-    private final ArmFeedforward armFeedforwardRetracted;
-    private final ArmFeedforward armFeedforwardExtended;
+    private ArmFeedforward armFeedforwardRetracted;
+    private ArmFeedforward armFeedforwardExtended;
 
     private static BetaArm instance;
     private static DigitalInput limitSwitch;
@@ -144,5 +144,8 @@ public class BetaArm extends Arm {
 
         update();
         SmartDashboard.putBoolean("Arm limit switch", limitSwitch.get());
+        SmartDashboard.putNumber("Arm Absolute Encoder", getAbsolutePosition());
+        SmartDashboard.putNumber("Arm Absolute Encoder Feedforawrd angle", getAbsolutePosition() - kArm.FEEDFORWARD_ANGLE_OFFSET);
+        SmartDashboard.putNumber("Arm Relativ Encoder", leftMotor.getEncoder().getPosition());
     }
 }

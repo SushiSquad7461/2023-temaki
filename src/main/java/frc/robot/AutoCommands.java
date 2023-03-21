@@ -4,6 +4,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
+import frc.robot.commands.AutoBalance;
 import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Swerve;
@@ -46,12 +48,12 @@ public class AutoCommands {
         this.arm = arm;
 
         eventMap.put("intakeDown", new SequentialCommandGroup(intake.extendIntake(), intake.runIntake(), new ParallelCommandGroup(
-            indexer.runIndexer(), 
-            manipulator.cube()
+            indexer.runIndexer()
+            // manipulator.cube()
         )));
 
         eventMap.put("intakeUp", new SequentialCommandGroup(
-            intake.retractIntake(), 
+            intake.retractIntake(),
             new ParallelCommandGroup(
                 indexer.runIndexer(), 
                 manipulator.cube()
@@ -82,7 +84,7 @@ public class AutoCommands {
         ));
 
         eventMap.put("raiseArm", new SequentialCommandGroup(
-            arm.moveArm(ArmPos.L2_SCORING)
+            arm.moveArm(ArmPos.L3_SCORING)
         ));
 
         eventMap.put("lowerArm", new SequentialCommandGroup(
@@ -97,7 +99,7 @@ public class AutoCommands {
             kSwerve.ANGLE_CONTROLLER, // PID constants to correct for rotation error (used to create the rotation controller)
             swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true // The drive subsystem. Used to properly set the requirements of path following commands
+            false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true // The drive subsystem. Used to properly set the requirements of path following commands
             swerve
         );
 
@@ -107,19 +109,109 @@ public class AutoCommands {
             System.out.println("YOUR A CLOWN");
         }));
 
-        autoChooser.addOption("2 Piece Loading Zone", makeAuto("2_Piece_Loading_Zone"));
-
-        autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
+        autoChooser.addOption("2 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto("2_Piece_Loading_Zone"),
-            scoreCube(),
-            makeAuto("3_Piece_Loading_Zone"),
+            makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
-        autoChooser.addOption("Charge", makeAuto("Charge"));
+        autoChooser.addOption("Red 2 Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("2 Piece Loading Zone + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
+            scoreCube(),
+            makeAuto(("2_piece_bal")),
+            new WaitCommand(0.3),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 2 Piece Loading Zone + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
+            scoreCube(),
+            makeAuto(("Red_2_piece_bal")),
+            new WaitCommand(0.3),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
+            scoreCube(),
+            makeAuto(("3_Piece_Loading_Zone")),
+            new WaitCommand(0.2),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            arm.moveArm(ArmPos.LOWERED),
+            makeAuto(("Charge")),
+            new WaitCommand(1.0),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 1 piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            arm.moveArm(ArmPos.LOWERED),
+            makeAuto(("Red_Charge")),
+            new WaitCommand(1.0),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("2 piece burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("Red 2 piece burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("2 piece burm + bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            scoreCube(),
+            makeAuto(("2_piece_bal_burm")),
+            new WaitCommand(0.2),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 2 piece burm + bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            scoreCube(),
+            makeAuto(("Red_2_piece_bal_burm")),
+            new WaitCommand(0.2),
+            new AutoBalance()
+        ));
+
+
+
         putAutoChooser();
     }
+
+    // private String getAutoPath(String pathName) {
+    //     var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+    //     boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+       
+    //     System.out.println((isRedAlliance ? "Red_" : "") + pathName);
+    //     return (isRedAlliance ? "Red_" : "") + pathName;
+    //     // return pathName;
+    // }
 
     private void putAutoChooser() {
         SmartDashboard.putData("Auto Selector", autoChooser); 
@@ -138,12 +230,18 @@ public class AutoCommands {
         );
     }
 
+    private Command makeAuto(String path, double speed) {
+        return autoBuilder.fullAuto(
+            PathPlanner.loadPathGroup(path, speed, kSwerve.MAX_ACCELERATION)
+        );
+    }
+
     private Command scoreCube() {
         return new SequentialCommandGroup(
-            arm.moveArm(ArmPos.L3_SCORING),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+            // arm.moveArm(ArmPos.L3_SCORING),
+            // new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             manipulator.cubeReverse(),
-            new WaitCommand(0.2)
+            new WaitCommand(0.4)
         );
     }
 
@@ -152,9 +250,9 @@ public class AutoCommands {
             manipulator.cone(),
             new WaitCommand(0.1),
             arm.moveArm(ArmPos.L3_SCORING),
-            new WaitCommand(0.5),
+            new WaitCommand(0.7),
             manipulator.coneReverse(),
-            new WaitCommand(0.1),
+            new WaitCommand(0.2),
             manipulator.stop()
         );
     }

@@ -117,7 +117,7 @@ public final class Constants {
                   break;
               default:
                   INDEXER_SPEED = -0.7;
-                  CONE_RAMP_SPEED = -0.5;
+                  CONE_RAMP_SPEED = -1;
                   break;
             }
         }
@@ -202,10 +202,10 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(4.2, 4.2, 0.1);
+            VecBuilder.fill(3.2, 3.2, 0.1);
 
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(20.0, 20.0, 0.0);
+            VecBuilder.fill(25.0, 25.0, 40.0);
 
         /* Module Specific Constants */
 
@@ -325,11 +325,11 @@ public final class Constants {
         public static final double THETA_TOLLERENCE = 0.02;
 
         /* Pid values */
-        public static final double X_P = 3.0;
+        public static final double X_P = 5.0;
         public static final double X_I = 0.0;
         public static final double X_D = 0.75;
 
-        public static final double Y_P = 3.0;
+        public static final double Y_P = 5.0;
         public static final double Y_I = 0.0;
         public static final double Y_D = 0.75;
         
@@ -418,12 +418,24 @@ public final class Constants {
                   ENCODER_ANGLE_OFFSET = 233.6;
                   break;
               default:
-                  ENCODER_ANGLE_OFFSET = 198.428918;
+                  ENCODER_ANGLE_OFFSET = 166.789129;
                   break;
             }
         }
 
-        public static final double FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+        public static final double PARLLELE_ZERO_ANGLED = 84.602423; // Angle of arm parllele to ground when zeroed at the bottom
+        public static final double FEEDFORWARD_ANGLE_OFFSET;
+
+        static {
+            switch (ROBOT_NAME) {
+              case ALPHA:
+                FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+                break;
+              default:
+                FEEDFORWARD_ANGLE_OFFSET = PARLLELE_ZERO_ANGLED;
+                break;
+            }
+        }
 
         public static final double KP;
         public static final double KI = 0.0;
@@ -452,11 +464,11 @@ public final class Constants {
               default:
                   GEAR_RATIO = 96.67;
 
-                  KP = 0.010;
+                  KP = 0.020000; //0.01
                   KS = 0.0;
                   KG = 0.0;
-                  KGR = 0.6;
-                  KGE = 1.2;
+                  KGR = 0.58; //0.6, 2.5
+                  KGE = 1.5;
                   KV = 0.0;
                   KA = 0.0;
                   break;
@@ -468,10 +480,10 @@ public final class Constants {
          */
         public enum ArmPos {
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 95.5),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 92.5),
             CONE_PICKUP_LOWERED(75),
-            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 81),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 100);
+            L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 79),
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95);
 
             private double angle;
 
@@ -498,8 +510,10 @@ public final class Constants {
      * Constants for manipulator.
      */
     public static final class kManipulator {
-        public static final double SPEED = 0.75;
-        public static final int CURRENT_LIMITING = 40;
+        public static final double SPEED = 1.0;
+        public static final double CUBE_REVERSE_SPEED = -0.4;
+        public static final double CONE_REVERSE_SPEED = 0.5;
+        public static final int CURRENT_LIMITING = 30;
         public static final int MAX_CURRENT = 30;
     }
 

@@ -29,6 +29,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.manipulator.AlphaManipulator;
 import frc.robot.subsystems.manipulator.BetaManipulator;
 import frc.robot.subsystems.manipulator.Manipulator;
+import frc.robot.util.CommandFactories;
 
 /**
  * This class is where the bulk of the robot (subsytems, commands, etc.) should be declared. 
@@ -119,9 +120,21 @@ public class RobotContainer {
     public void configureBetaButtonBindings() {
         
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(
-            new InstantCommand(() -> ((BetaManipulator) manipulator).release())
-        );
+        // oi.getOperatorController().x().onTrue(
+        //     new InstantCommand(() -> ((BetaManipulator) manipulator).release())
+        // );
+
+        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+            manipulator.cubeReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
+
+        oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
+            manipulator.coneReverse(),
+            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+            manipulator.stop()
+        ));
 
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
@@ -177,6 +190,9 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        oi.getDriverController().back().onTrue(CommandFactories.resetRobot(intake, indexer, arm, manipulator));
+        oi.getOperatorController().back().onTrue(CommandFactories.resetRobot(intake, indexer, arm, manipulator));
+
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
                 swerve, 
@@ -251,15 +267,15 @@ public class RobotContainer {
 
         // TODO: add alliance based substation selection
         oi.getDriverController().povUp().whileTrue(
-            swerve.moveToAprilTag(4, new Translation2d(1.0, -0.61))
+            swerve.moveToDoubleSuby(new Translation2d(1.0, -0.61))
         );
 
         oi.getDriverController().povLeft().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.8, 0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
         );
 
         oi.getDriverController().povRight().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.8, -0.6))
+            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
         );
     }
 
@@ -298,6 +314,7 @@ public class RobotContainer {
                     intake.extendIntake(),
                     new ParallelCommandGroup(
                         intake.reverseIntake(),
+                        indexer.reverseIndexer(),
                         manipulator.cubeReverse()
                     )
                 )
@@ -306,6 +323,7 @@ public class RobotContainer {
             (
                 new SequentialCommandGroup(
                     manipulator.stop(),
+                    indexer.stopIndexer(),
                     intake.retractIntake(), 
                     intake.stopIntake()
                 )
