@@ -26,6 +26,7 @@ public class BetaArm extends Arm {
 
     private static BetaArm instance;
     private static DigitalInput limitSwitch;
+    private boolean override;
 
     /**
      * Gets current instance of arm implements singelton.
@@ -38,6 +39,7 @@ public class BetaArm extends Arm {
     }
 
     private BetaArm() {
+        override = false;
         armFeedforwardRetracted = new ArmFeedforward(
             Constants.kArm.KS, 
             Constants.kArm.KGR, 
@@ -124,7 +126,18 @@ public class BetaArm extends Arm {
         }
     }
 
+    public void override() {
+        override = true;
+    }
+
+    public void cancelOverride(){
+        override = false;
+    }
+
     private boolean armClosed() {
+        if(override) {
+            return true;
+        }
         return !limitSwitch.get();
     }
 

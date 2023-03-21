@@ -171,6 +171,12 @@ public class RobotContainer {
                 () -> ((BetaArm) arm).toggleSolenoid()
             )
         );
+        
+        oi.getOperatorController().leftBumper().onTrue(
+            new InstantCommand(() -> ((BetaArm) arm).override())
+        ).onFalse(
+            new InstantCommand(() -> ((BetaArm) arm).cancelOverride())  
+        );
 
         // raise arm for cone
         oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
