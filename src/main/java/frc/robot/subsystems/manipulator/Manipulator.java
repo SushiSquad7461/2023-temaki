@@ -13,6 +13,7 @@ import frc.robot.Constants.kPorts;
  */
 public abstract class Manipulator extends SubsystemBase {
     protected CANSparkMax motor;
+    public int currentSpikes = 0;
 
     protected Manipulator() {
         motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
@@ -37,6 +38,14 @@ public abstract class Manipulator extends SubsystemBase {
         return runOnce(() -> {
             motor.set(kManipulator.CONE_REVERSE_SPEED);
         });
+    }
+
+    public boolean currentSpike() {
+        if(currentSpikes>=3) {
+            currentSpikes = 0;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -73,5 +82,10 @@ public abstract class Manipulator extends SubsystemBase {
         return runOnce(() -> {
             motor.set(kManipulator.SPEED * 0.02);
         });
+    }
+
+    @Override
+    public void periodic() {
+        currentSpikes += motor.getOutputCurrent() > 25?1:0;
     }
 }
