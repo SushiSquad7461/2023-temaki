@@ -258,6 +258,19 @@ public class RobotContainer {
             arm.moveArm(ArmPos.L2_SCORING)
         ));
 
+        oi.getOperatorController().povRight().onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                indexer.runIndexer(),
+                manipulator.cube()
+            ),
+            new WaitCommand(1.5),  
+            new ParallelCommandGroup(
+                indexer.stopIndexer(),
+                manipulator.holdCube()
+            )
+        ));
+
+
 
         // pickup cone
         oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
@@ -269,7 +282,7 @@ public class RobotContainer {
         ));
 
         oi.getDriverController().rightBumper().whileTrue(
-            swerve.moveToNearestAprilTag(null)
+            swerve.moveToNearestScoringPos(null)
         );
 
         // // Reset odo
@@ -284,16 +297,18 @@ public class RobotContainer {
         // }));
 
         // TODO: add alliance based substation selection
-        oi.getDriverController().povUp().whileTrue(
-            swerve.moveToDoubleSuby(new Translation2d(1.0, -0.61))
-        );
+    //     oi.getDriverController().povUp().whileTrue(
+    //         swerve.moveToDoubleSuby(new Translation2d(1.0, -0.61))
+    //     );
 
         oi.getDriverController().povLeft().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6))
+            // swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6)),
+            swerve.moveToNearestScoringPosLeft(null)
         );
 
         oi.getDriverController().povRight().whileTrue(
-            swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
+            // swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
+            swerve.moveToNearestScoringPosRight(null)
         );
     }
 
@@ -313,7 +328,8 @@ public class RobotContainer {
                     new ParallelCommandGroup(
                         indexer.runIndexer(),
                         manipulator.cube()
-                    ),  
+                    ),
+                    new WaitCommand(1.5),  
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
                         indexer.stopIndexer(),

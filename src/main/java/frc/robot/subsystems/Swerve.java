@@ -11,11 +11,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.kAutoAlign;
@@ -25,8 +23,6 @@ import frc.robot.Constants.kVision;
 import frc.robot.util.SwerveModule;
 import frc.robot.util.Vision;
 import frc.robot.util.VisionMeasurement;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -85,7 +81,7 @@ public class Swerve extends SubsystemBase {
         );
 
         locationLock = false;
-        locationLockPID = new PIDController(0.1d, 0, 0);
+        locationLockPID = new PIDController(0.1, 0.0, 0.0);
 
         SmartDashboard.putData("Field", field);
     }
@@ -95,13 +91,6 @@ public class Swerve extends SubsystemBase {
     }
 
     public void turnOnLocationLock(double angle) {
-        var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
-        boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
-
-        if (isRedAlliance) {
-            angle += 180;
-        }
-
         locationLock = true;
         locationLockPID.setSetpoint(angle);
         locationLockPID.calculate(gyro.getAngle().getDegrees());
@@ -110,67 +99,7 @@ public class Swerve extends SubsystemBase {
     public void turnOfLocationLock() {
         locationLock = false;
     }
-
-    /**
-     * Returns a command that will drive the specified offset from the given 
-     * April Tag.
-     *
-     * @param tagOffset The offset of the tag in tag space (x+ away from
-     *      tag, y+ left from tag). A null value will default to 1 meter in front of
-     *      the target.
-     */
-    public Command moveToAprilTag(int tagID, Translation2d tagOffset) {
-        return moveToPose(
-            () -> kVision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
-            tagOffset
-        );
-    }
-
-    public Command moveToDoubleSuby(Translation2d tagOffset) {
-        var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
-        boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
-        return moveToAprilTag(isRedAlliance ? 7 : 4, tagOffset);
-    }
-
-    /**
-     * Returns a command that will drive the specified offset from the nearest 
-     * April Tag.
-     *
-     * @param tagOffset The offset of the tag in tag space (x+ away from
-     *      tag, y+ left from tag). A null value will default to 1 meter in front of
-     *      the target.
-     */
-    public Command moveToNearestAprilTag(Translation2d tagOffset) {
-        return moveToPose(() -> getClosestAprilTag(), tagOffset);
-    }
-
-    private Pose2d getClosestAprilTag() {
-        Translation2d currentTranslation = swerveOdometry
-            .getEstimatedPosition()
-            .getTranslation(); 
-
-        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
-
-
-        double minDistance = Double.MAX_VALUE;
-        AprilTag closestTag = null;
-
-        for (AprilTag tag : Constants.kVision.APRIL_TAG_FIELD_LAYOUT.getTags()) {
-            Translation2d tagTranslation = tag.pose.toPose2d().getTranslation();
-            double distanceToTag = currentTranslation.getDistance(tagTranslation);
-
-            SmartDashboard.putNumber("Tag Distance" + tag.ID, distanceToTag);
-
-            if (distanceToTag < minDistance) {
-                minDistance = distanceToTag;
-                closestTag = tag;
-            }
-        }
-
-        return closestTag.pose.toPose2d(); 
-    }
-
+ 
     /**
      * Returns a command that will drive the specified offset from the given
      * pose.
@@ -265,19 +194,117 @@ public class Swerve extends SubsystemBase {
         );
     }
 
-    public void drive(Translation2d translation, 
+    private Pose2d getClosestScoringPos() {
+        Translation2d currentTranslation = swerveOdometry
+            .getEstimatedPosition()
+            .getTranslation(); 
+
+        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+
+        double minDistance = Double.MAX_VALUE;
+        Pose2d closestScoringPos = null;
+
+        for (Pose2d pos : Constants.kAutoAlign.SCORING_POSES) {
+            Translation2d translation = pos.getTranslation();
+            double distance = currentTranslation.getDistance(translation);
+
+            SmartDashboard.putNumber("Scoring Pos Distance", distance);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestScoringPos = pos;
+            }
+        }
+
+        return closestScoringPos; 
+    }
+
+    private Pose2d getClosestRightScoringPos() {
+        Translation2d currentTranslation = swerveOdometry
+            .getEstimatedPosition()
+            .getTranslation(); 
+
+        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+
+        double minDistance = Double.MAX_VALUE;
+        Pose2d closestScoringPos = null;
+
+        for (Pose2d pos : Constants.kAutoAlign.SCORING_POSES) {
+            Translation2d translation = pos.getTranslation();
+            double distance = currentTranslation.getDistance(translation);
+
+            SmartDashboard.putNumber("Scoring Pos Distance", distance);
+
+            if (distance < minDistance && (currentTranslation.getY() - pos.getY()) > kAutoAlign.ERROR) {
+                minDistance = distance;
+                closestScoringPos = pos;
+            }
+        }
+
+        return closestScoringPos; 
+    }
+
+    private Pose2d getClosestLeftScoringPos() {
+        Translation2d currentTranslation = swerveOdometry
+            .getEstimatedPosition()
+
+            .getTranslation(); 
+
+        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+
+        double minDistance = Double.MAX_VALUE;
+        Pose2d closestScoringPos = null;
+
+        for (Pose2d pos : Constants.kAutoAlign.SCORING_POSES) {
+            Translation2d translation = pos.getTranslation();
+            double distance = currentTranslation.getDistance(translation);
+
+            SmartDashboard.putNumber("Scoring Pos Distance", distance);
+
+            if (distance < minDistance && (pos.getY() - currentTranslation.getY()) > kAutoAlign.ERROR) {
+                minDistance = distance;
+                closestScoringPos = pos;
+            }
+        }
+
+        return closestScoringPos; 
+    }
+
+    public Command moveToNearestScoringPos(Translation2d tagOffset) {
+        return moveToPose(() -> getClosestScoringPos(), tagOffset);
+    }
+
+    public Command moveToNearestScoringPosLeft(Translation2d tagOffset) {
+        return moveToPose(() -> getClosestLeftScoringPos(), tagOffset);
+    }
+
+    public Command moveToNearestScoringPosRight(Translation2d tagOffset) {
+        return moveToPose(() -> getClosestRightScoringPos(), tagOffset);
+    }
+
+    public Command moveToAprilTag(int tagID, Translation2d tagOffset) {
+        return moveToPose(
+            () -> kVision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
+            tagOffset
+        );
+    }
+
+    public void driveWithRotationLock(Translation2d translation, 
         double rotation, boolean fieldRelative, boolean isOpenLoop
     ) {
         if (locationLock) {
-            rotation = locationLockPID.calculate(gyro.getAngle().getDegrees());
+            rotation = locationLockPID.calculate(swerveOdometry.getEstimatedPosition().getRotation().getDegrees());
         }
-        driveWithLocationLock(translation, rotation, fieldRelative, isOpenLoop);
+        drive(translation, rotation, fieldRelative, isOpenLoop);
     }
 
     /**
      * Updates the swerve module values for the swerve.
      */
-    private void driveWithLocationLock(Translation2d translation, 
+    public void drive(Translation2d translation, 
         double rotation, boolean fieldRelative, boolean isOpenLoop
     ) {
         SwerveModuleState[] swerveModuleStates = kSwerve.SWERVE_KINEMATICS.toSwerveModuleStates(
@@ -321,7 +348,6 @@ public class Swerve extends SubsystemBase {
     public Command resetOdometryToBestAprilTag() {
         return runOnce(() -> {
             VisionMeasurement measurement = Vision.getVision().getBestMeasurement();
-            SmartDashboard.putBoolean("Running", measurement == null);
             if (measurement != null) {
                 this.resetOdometryAndGyro(measurement.robotPose);
             }
@@ -332,7 +358,6 @@ public class Swerve extends SubsystemBase {
         gyro.setAngle(pose.getRotation());
         swerveOdometry.resetPosition(pose.getRotation(), getPositions(), pose);
     }
-
 
     /**
      * Returns current swerve module states.
@@ -366,14 +391,13 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());
 
-        SmartDashboard.putNumber("Gyro Angle", gyro.getAngle().getDegrees());
-
         for (SwerveModule m : swerveMods) {
             SmartDashboard.putNumber("Module Angle " + m.moduleNumber, m.getDriveSpeed());
         }   
 
         // Loop through all measurements and add it to pose estimator
         List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
+        VisionMeasurement bestMeasurement = Vision.getVision().getBestMeasurement();
 
         field.getObject("best")
             .setPoses(measurements.stream().map(
@@ -381,19 +405,12 @@ public class Swerve extends SubsystemBase {
             )
             .collect(Collectors.toList()));
 
-        if (measurements != null) {
-            for (VisionMeasurement measurement : measurements) {
-                // Skip measurement if it's more than a meter away
-                if (measurement.robotPose.getTranslation().getDistance(swerveOdometry.getEstimatedPosition().getTranslation()) > 1.0 && measurement.ambiguity > 0.1) {
-                    continue;
-                }
-        
-                swerveOdometry.addVisionMeasurement(
-                    measurement.robotPose,
-                    measurement.timestampSeconds,
-                    kSwerve.VISION_STANDARD_DEVIATION
-                );
-            }
+        if (bestMeasurement != null && bestMeasurement.ambiguity < Constants.kVision.AMBIGUITY_THRESHOLD) {
+            swerveOdometry.addVisionMeasurement(
+                bestMeasurement.robotPose,
+                bestMeasurement.timestampSeconds,
+                Constants.kSwerve.VISION_STANDARD_DEVIATION
+            );
         }
     }
 
