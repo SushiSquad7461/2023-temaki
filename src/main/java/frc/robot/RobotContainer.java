@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -138,12 +139,17 @@ public class RobotContainer {
 
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
-                indexer.reverseIndexer(),
-                intake.extendIntake(),
-                ((BetaIntake) intake).cubeShoot()
+                new SequentialCommandGroup(
+                    intake.extendIntake(),
+                    ((BetaIntake) intake).cubeShoot()
+                ),
+                new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+                manipulator.cone(),
+                indexer.reverseIndexer()
             )
         ).onFalse(
             new SequentialCommandGroup(
+                manipulator.stop(),
                 indexer.stopIndexer(),
                 intake.retractIntake(),
                 intake.stopIntake()
@@ -152,24 +158,24 @@ public class RobotContainer {
 
         oi.getDriverController().y().onTrue(
             new SequentialCommandGroup(
-                ((BetaIntake) intake).coneIntake(),
-                indexer.runIndexer(),
-                manipulator.cone()
-            )
-        ).onFalse(new ParallelCommandGroup(
-            intake.stopIntake(),
-            new SequentialCommandGroup(
-                manipulator.cone(),
-                new WaitCommand(0),
-                indexer.stopIndexer(),
-                manipulator.stop()
-            )
+                arm.moveArm(ArmPos.L1_SCORING),
+                new WaitCommand(0.3),
+                manipulator.cubeReverse(),
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+                manipulator.stop(),
+                arm.moveArm(ArmPos.LOWERED)
         ));
 
         oi.getOperatorController().leftTrigger().onTrue(
             new InstantCommand(
                 () -> ((BetaArm) arm).toggleSolenoid()
             )
+        );
+        
+        oi.getOperatorController().leftBumper().onTrue(
+            new InstantCommand(() -> ((BetaArm) arm).override())
+        ).onFalse(
+            new InstantCommand(() -> ((BetaArm) arm).cancelOverride())  
         );
 
         // raise arm for cone
@@ -226,11 +232,23 @@ public class RobotContainer {
                     toggleIntake();
                 }
             )
+        ).onFalse(
+            new InstantCommand(
+                () -> {
+                    toggleIntake();
+                }
+            )
         );
 
         oi.getDriverController().leftTrigger().onTrue(
             new InstantCommand(
                 () -> {
+                    toggleIntakeReversal();
+                }
+            )
+        ).onFalse(
+            new InstantCommand(
+                ()-> {
                     toggleIntakeReversal();
                 }
             )
@@ -295,8 +313,7 @@ public class RobotContainer {
                     new ParallelCommandGroup(
                         indexer.runIndexer(),
                         manipulator.cube()
-                    ), 
-                    new WaitCommand(1.5), 
+                    ),  
                     new ParallelCommandGroup(
                         intake.stopIntake(), 
                         indexer.stopIndexer(),
