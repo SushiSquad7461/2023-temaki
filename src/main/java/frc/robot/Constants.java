@@ -12,6 +12,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -202,10 +203,9 @@ public final class Constants {
 
         /** Pose estimation standard deviations. */
         public static final Matrix<N3, N1> STATE_STANDARD_DEVIATION = 
-            VecBuilder.fill(3.2, 3.2, 0.1);
-
+            VecBuilder.fill(4.2, 4.2, 0.1);
         public static final Matrix<N3, N1> VISION_STANDARD_DEVIATION = 
-            VecBuilder.fill(25.0, 25.0, 40.0);
+            VecBuilder.fill(100, 100, 200); // TODO : tune values properly
 
         /* Module Specific Constants */
 
@@ -307,15 +307,15 @@ public final class Constants {
      */
     public static final class kAutoAlign {
         public static final Rotation2d DEFAULT_ROTATION;
-
+        
         static {
             switch (ROBOT_NAME) {
-              case ALPHA:
-                  DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
-                  break;
-              default:
-                  DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
-                  break;
+            case ALPHA:
+                DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
+                break;
+            default:
+                DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
+                break;
             }
         }
 
@@ -324,21 +324,34 @@ public final class Constants {
         public static final double Y_TOLLERENCE = 0.02;
         public static final double THETA_TOLLERENCE = 0.02;
 
-        /* Pid values */
-        public static final double X_P = 5.0;
+        /* Pid values */ // TODO : tune properly
+        public static final double X_P = 9.0;
         public static final double X_I = 0.0;
-        public static final double X_D = 0.75;
-
-        public static final double Y_P = 5.0;
+        public static final double X_D = 0.0;
+        public static final double Y_P = 9.0;
         public static final double Y_I = 0.0;
-        public static final double Y_D = 0.75;
-        
+        public static final double Y_D = 0.0;
+                
         public static final double THETA_P = 6.0;
         public static final double THETA_I = 0.0;
         public static final double THETA_D = 0.9;
-
+        public static final double ERROR = 0.1;
         /** Default offset value. */
         public static final Translation2d DEFAULT_OFFSET = new Translation2d(1.0, 0);
+        public static final Pose2d[] SCORING_POSES = {
+            new Pose2d(15.513558, 1.071626, Rotation2d.fromDegrees(180)),
+            new Pose2d(15.513558, 2.748026, Rotation2d.fromDegrees(180)),
+            new Pose2d(15.513558, 4.424426, Rotation2d.fromDegrees(180)),
+            new Pose2d(1.2, 0.4, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 1.071626, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 1.64, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 2.1, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 2.748026, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 3.3, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 3.857, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 4.424426, Rotation2d.fromDegrees(0)),
+            new Pose2d(1.2, 5.0, Rotation2d.fromDegrees(0))
+        };
     }
 
     /**
@@ -520,7 +533,7 @@ public final class Constants {
 
     /** Vision constants. */
     public static class kVision {
-
+        public static final double AMBIGUITY_THRESHOLD = 0.15;
         public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
 
         /**
