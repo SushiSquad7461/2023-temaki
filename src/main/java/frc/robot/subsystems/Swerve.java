@@ -11,6 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +43,9 @@ public class Swerve extends SubsystemBase {
     private boolean locationLock;
     private PIDController locationLockPID;
 
+    private Boolean isRedAlliance;
+    private NetworkTable table;
+    
     /**
      * singleton get instance method.
      */
@@ -84,6 +89,9 @@ public class Swerve extends SubsystemBase {
         locationLockPID = new PIDController(0.1, 0.0, 0.0);
 
         SmartDashboard.putData("Field", field);
+
+        table = NetworkTableInstance.getDefault().getTable("FMSInfo");
+        isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
     }
 
     public Pigeon getGyro() {
@@ -92,6 +100,11 @@ public class Swerve extends SubsystemBase {
 
     public void turnOnLocationLock(double angle) {
         locationLock = true;
+
+        if (isRedAlliance) {
+            angle += 180;
+        }
+        
         locationLockPID.setSetpoint(angle);
         locationLockPID.calculate(gyro.getAngle().getDegrees());
     }
@@ -278,11 +291,17 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command moveToNearestScoringPosLeft(Translation2d tagOffset) {
-        return moveToPose(() -> getClosestLeftScoringPos(), tagOffset);
+        return moveToPose(() -> {
+            Pose2d target = isRedAlliance ? getClosestRightScoringPos() : getClosestLeftScoringPos();
+            return target == null ? getClosestScoringPos() : target;
+        }, tagOffset);
     }
 
     public Command moveToNearestScoringPosRight(Translation2d tagOffset) {
-        return moveToPose(() -> getClosestRightScoringPos(), tagOffset);
+        return moveToPose(() -> {
+            Pose2d target = isRedAlliance ? getClosestLeftScoringPos() : getClosestRightScoringPos();
+            return target == null ? getClosestScoringPos() : target;
+        }, tagOffset);
     }
 
     public Command moveToAprilTag(int tagID, Translation2d tagOffset) {
@@ -296,7 +315,7 @@ public class Swerve extends SubsystemBase {
         double rotation, boolean fieldRelative, boolean isOpenLoop
     ) {
         if (locationLock) {
-            rotation = locationLockPID.calculate(swerveOdometry.getEstimatedPosition().getRotation().getDegrees());
+            rotation = locationLockPID.calculate(gyro.getAngle().getDegrees());
         }
         drive(translation, rotation, fieldRelative, isOpenLoop);
     }
@@ -388,6 +407,8 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
+        isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
+
         swerveOdometry.update(gyro.getAngle(), getPositions());
         field.setRobotPose(swerveOdometry.getEstimatedPosition());
 
