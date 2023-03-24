@@ -285,6 +285,10 @@ public class RobotContainer {
             swerve.moveToNearestScoringPos(null)
         );
 
+        oi.getDriverController().povUp().onTrue(
+            new AutoBalance()
+        );
+
         // // Reset odo
         oi.getDriverController().povDown().onTrue(
             swerve.resetOdometryToBestAprilTag()

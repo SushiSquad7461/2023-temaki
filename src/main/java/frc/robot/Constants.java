@@ -134,12 +134,13 @@ public final class Constants {
 
     public static class kAutoBalance {
         public static final double FLATNESS_THRESHOLD_DEGREES = 2;
-        public static final double MAX_SPEED = Constants.kSwerve.MAX_SPEED * 0.01;
+        public static final double MAX_SPEED = Constants.kSwerve.MAX_SPEED * 0.0035;
     }
     
     /**
      * Constants for swerve drive.
      */
+    
     public static final class kSwerve {
         public static final boolean OPEN_LOOP = false;
         public static final boolean FEILD_RELATIVE = false;
