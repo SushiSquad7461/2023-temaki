@@ -227,30 +227,42 @@ public class RobotContainer {
 
         // Toggle intake
         oi.getDriverController().leftBumper().onTrue(
-            new InstantCommand(
-                () -> {
-                    toggleIntake();
-                }
+        new SequentialCommandGroup(
+                intake.extendIntake(), 
+                intake.runIntake(),
+                indexer.runIndexer()
             )
         ).onFalse(
-            new InstantCommand(
-                () -> {
-                    toggleIntake();
-                }
+            new SequentialCommandGroup(
+                intake.retractIntake(), 
+                new ParallelCommandGroup(
+                    indexer.runIndexer(),
+                    manipulator.cube()
+                ),
+                new WaitCommand(1.5),  
+                new ParallelCommandGroup(
+                    intake.stopIntake(), 
+                    indexer.stopIndexer(),
+                    manipulator.holdCube()
+                )
             )
         );
 
         oi.getDriverController().leftTrigger().onTrue(
-            new InstantCommand(
-                () -> {
-                    toggleIntakeReversal();
-                }
+            new SequentialCommandGroup(
+                intake.extendIntake(),
+                new ParallelCommandGroup(
+                    intake.reverseIntake(),
+                    indexer.reverseIndexer(),
+                    manipulator.cubeReverse()
+                )
             )
         ).onFalse(
-            new InstantCommand(
-                ()-> {
-                    toggleIntakeReversal();
-                }
+            new SequentialCommandGroup(
+                manipulator.stop(),
+                indexer.stopIndexer(),
+                intake.retractIntake(), 
+                intake.stopIntake()
             )
         );
 
@@ -314,58 +326,6 @@ public class RobotContainer {
             // swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
             swerve.moveToNearestScoringPosRight(null)
         );
-    }
-
-    private void toggleIntake() {
-        if (intake.isIn()) {
-            (
-                new SequentialCommandGroup(
-                    intake.extendIntake(), 
-                    intake.runIntake(),
-                    indexer.runIndexer()
-                )
-            ).schedule();
-        } else {
-            (
-                new SequentialCommandGroup(
-                    intake.retractIntake(), 
-                    new ParallelCommandGroup(
-                        indexer.runIndexer(),
-                        manipulator.cube()
-                    ),
-                    new WaitCommand(1.5),  
-                    new ParallelCommandGroup(
-                        intake.stopIntake(), 
-                        indexer.stopIndexer(),
-                        manipulator.holdCube()
-                    )
-                )
-            ).schedule();
-        }
-    }
-
-    private void toggleIntakeReversal() {
-        if (intake.isIn()) {
-            (
-                new SequentialCommandGroup(
-                    intake.extendIntake(),
-                    new ParallelCommandGroup(
-                        intake.reverseIntake(),
-                        indexer.reverseIndexer(),
-                        manipulator.cubeReverse()
-                    )
-                )
-            ).schedule();
-        } else {
-            (
-                new SequentialCommandGroup(
-                    manipulator.stop(),
-                    indexer.stopIndexer(),
-                    intake.retractIntake(), 
-                    intake.stopIntake()
-                )
-            ).schedule();
-        }
     }
 
     public Command getAutonomousCommand() {
