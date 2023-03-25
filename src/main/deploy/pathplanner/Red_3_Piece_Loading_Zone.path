@@ -123,5 +123,30 @@
   "maxVelocity": 1.0,
   "maxAcceleration": null,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.33939393939397805,
+      "names": [
+        "lowerArm"
+      ]
+    },
+    {
+      "position": 3.22,
+      "names": [
+        "raiseArm"
+      ]
+    },
+    {
+      "position": 0.95,
+      "names": [
+        "intakeDown"
+      ]
+    },
+    {
+      "position": 2.3,
+      "names": [
+        "intakeUp"
+      ]
+    }
+  ]
 }
