@@ -41,17 +41,17 @@ public class AutoBalance extends CommandBase {
 
     tilt = new Translation2d(getRoll(), getPitch()); // TODO: switch them?? 
     SmartDashboard.putNumber("autobalance norm", tilt.getNorm());
-    if(!(initialTilt.getNorm() - tilt.getNorm() > initialTilt.getNorm()/7.5) || changeDir){
+    if(!(initialTilt.getNorm() - tilt.getNorm() > initialTilt.getNorm()/10.0) || changeDir){
       swerve.drive(tilt.times(Constants.kAutoBalance.MAX_SPEED), 0, false, false);
     } else {
-      swerve.drive(new Translation2d(0,0), 0, true, false);
+      swerve.drive(new Translation2d(0, 0), 0.1, false, false);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(new Translation2d(0, 0), 0.01, false, false);
+    swerve.drive(new Translation2d(0, 0), 0.1, false, false);
   }
 
   // Returns true when the command should end.
