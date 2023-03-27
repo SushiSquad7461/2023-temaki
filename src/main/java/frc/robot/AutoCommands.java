@@ -203,7 +203,15 @@ public class AutoCommands {
             new AutoBalance()
         ));
 
-
+        autoChooser.addOption("Red 3 Piece Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
+            scoreCube(),
+            makeAuto(("Red_3_Piece_Loading_Zone")),
+            new WaitCommand(0.2),
+            scoreCube()
+        ));
 
         putAutoChooser();
     }

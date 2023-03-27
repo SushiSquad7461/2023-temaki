@@ -112,17 +112,13 @@ public class Vision {
                     bestPose.getX(),
                     bestPose.getY(),
                     new Rotation2d(bestPose.getRotation().getZ())), 
-                res.getTimestampSeconds(),
-                bestTarget.getPoseAmbiguity()); 
+                    res.getTimestampSeconds(),
+                    bestTarget.getPoseAmbiguity()); 
         }
 
         measurements.clear();
         // Loop through all targets
         for (PhotonTrackedTarget target : res.targets) {
-            // Skip anything with too high of an ambiguity
-            if (target.getPoseAmbiguity() > 0.2) {
-                continue;
-            }
 
             // Get pose
             Pose3d estRobotPose = getRobotPoseFromTarget(target);
@@ -137,7 +133,7 @@ public class Vision {
                     estRobotPose.getX(),
                     estRobotPose.getY(),
                     new Rotation2d(estRobotPose.getRotation().getZ())), 
-                res.getTimestampSeconds(),
+                    res.getTimestampSeconds(),
                 target.getPoseAmbiguity())); 
         }
     }
