@@ -176,18 +176,21 @@ public class AutoCommands {
         autoChooser.addOption("2 piece burm", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
         autoChooser.addOption("Red 2 piece burm", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
         autoChooser.addOption("2 piece burm + bal", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("2_piece_bal_burm"), chargeSpeed),
             new WaitCommand(0.2),
@@ -197,6 +200,7 @@ public class AutoCommands {
         autoChooser.addOption("Red 2 piece burm + bal", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("Red_2_piece_bal_burm"), chargeSpeed),
             new WaitCommand(0.2),
