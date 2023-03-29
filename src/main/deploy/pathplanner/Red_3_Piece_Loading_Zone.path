@@ -147,6 +147,12 @@
       "names": [
         "intakeUp"
       ]
+    },
+    {
+      "position": 3.5,
+      "names": [
+        "raiseArm"
+      ]
     }
   ]
 }
