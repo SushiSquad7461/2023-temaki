@@ -6,24 +6,25 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-public class NormalButton {
+public class ToggleButton {
 
     private GenericEntry button;
     private String name;
 
 
-    public NormalButton(String name, Consumer<Boolean> callback) { //what does callback do,, listen to button change
+    public ToggleButton(String name, Consumer<Boolean> callback) {
         this.name = name;
 
         button = Shuffleboard.getTab("<some tab>")
             .add(name, false)
-            .withWidget(BuiltInWidgets.kToggleButton)
+            .withWidget(BuiltInWidgets.kToggleSwitch)
             .getEntry();
     }
 
 
-    public boolean checkButton() {
+    public boolean getButton() {
         return button.getBoolean(false);
     }
 
 }
+
