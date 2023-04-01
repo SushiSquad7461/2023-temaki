@@ -10,10 +10,12 @@ public class NormalButton {
 
     private GenericEntry button;
     private String name;
+    private Consumer<Boolean> callback;
 
 
-    public NormalButton(String name, Consumer<Boolean> callback) { //what does callback do,, listen to button change
+    public NormalButton(String name, Consumer<Boolean> callback) {
         this.name = name;
+        this.callback = callback;
 
         button = Shuffleboard.getTab("<some tab>")
             .add(name, false)
@@ -22,8 +24,10 @@ public class NormalButton {
     }
 
 
-    public boolean checkButton() {
-        return button.getBoolean(false);
+    public void checkButton() { //call in periodic to actually check value, no listeners for changes built in
+        if(button.getBoolean(false)){
+            callback.accept(button.getBoolean(false));
+        }
     }
 
 }

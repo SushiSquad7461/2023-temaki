@@ -10,6 +10,7 @@ public class ToggleButton {
 
     private GenericEntry button;
     private String name;
+    private Consumer<Boolean> callback;
 
 
     public ToggleButton(String name, Consumer<Boolean> callback) {
@@ -21,9 +22,10 @@ public class ToggleButton {
             .getEntry();
     }
 
-
-    public boolean getButton() {
-        return button.getBoolean(false);
+    public void checkButton() { //call in periodic to actually check value, no listeners for changes built in
+        if(button.getBoolean(false)){
+            callback.accept(button.getBoolean(false));
+        }
     }
 
 }
