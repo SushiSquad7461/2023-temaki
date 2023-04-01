@@ -24,31 +24,6 @@
     },
     {
       "anchorPoint": {
-        "x": 14.602246013002667,
-        "y": 4.384778344024774
-      },
-      "prevControl": {
-        "x": 14.616034905428897,
-        "y": 4.392341864952869
-      },
-      "nextControl": {
-        "x": 14.588457120576436,
-        "y": 4.377214823096678
-      },
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
         "x": 11.49,
         "y": 4.832494771372523
       },
@@ -124,40 +99,15 @@
     },
     {
       "anchorPoint": {
-        "x": 14.623565842876367,
-        "y": 4.384778344024774
+        "x": 14.628371168297264,
+        "y": 4.4026513160016325
       },
       "prevControl": {
-        "x": 13.551140192067617,
-        "y": 4.594074816660274
-      },
-      "nextControl": {
-        "x": 15.695991493685117,
-        "y": 4.175481871389274
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 14.62,
-        "y": 4.413204783856377
-      },
-      "prevControl": {
-        "x": 15.156212825404374,
-        "y": 4.294343327622825
+        "x": 14.262436513460754,
+        "y": 4.53987681156532
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -172,25 +122,25 @@
   ],
   "markers": [
     {
-      "position": 3.254545454545459,
+      "position": 3.1127272727272537,
       "names": [
         "raiseArmL2"
       ]
     },
     {
-      "position": 2.0545454545454587,
+      "position": 2.3563636363636107,
       "names": [
         "intakeUp"
       ]
     },
     {
-      "position": 0.4,
+      "position": 0.01,
       "names": [
         "lowerArm"
       ]
     },
     {
-      "position": 1.0,
+      "position": 0.9599999999999864,
       "names": [
         "intakeDown"
       ]
