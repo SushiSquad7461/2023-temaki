@@ -80,7 +80,7 @@ public class RobotContainer {
      */
     public void configureAlphaButtonBindings() {
         // raise arm for cone
-        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
+        oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
             intake.extendIntake(),
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.cone()
@@ -119,6 +119,17 @@ public class RobotContainer {
      * Configures button bindings for beta.
      */
     public void configureBetaButtonBindings() {
+        oi.getOperatorController().povRight().onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                ((BetaIndexer) indexer).runConeRamp(),
+                manipulator.cube()
+            ),
+            new WaitCommand(1.5),  
+            new ParallelCommandGroup(
+                indexer.stopIndexer(),
+                manipulator.holdCube()
+            )
+        ));
         
         // Score item to relese cube
         // oi.getOperatorController().x().onTrue(
@@ -179,7 +190,7 @@ public class RobotContainer {
         );
 
         // raise arm for cone
-        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
+        oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
             manipulator.cone()
         ));
@@ -190,7 +201,7 @@ public class RobotContainer {
         ));
 
         // Raise arm to score at L2
-        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+        oi.getDriverController().leftStick().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.L3_SCORING)
         ));
     }
@@ -266,22 +277,9 @@ public class RobotContainer {
             )
         );
 
-        oi.getOperatorController().povLeft().onTrue(new SequentialCommandGroup(
+        oi.getDriverController().button(8).onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.L2_SCORING)
         ));
-
-        oi.getOperatorController().povRight().onTrue(new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                indexer.runIndexer(),
-                manipulator.cube()
-            ),
-            new WaitCommand(1.5),  
-            new ParallelCommandGroup(
-                indexer.stopIndexer(),
-                manipulator.holdCube()
-            )
-        ));
-
 
 
         // pickup cone
