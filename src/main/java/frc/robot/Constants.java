@@ -128,8 +128,9 @@ public final class Constants {
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.3;
+        public static final double MOTOR_SPEED = 0.8;
         public static final double CUBE_SHOOT_TOP_SPEED = 0.8;
+        public static final int CURRENT_LIMIT = 30;
     }
 
     public static class kAutoBalance {
@@ -168,7 +169,7 @@ public final class Constants {
 
         /* Swerve Current Limiting */
         public static final int ANGLE_CURRENT_LIMIT = 20;
-        public static final int DRIVE_CURRENT_LIMIT = 25;
+        public static final int DRIVE_CURRENT_LIMIT = 40;
 
         /* Angle Motor PID Values */
         public static final double ANGLE_P = 0.3;

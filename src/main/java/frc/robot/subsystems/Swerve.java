@@ -433,6 +433,7 @@ public class Swerve extends SubsystemBase {
                 Constants.kSwerve.VISION_STANDARD_DEVIATION
             );
         }
+        SmartDashboard.putNumber("Drive Current", swerveMods[0].getDriveCurrentDraw());
     }
 
     /**

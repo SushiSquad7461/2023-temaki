@@ -31,10 +31,12 @@ public class BetaIntake extends Intake {
         super();
         bottom = new CANSparkMax(kPorts.INTAKE_BOTTOM_MOTOR_ID, MotorType.kBrushless);
         bottom.setInverted(true);
+        bottom.setSmartCurrentLimit(kIntake.CURRENT_LIMIT);
         bottom.burnFlash();
 
         top = new CANSparkMax(kPorts.INTAKE_TOP_MOTOR_ID, MotorType.kBrushless);
         top.setInverted(false);
+        top.setSmartCurrentLimit(kIntake.CURRENT_LIMIT);
         top.burnFlash();
     }
 
@@ -44,7 +46,7 @@ public class BetaIntake extends Intake {
     public Command runIntake() {
         return runOnce(() -> {
             bottom.set(kIntake.MOTOR_SPEED);
-            top.set(kIntake.MOTOR_SPEED);
+            top.set(kIntake.MOTOR_SPEED/1.5); //half to maintain tangential velocity
         });
     }
 
@@ -64,7 +66,7 @@ public class BetaIntake extends Intake {
     public Command reverseIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
-            top.set(-kIntake.MOTOR_SPEED);
+            top.set(-kIntake.MOTOR_SPEED/1.5);
         });
     }
    
@@ -74,7 +76,7 @@ public class BetaIntake extends Intake {
     public Command coneIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
-            top.set(kIntake.MOTOR_SPEED);
+            top.set(kIntake.MOTOR_SPEED/1.5);
         });
     }
 
@@ -83,8 +85,8 @@ public class BetaIntake extends Intake {
      */
     public Command cubeShoot() {
         return runOnce(() -> {
-            bottom.set(kIntake.MOTOR_SPEED);
-            top.set(-kIntake.CUBE_SHOOT_TOP_SPEED);
+            bottom.set(1.0);
+            top.set(-0.6);
         });
     }
 
