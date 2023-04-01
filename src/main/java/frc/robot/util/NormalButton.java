@@ -12,7 +12,6 @@ public class NormalButton {
     private String name;
     private Consumer<Boolean> callback;
 
-
     public NormalButton(String name, Consumer<Boolean> callback) {
         this.name = name;
         this.callback = callback;
@@ -22,7 +21,6 @@ public class NormalButton {
             .withWidget(BuiltInWidgets.kToggleButton)
             .getEntry();
     }
-
 
     public void checkButton() { //call in periodic to actually check value, no listeners for changes built in
         if(button.getBoolean(false)){
