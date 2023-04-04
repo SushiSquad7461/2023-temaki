@@ -92,7 +92,7 @@ public class BetaIntake extends Intake {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Top intake current", top.getOutputCurrent());
+        // SmartDashboard.putNumber("Top intake current", top.getOutputCurrent());
     }
 
 }

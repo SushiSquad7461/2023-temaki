@@ -221,7 +221,7 @@ public class RobotContainer {
             )
         );
 
-        oi.getDriverController().rightTrigger().onTrue(new AutoBalance());
+        // oi.getDriverController().rightTrigger().onTrue(new AutoBalance());
 
         oi.getDriverController().b().onTrue(new InstantCommand(() -> {
             swerve.turnOnLocationLock(180);
@@ -238,25 +238,29 @@ public class RobotContainer {
 
         // Toggle intake
         oi.getDriverController().leftBumper().onTrue(
-        new SequentialCommandGroup(
-                intake.extendIntake(), 
-                intake.runIntake(),
-                indexer.runIndexer()
-            )
-        ).onFalse(
-            new SequentialCommandGroup(
-                intake.retractIntake(), 
-                new ParallelCommandGroup(
-                    indexer.runIndexer(),
-                    manipulator.cube()
-                ),
-                new WaitCommand(1.5),  
-                new ParallelCommandGroup(
-                    intake.stopIntake(), 
-                    indexer.stopIndexer(),
-                    manipulator.holdCube()
-                )
-            )
+            new InstantCommand(() -> {
+                if (intake.isIn()) {
+                    new SequentialCommandGroup(
+                        intake.extendIntake(), 
+                        intake.runIntake(),
+                        indexer.runIndexer()
+                    ).schedule();
+                } else {
+                    new SequentialCommandGroup(
+                        intake.retractIntake(), 
+                        new ParallelCommandGroup(
+                            indexer.runIndexer(),
+                            manipulator.cube()
+                        ),
+                        new WaitCommand(1.5),  
+                        new ParallelCommandGroup(
+                            intake.stopIntake(), 
+                            indexer.stopIndexer(),
+                            manipulator.holdCube()
+                        )
+                    ).schedule();
+                }
+            })
         );
 
         oi.getDriverController().leftTrigger().onTrue(
