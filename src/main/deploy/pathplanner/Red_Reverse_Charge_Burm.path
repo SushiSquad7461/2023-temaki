@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 14.52,
-        "y": 1.12
+        "x": 9.17,
+        "y": 2.29
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.12521101789707,
-        "y": 0.7204338517093577
+        "x": 9.17498700689709,
+        "y": 2.2593180086360185
       },
-      "holonomicAngle": -180.0,
+      "holonomicAngle": 133.67,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -24,19 +24,19 @@
     },
     {
       "anchorPoint": {
-        "x": 11.860990341096231,
-        "y": 0.5489019822547491
+        "x": 11.218543014009105,
+        "y": 2.2545720091440193
       },
       "prevControl": {
-        "x": 13.8270867862038,
-        "y": 0.4927277981088184
+        "x": 11.228177937125103,
+        "y": 2.2545720091440193
       },
       "nextControl": {
-        "x": 10.660267254913967,
-        "y": 0.5832083561456711
+        "x": 11.228177937125103,
+        "y": 2.2545720091440193
       },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
+      "holonomicAngle": 150.0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -49,15 +49,15 @@
     },
     {
       "anchorPoint": {
-        "x": 9.173657719640689,
-        "y": 2.287091592728121
+        "x": 14.465512104101132,
+        "y": 2.2256672397960195
       },
       "prevControl": {
-        "x": 9.985575235059173,
-        "y": 1.4294322454550756
+        "x": 14.475147027217131,
+        "y": 2.2256672397960195
       },
       "nextControl": null,
-      "holonomicAngle": 133.66778014613033,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -70,20 +70,11 @@
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": null,
-  "isReversed": null,
   "markers": [
     {
-      "position": 0.05818181818180663,
+      "position": 0.29090909090908673,
       "names": [
-        "lowerArm"
-      ]
-    },
-    {
-      "position": 1.2072727272727328,
-      "names": [
-        "intakeDown"
+        "intakeUp"
       ]
     }
   ]

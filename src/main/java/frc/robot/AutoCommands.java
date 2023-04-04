@@ -246,12 +246,43 @@ public class AutoCommands {
 
         autoChooser.addOption("Red 2.5 Piece Burm", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("Red_2_Piece_Burm"), 2),
+            makeAuto(("Red_2_Piece_Burm"), 2.2),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Red_Get_Piece_Burm"), 2)
+            makeAuto(("Red_Get_Piece_Burm"), 3)
         ));
 
+        autoChooser.addOption("Red 2.5 Piece Burm + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Burm"), 2.2),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_Get_Piece_Burm"), 2.2),
+            makeAuto(("Red_Reverse_Charge_Burm"), 2.2),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 2.5 Piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_Get_Piece")),
+            makeAuto(("Red_Reverse_Charge"), 2.2),
+            new AutoBalance()
+        ));
+
+        // autoChooser.addOption("Red 3 Piece Loading Zone + Bal", new SequentialCommandGroup(
+        //     scoreCone(),
+        //     makeAuto(("Red_2_Piece_Loading_Zone")),
+        //     new WaitCommand(0.3),
+        //     scoreCube(),
+        //     makeAuto(("Red_3_Piece_Loading_Zone_L2")),
+        //     new WaitCommand(0.2),
+        //     scoreCube(),
+        //     makeAuto(("Red_2_piece_bal"), 2.2),
+        //     new AutoBalance()
+        // ));
         putAutoChooser();
     }
 

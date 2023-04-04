@@ -80,14 +80,14 @@ public final class Constants {
                   PNEUMATIC_REVERSE_CHANNEL = 6;
                   break;
               default:
-                  PNEUMATIC_FORWARD_CHANNEL = 0;
-                  PNEUMATIC_REVERSE_CHANNEL = 1;
+                  PNEUMATIC_FORWARD_CHANNEL = 0; //correct
+                  PNEUMATIC_REVERSE_CHANNEL = 2; //correct
                   break;
             }
         }
 
         // arm pneumatic
-        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 2;
+        public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 1;
         public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
 
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM2 = 4;
