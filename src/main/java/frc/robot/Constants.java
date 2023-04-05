@@ -37,6 +37,8 @@ import java.io.IOException;
 public final class Constants {
     public static final boolean TUNING_MODE = false;
     public static final double STICK_DEADBAND = 0.1;
+    public static final double MIN_PRESSURE = 115;
+    public static final double MAX_PRESSURE = 120;
 
     enum RobotNames {
         ALPHA,
@@ -88,7 +90,7 @@ public final class Constants {
 
         // arm pneumatic
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM = 1;
-        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 3;  
+        public static final int PNEUMATIC_REVERSE_CHANNEL_ARM = 5;  
 
         public static final int PNEUMATIC_FORWARD_CHANNEL_ARM2 = 4;
         public static final int PNEUMATIC_REVERSE_CHANNEL_ARM2 = 6;
