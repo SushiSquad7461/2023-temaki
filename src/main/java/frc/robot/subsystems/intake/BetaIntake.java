@@ -46,7 +46,7 @@ public class BetaIntake extends Intake {
     public Command runIntake() {
         return runOnce(() -> {
             bottom.set(kIntake.MOTOR_SPEED);
-            top.set(kIntake.MOTOR_SPEED/1.5); //half to maintain tangential velocity
+            top.set(kIntake.MOTOR_SPEED/2.0); //half to maintain tangential velocity
         });
     }
 
@@ -66,7 +66,7 @@ public class BetaIntake extends Intake {
     public Command reverseIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
-            top.set(-kIntake.MOTOR_SPEED/1.5);
+            top.set(-kIntake.MOTOR_SPEED/2.0);
         });
     }
    
@@ -76,7 +76,7 @@ public class BetaIntake extends Intake {
     public Command coneIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
-            top.set(kIntake.MOTOR_SPEED/1.5);
+            top.set(kIntake.MOTOR_SPEED/2.0);
         });
     }
 
