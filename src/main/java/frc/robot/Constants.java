@@ -132,7 +132,7 @@ public final class Constants {
     public static class kIntake {
         public static final double MOTOR_SPEED = 0.8;
         public static final double CUBE_SHOOT_TOP_SPEED = 0.8;
-        public static final int CURRENT_LIMIT = 30;
+        public static final int CURRENT_LIMIT = 50;
     }
 
     public static class kAutoBalance {
