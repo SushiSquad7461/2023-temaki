@@ -62,7 +62,7 @@ public class AutoCommands {
                 indexer.runIndexer(), 
                 manipulator.cube()
             ), 
-            new WaitCommand(2.0), 
+            new WaitCommand(2.5), 
             new ParallelCommandGroup(
                 intake.stopIntake(), 
                 indexer.stopIndexer(), 
@@ -89,6 +89,10 @@ public class AutoCommands {
 
         eventMap.put("raiseArm", new SequentialCommandGroup(
             arm.moveArm(ArmPos.L3_SCORING)
+        ));
+
+        eventMap.put("raiseArmL2", new SequentialCommandGroup(
+            arm.moveArm(ArmPos.L2_SCORING)
         ));
 
         eventMap.put("lowerArm", new SequentialCommandGroup(
@@ -147,7 +151,7 @@ public class AutoCommands {
             new AutoBalance()
         ));
 
-        autoChooser.addOption("3 Piece Piece Loading Zone", new SequentialCommandGroup(
+        autoChooser.addOption("3 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone")),
             new WaitCommand(0.5),
@@ -156,6 +160,17 @@ public class AutoCommands {
             new WaitCommand(0.2),
             scoreCube()
         ));
+
+        
+        // autoChooser.addOption("3 Piece Loading Zone L2", new SequentialCommandGroup(
+        //     scoreCone(),
+        //     makeAuto(("2_Piece_Loading_Zone")),
+        //     new WaitCommand(0.5),
+        //     scoreCube(),
+        //     makeAuto(("3_Piece_Loading_Zone_L2")),
+        //     new WaitCommand(0.2),
+        //     scoreCube()
+        // ));
 
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
@@ -175,59 +190,101 @@ public class AutoCommands {
 
         autoChooser.addOption("2 piece burm", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            makeAuto(("2_Piece_Burm"), 2.0),
             new WaitCommand(0.5),
             scoreCube()
         ));
 
         autoChooser.addOption("Red 2 piece burm", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            makeAuto(("Red_2_Piece_Burm"), 2.0),
             new WaitCommand(0.5),
             scoreCube()
         ));
 
         autoChooser.addOption("2 piece burm + bal", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("2_Piece_Loading_Zone_Burm"), 2.0),
+            makeAuto(("2_Piece_Burm"), 2.0),
             new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("2_piece_bal_burm"), chargeSpeed),
-            new WaitCommand(0.2),
+            //new WaitCommand(0.2),
             new AutoBalance()
         ));
 
         autoChooser.addOption("Red 2 piece burm + bal", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("Red_2_Piece_Loading_Zone_Burm"), 2.0),
+            makeAuto(("Red_2_Piece_Burm"), 2.0),
             new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("Red_2_piece_bal_burm"), chargeSpeed),
-            new WaitCommand(0.2),
+            //new WaitCommand(0.2),
             new AutoBalance()
         ));
 
-        autoChooser.addOption("Red 3 Piece Piece Loading Zone", new SequentialCommandGroup(
+        autoChooser.addOption("Red 3 Piece Loading Zone", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone")),
-            new WaitCommand(0.5),
+            new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("Red_3_Piece_Loading_Zone")),
             new WaitCommand(0.2),
             scoreCube()
+        )); 
+
+        autoChooser.addOption("Red 3 Piece Loading Zone L2", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_3_Piece_Loading_Zone_L2")),
+            new WaitCommand(0.2),
+            scoreCube()
+        )); 
+
+        autoChooser.addOption("1 piece", scoreCone());
+
+        autoChooser.addOption("Red 2.5 Piece Burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Burm"), 2.2),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_Get_Piece_Burm"), 3)
         ));
 
+        autoChooser.addOption("Red 2.5 Piece Burm + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Burm"), 2.2),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_Get_Piece_Burm"), 2.2),
+            makeAuto(("Red_Reverse_Charge_Burm"), 2.2),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 2.5 Piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_Get_Piece")),
+            makeAuto(("Red_Reverse_Charge"), 2.2),
+            new AutoBalance()
+        ));
+
+        // autoChooser.addOption("Red 3 Piece Loading Zone + Bal", new SequentialCommandGroup(
+        //     scoreCone(),
+        //     makeAuto(("Red_2_Piece_Loading_Zone")),
+        //     new WaitCommand(0.3),
+        //     scoreCube(),
+        //     makeAuto(("Red_3_Piece_Loading_Zone_L2")),
+        //     new WaitCommand(0.2),
+        //     scoreCube(),
+        //     makeAuto(("Red_2_piece_bal"), 2.2),
+        //     new AutoBalance()
+        // ));
         putAutoChooser();
     }
-
-    // private String getAutoPath(String pathName) {
-    //     var table = NetworkTableInstance.getDefault().getTable("FMSInfo");
-    //     boolean isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
-       
-    //     System.out.println((isRedAlliance ? "Red_" : "") + pathName);
-    //     return (isRedAlliance ? "Red_" : "") + pathName;
-    //     // return pathName;
-    // }
 
     private void putAutoChooser() {
         SmartDashboard.putData("Auto Selector", autoChooser); 
@@ -254,10 +311,8 @@ public class AutoCommands {
 
     private Command scoreCube() {
         return new SequentialCommandGroup(
-            // arm.moveArm(ArmPos.L3_SCORING),
-            // new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
             manipulator.cubeReverse(),
-            new WaitCommand(0.4)
+            new WaitCommand(0.3)
         );
     }
 

@@ -126,7 +126,7 @@ public class SwerveModule {
             );
             driveMotor.set(ControlMode.Velocity, velocity);
 
-            SmartDashboard.putNumber("Mod " + moduleNumber + " wanted velocity ", velocity);
+            // SmartDashboard.putNumber("Mod " + moduleNumber + " wanted velocity ", velocity);
         }
 
         // Prevent rotating module if speed is less then 1%. Prevents jittering.
@@ -139,7 +139,7 @@ public class SwerveModule {
             Conversion.degreesToFalcon(angle, kSwerve.ANGLE_GEAR_RATIO)
         );
 
-        SmartDashboard.putNumber("Mod " + moduleNumber + " wanted angle ", angle);
+        // SmartDashboard.putNumber("Mod " + moduleNumber + " wanted angle ", angle);
 
         lastAngle = angle;
     }

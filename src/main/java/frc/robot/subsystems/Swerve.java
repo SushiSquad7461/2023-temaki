@@ -155,7 +155,7 @@ public class Swerve extends SubsystemBase {
                         swerveOdometry.getEstimatedPosition().getRotation().getRadians()
             );
 
-            SmartDashboard.putNumber("In Auto Align", 1);
+            // SmartDashboard.putNumber("In Auto Align", 1);
             Translation2d offset = newOffset;
             // Give offset a default value
             if (offset == null) {
@@ -178,9 +178,9 @@ public class Swerve extends SubsystemBase {
             thetaPid.setSetpoint(targetRot.minus(kAutoAlign.DEFAULT_ROTATION).getRadians());
         }).andThen(run(
             () -> {
-                SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());
-                SmartDashboard.putNumber("y tolerance", yaxisPid.getPositionError());
-                SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
+                // SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());
+                // SmartDashboard.putNumber("y tolerance", yaxisPid.getPositionError());
+                // SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
 
                 drive(
                     new Translation2d(
@@ -198,7 +198,7 @@ public class Swerve extends SubsystemBase {
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
         ).andThen(
             () -> { 
-                SmartDashboard.putNumber("In Auto Align", 0);
+                // SmartDashboard.putNumber("In Auto Align", 0);
 
                 xaxisPid.close(); 
                 yaxisPid.close(); 
@@ -212,8 +212,8 @@ public class Swerve extends SubsystemBase {
             .getEstimatedPosition()
             .getTranslation(); 
 
-        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+        // SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        // SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
 
         double minDistance = Double.MAX_VALUE;
         Pose2d closestScoringPos = null;
@@ -222,7 +222,7 @@ public class Swerve extends SubsystemBase {
             Translation2d translation = pos.getTranslation();
             double distance = currentTranslation.getDistance(translation);
 
-            SmartDashboard.putNumber("Scoring Pos Distance", distance);
+            // SmartDashboard.putNumber("Scoring Pos Distance", distance);
 
             if (distance < minDistance) {
                 minDistance = distance;
@@ -238,8 +238,8 @@ public class Swerve extends SubsystemBase {
             .getEstimatedPosition()
             .getTranslation(); 
 
-        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+        // SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        // SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
 
         double minDistance = Double.MAX_VALUE;
         Pose2d closestScoringPos = null;
@@ -248,7 +248,7 @@ public class Swerve extends SubsystemBase {
             Translation2d translation = pos.getTranslation();
             double distance = currentTranslation.getDistance(translation);
 
-            SmartDashboard.putNumber("Scoring Pos Distance", distance);
+            // SmartDashboard.putNumber("Scoring Pos Distance", distance);
 
             if (distance < minDistance && (currentTranslation.getY() - pos.getY()) > kAutoAlign.ERROR) {
                 minDistance = distance;
@@ -265,8 +265,8 @@ public class Swerve extends SubsystemBase {
 
             .getTranslation(); 
 
-        SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
+        // SmartDashboard.putNumber("Robot x", currentTranslation.getX());
+        // SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
 
         double minDistance = Double.MAX_VALUE;
         Pose2d closestScoringPos = null;
@@ -275,7 +275,7 @@ public class Swerve extends SubsystemBase {
             Translation2d translation = pos.getTranslation();
             double distance = currentTranslation.getDistance(translation);
 
-            SmartDashboard.putNumber("Scoring Pos Distance", distance);
+            // SmartDashboard.putNumber("Scoring Pos Distance", distance);
 
             if (distance < minDistance && (pos.getY() - currentTranslation.getY()) > kAutoAlign.ERROR) {
                 minDistance = distance;
@@ -433,6 +433,7 @@ public class Swerve extends SubsystemBase {
                 Constants.kSwerve.VISION_STANDARD_DEVIATION
             );
         }
+        SmartDashboard.putNumber("Drive Current", swerveMods[0].getDriveCurrentDraw());
     }
 
     /**
