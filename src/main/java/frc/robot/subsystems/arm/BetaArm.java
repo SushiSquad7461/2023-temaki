@@ -126,7 +126,7 @@ public class BetaArm extends Arm {
         }
     }
 
-    public void []\override() {
+    public void override() {
         override = true;
     }
 

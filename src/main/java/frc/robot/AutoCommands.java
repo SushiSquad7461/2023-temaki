@@ -161,16 +161,35 @@ public class AutoCommands {
             scoreCube()
         ));
 
+        autoChooser.addOption("Red 3 Piece Loading Zone", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_3_Piece_Loading_Zone")),
+            new WaitCommand(0.2),
+            scoreCube()
+        )); 
         
-        // autoChooser.addOption("3 Piece Loading Zone L2", new SequentialCommandGroup(
-        //     scoreCone(),
-        //     makeAuto(("2_Piece_Loading_Zone")),
-        //     new WaitCommand(0.5),
-        //     scoreCube(),
-        //     makeAuto(("3_Piece_Loading_Zone_L2")),
-        //     new WaitCommand(0.2),
-        //     scoreCube()
-        // ));
+        autoChooser.addOption("3 Piece Loading Zone L2", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.5),
+            scoreCube(),
+            makeAuto(("3_Piece_Loading_Zone_L2")),
+            new WaitCommand(0.2),
+            scoreCube()
+        ));
+        
+        autoChooser.addOption("Red 3 Piece Loading Zone L2", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_2_Piece_Loading_Zone")),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Red_3_Piece_Loading_Zone_L2")),
+            new WaitCommand(0.2),
+            scoreCube()
+        ));
 
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
@@ -222,26 +241,6 @@ public class AutoCommands {
             new AutoBalance()
         ));
 
-        autoChooser.addOption("Red 3 Piece Loading Zone", new SequentialCommandGroup(
-            scoreCone(),
-            makeAuto(("Red_2_Piece_Loading_Zone")),
-            new WaitCommand(0.3),
-            scoreCube(),
-            makeAuto(("Red_3_Piece_Loading_Zone")),
-            new WaitCommand(0.2),
-            scoreCube()
-        )); 
-
-        autoChooser.addOption("Red 3 Piece Loading Zone L2", new SequentialCommandGroup(
-            scoreCone(),
-            makeAuto(("Red_2_Piece_Loading_Zone")),
-            new WaitCommand(0.3),
-            scoreCube(),
-            makeAuto(("Red_3_Piece_Loading_Zone_L2")),
-            new WaitCommand(0.2),
-            scoreCube()
-        )); 
-
         autoChooser.addOption("1 piece", scoreCone());
 
         autoChooser.addOption("Red 2.5 Piece Burm", new SequentialCommandGroup(
@@ -249,7 +248,25 @@ public class AutoCommands {
             makeAuto(("Red_2_Piece_Burm"), 2.2),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Red_Get_Piece_Burm"), 3)
+            makeAuto(("Red_Get_Piece_Burm"), 2)
+        ));
+
+        autoChooser.addOption("2.5 Piece Burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Burm"), 2.2),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Get_Piece_Burm"), 2)
+        ));
+
+        autoChooser.addOption("2.5 Piece Burm + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Burm"), 2.2),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Get_Piece_Burm"), 2.2),
+            makeAuto(("Reverse_Charge_Burm"), 2.2),
+            new AutoBalance()
         ));
 
         autoChooser.addOption("Red 2.5 Piece Burm + Bal", new SequentialCommandGroup(
@@ -267,8 +284,18 @@ public class AutoCommands {
             makeAuto(("Red_2_Piece_Loading_Zone")),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Red_Get_Piece")),
+            makeAuto(("Red_Get_Piece"), 2.2),
             makeAuto(("Red_Reverse_Charge"), 2.2),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("2.5 Piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("2_Piece_Loading_Zone")),
+            new WaitCommand(0.3),
+            scoreCube(),
+            makeAuto(("Get_Piece"), 2.2),
+            makeAuto(("Reverse_Charge"), 2.2),
             new AutoBalance()
         ));
 
