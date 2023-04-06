@@ -245,7 +245,7 @@ public class AutoCommands {
 
         autoChooser.addOption("Red 2.5 Piece Burm", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("Red_2_Piece_Burm"), 2.2),
+            makeAuto(("Red_2_Piece_Burm"), 2),
             new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("Red_Get_Piece_Burm"), 2)
@@ -253,7 +253,7 @@ public class AutoCommands {
 
         autoChooser.addOption("2.5 Piece Burm", new SequentialCommandGroup(
             scoreCone(),
-            makeAuto(("2_Piece_Burm"), 2.2),
+            makeAuto(("2_Piece_Burm"), 2),
             new WaitCommand(0.3),
             scoreCube(),
             makeAuto(("Get_Piece_Burm"), 2)
