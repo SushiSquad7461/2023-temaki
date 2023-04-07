@@ -174,7 +174,7 @@ public class AutoCommands {
         autoChooser.addOption("3 Piece Loading Zone L2", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("2_Piece_Loading_Zone")),
-            new WaitCommand(0.5),
+            new WaitCommand(0.7),
             scoreCube(),
             makeAuto(("3_Piece_Loading_Zone_L2")),
             new WaitCommand(0.2),
@@ -184,7 +184,7 @@ public class AutoCommands {
         autoChooser.addOption("Red 3 Piece Loading Zone L2", new SequentialCommandGroup(
             scoreCone(),
             makeAuto(("Red_2_Piece_Loading_Zone")),
-            new WaitCommand(0.3),
+            new WaitCommand(0.7),
             scoreCube(),
             makeAuto(("Red_3_Piece_Loading_Zone_L2")),
             new WaitCommand(0.2),
