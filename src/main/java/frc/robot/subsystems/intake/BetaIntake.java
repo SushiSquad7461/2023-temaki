@@ -85,8 +85,8 @@ public class BetaIntake extends Intake {
      */
     public Command cubeShoot() {
         return runOnce(() -> {
-            bottom.set(1.0);
-            top.set(-0.6);
+            bottom.set(0.8);
+            top.set(-0.8);
         });
     }
 
