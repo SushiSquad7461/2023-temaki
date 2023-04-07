@@ -505,7 +505,7 @@ public final class Constants {
         public enum ArmPos {
             L1_SCORING(47),
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 93.5),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 93.0),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 79),
             L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95);
