@@ -194,16 +194,16 @@ public class AutoCommands {
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(("Charge"), chargeSpeed),
-            new WaitCommand(autoBalanceWait),
+            makeAuto(("Charge"), 1.4),
+            //new WaitCommand(autoBalanceWait),
             new AutoBalance()
         ));
 
         autoChooser.addOption("Red 1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(("Red_Charge"), chargeSpeed),
-            new WaitCommand(autoBalanceWait),
+            makeAuto(("Red_Charge"), 1.4),
+            //new WaitCommand(autoBalanceWait),
             new AutoBalance()
         ));
 
