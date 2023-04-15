@@ -195,6 +195,10 @@ public class RobotContainer {
             manipulator.cone()
         ));
 
+        oi.getOperatorController().start().onTrue(
+          new InstantCommand(()->swerve.getGyro().zeroGyro())
+        );
+
         // Lower arm
         oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.LOWERED)

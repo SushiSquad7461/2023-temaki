@@ -126,7 +126,7 @@ public class BetaArm extends Arm {
         }
     }
 
-    public void []\override() {
+    public void override() {
         override = true;
     }
 
@@ -151,7 +151,7 @@ public class BetaArm extends Arm {
 
     @Override
     public void periodic() {
-        if (Math.abs(getAbsolutePosition() - leftMotor.getEncoder().getPosition()) > 1) {
+        if (Math.abs(getAbsolutePosition() - leftMotor.getEncoder().getPosition()) > 0.3) {
             resetArm();
         }
 

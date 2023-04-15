@@ -132,7 +132,7 @@ public final class Constants {
     public static class kIntake {
         public static final double MOTOR_SPEED = 0.8;
         public static final double CUBE_SHOOT_TOP_SPEED = 0.8;
-        public static final int CURRENT_LIMIT = 30;
+        public static final int CURRENT_LIMIT = 50;
     }
 
     public static class kAutoBalance {
@@ -505,7 +505,7 @@ public final class Constants {
         public enum ArmPos {
             L1_SCORING(47),
             LOWERED(0),
-            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 92.5),
+            CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 93.0),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 79),
             L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95);
