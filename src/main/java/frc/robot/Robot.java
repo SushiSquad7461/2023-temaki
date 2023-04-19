@@ -32,8 +32,6 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
     private Swerve swerve;
     private Compressor compressor;
-    private LED led;
-    private int ledCycle;
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -57,8 +55,6 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
-        led = new LED(7);
-        ledCycle = 0;
     }
 
     /**
@@ -74,18 +70,6 @@ public class Robot extends TimedRobot {
         compressor.enableAnalog(Constants.MIN_PRESSURE, Constants.MAX_PRESSURE);
         SmartDashboard.putNumber("Compressor Pressure", compressor.getPressure());
         SmartDashboard.putBoolean("Compress Full", compressor.getPressureSwitchValue());
-        if (ledCycle == 50)
-            led.set(0.59, 1795);
-        else if (ledCycle == 100)
-            led.set(0.57, 1785);
-        else if (ledCycle == 150)
-            led.set(0.67, 1835);
-        else if (ledCycle == 200)
-            led.set(1865, 0.73);
-        else if (ledCycle == 250)
-            led.set(1915, 0.83);
-        ledCycle++;
-        ledCycle%=500;
     }
 
 
