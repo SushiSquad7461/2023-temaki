@@ -508,7 +508,8 @@ public final class Constants {
             CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 93.0),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 79),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95);
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95),
+            CUBE_SHOOT(105);
 
             private double angle;
 

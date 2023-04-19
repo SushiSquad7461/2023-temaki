@@ -299,6 +299,32 @@ public class AutoCommands {
             new AutoBalance()
         ));
 
+        autoChooser.addOption("Red 3 Piece Burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_3_Piece_Burm1"), 2.2),
+            new SequentialCommandGroup(
+                arm.moveArm(ArmPos.CUBE_SHOOT),
+                manipulator.cubeShoot(),
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
+            ),
+            makeAuto("Red_3_Piece_Burm2", 2.2),
+            new WaitCommand(0.3),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("3 Piece Burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("3_Piece_Burm1"), 2.2),
+            new SequentialCommandGroup(
+                arm.moveArm(ArmPos.CUBE_SHOOT),
+                manipulator.cubeShoot(),
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
+            ),
+            makeAuto("3_Piece_Burm2", 2.2),
+            new WaitCommand(0.3),
+            scoreCube()
+        ));
+
         // autoChooser.addOption("Red 3 Piece Loading Zone + Bal", new SequentialCommandGroup(
         //     scoreCone(),
         //     makeAuto(("Red_2_Piece_Loading_Zone")),

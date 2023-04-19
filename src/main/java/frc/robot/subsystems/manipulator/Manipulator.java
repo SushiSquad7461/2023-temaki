@@ -66,6 +66,12 @@ public abstract class Manipulator extends SubsystemBase {
         });
     }
 
+    public Command cubeShoot() {
+        return runOnce(() -> {
+            motor.set(-1.0);
+        });
+    }
+
     /**
      * Stops indexer.
      */
