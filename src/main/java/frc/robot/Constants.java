@@ -36,7 +36,7 @@ import java.io.IOException;
  */
 public final class Constants {
     public static final boolean TUNING_MODE = false;
-    public static final double STICK_DEADBAND = 0.02; // was 0.1
+    public static final double STICK_DEADBAND = 0.01; // was 0.1
     public static final double MIN_PRESSURE = 115;
     public static final double MAX_PRESSURE = 120;
 
