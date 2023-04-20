@@ -195,8 +195,8 @@ public class AutoCommands {
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
             makeAuto(("Charge1"), 1.4),
-            new WaitCommand(2.0),
-            makeAuto(("Charge2"), chargeSpeed),
+            new WaitCommand(0.5),
+            makeAuto(("Charge2"), 3),
             new AutoBalance()
         ));
 
@@ -204,8 +204,8 @@ public class AutoCommands {
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
             makeAuto(("Red_Charge1"), 1.4),
-            new WaitCommand(2.0),
-            makeAuto(("Red_Charge2"), chargeSpeed),
+            new WaitCommand(0.5),
+            makeAuto(("Red_Charge2"), 3),
             new AutoBalance()
         ));
 
@@ -213,8 +213,8 @@ public class AutoCommands {
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
             makeAuto(("Charge1_burm"), 1.4),
-            new WaitCommand(2.0),
-            makeAuto(("Charge2_burm"), chargeSpeed),
+            new WaitCommand(0.5),
+            makeAuto(("Charge2_burm"), 3),
             new AutoBalance()
         ));
 
@@ -222,8 +222,8 @@ public class AutoCommands {
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
             makeAuto(("Red_Charge1_burm"), 1.4),
-            new WaitCommand(2.0),
-            makeAuto(("Red_Charge2_burm"), chargeSpeed),
+            new WaitCommand(0.5),
+            makeAuto(("Red_Charge2_burm"), 3),
             new AutoBalance()
         ));
 
