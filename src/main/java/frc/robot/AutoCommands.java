@@ -303,8 +303,8 @@ public class AutoCommands {
             scoreCone(),
             makeAuto(("Red_3_Piece_Burm1"), 2.2),
             new SequentialCommandGroup(
-                arm.moveArm(ArmPos.CUBE_SHOOT),
-                manipulator.cubeShoot(),
+                arm.moveArm(ArmPos.L1_SCORING),
+                manipulator.cubeReverse(),
                 new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
             ),
             makeAuto("Red_3_Piece_Burm2", 2.2),
@@ -316,8 +316,8 @@ public class AutoCommands {
             scoreCone(),
             makeAuto(("3_Piece_Burm1"), 2.2),
             new SequentialCommandGroup(
-                arm.moveArm(ArmPos.CUBE_SHOOT),
-                manipulator.cubeShoot(),
+                arm.moveArm(ArmPos.L1_SCORING),
+                manipulator.cubeReverse(),
                 new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
             ),
             makeAuto("3_Piece_Burm2", 2.2),
