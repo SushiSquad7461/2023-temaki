@@ -503,6 +503,7 @@ public final class Constants {
          * Enum for arm angles.
          */
         public enum ArmPos {
+            AUTO_DROP(65),
             L1_SCORING(47),
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 93.0),
