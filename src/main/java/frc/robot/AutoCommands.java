@@ -328,7 +328,7 @@ public class AutoCommands {
                 new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
             ),
             makeAuto("Red_3_Piece_Burm2", 2.2),
-            new WaitCommand(0.3),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
@@ -341,7 +341,7 @@ public class AutoCommands {
                 new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
             ),
             makeAuto("3_Piece_Burm2", 2.2),
-            new WaitCommand(0.3),
+            new WaitCommand(0.5),
             scoreCube()
         ));
 
