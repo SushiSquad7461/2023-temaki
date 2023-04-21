@@ -304,7 +304,7 @@ public class AutoCommands {
             makeAuto(("Red_2_Piece_Loading_Zone")),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Red_Get_Piece"), 2.2),
+            makeAuto(("Red_Get_Piece")),
             makeAuto(("Red_Reverse_Charge"), 2.2),
             new AutoBalance()
         ));
@@ -314,7 +314,7 @@ public class AutoCommands {
             makeAuto(("2_Piece_Loading_Zone")),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Get_Piece"), 2.2),
+            makeAuto(("Get_Piece")),
             makeAuto(("Reverse_Charge"), 2.2),
             new AutoBalance()
         ));
