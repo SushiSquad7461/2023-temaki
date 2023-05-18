@@ -18,6 +18,7 @@ import frc.robot.Constants.kCommandTimmings;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.BetaArm;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.manipulator.Manipulator;

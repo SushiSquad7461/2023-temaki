@@ -43,13 +43,13 @@ public class RobotContainer {
     private final Arm arm;
     private final Indexer indexer;
     private final Manipulator manipulator;
+    private final boolean disableArm;
 
     /**
      * Instaite subsystems and commands.
      */
     public RobotContainer() {
         SmartDashboard.putString("Robot Name", Constants.ROBOT_NAME.toString());
-
         swerve = Swerve.getInstance();
         oi = OI.getInstance();
 
@@ -70,7 +70,17 @@ public class RobotContainer {
               break;
         }
 
-        autos = new AutoCommands(swerve, indexer, intake, manipulator, arm);
+        // disable auto & arm in outreach
+        switch (Constants.ROBOT_NAME) {
+            case OUTREACH:
+                autos = null;
+                disableArm = true;
+            break;
+            default:
+                autos = new AutoCommands(swerve, indexer, intake, manipulator, arm);
+                disableArm = false;
+            break;
+        }
 
         configureButtonBindings();
     }
@@ -174,8 +184,8 @@ public class RobotContainer {
                 manipulator.cubeReverse(),
                 new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
                 manipulator.stop(),
-                arm.moveArm(ArmPos.LOWERED)
-        ));
+                arm.moveArm(ArmPos.LOWERED))
+        );
 
         oi.getOperatorController().leftTrigger().onTrue(
             new InstantCommand(

@@ -42,7 +42,8 @@ public final class Constants {
 
     enum RobotNames {
         ALPHA,
-        BETA
+        BETA,
+        OUTREACH
     }
 
     public static final RobotNames ROBOT_NAME = RobotNames.BETA;
@@ -118,6 +119,10 @@ public final class Constants {
                   INDEXER_SPEED = 0.7;
                   CONE_RAMP_SPEED = 0.5;
                   break;
+              case OUTREACH:
+                  INDEXER_SPEED = -0.3;
+                  CONE_RAMP_SPEED = 0.2;
+                  break;
               default:
                   INDEXER_SPEED = -0.7;
                   CONE_RAMP_SPEED = -1;
@@ -130,9 +135,21 @@ public final class Constants {
      * Constants for intake.
      */
     public static class kIntake {
-        public static final double MOTOR_SPEED = 0.8;
-        public static final double CUBE_SHOOT_TOP_SPEED = 0.8;
+        public static final double MOTOR_SPEED;
+        public static final double CUBE_SHOOT_TOP_SPEED;
         public static final int CURRENT_LIMIT = 50;
+        static {
+            switch (ROBOT_NAME) {
+              case OUTREACH:
+                  MOTOR_SPEED = 0.6;
+                  CUBE_SHOOT_TOP_SPEED = 0.6;
+                  break;
+              default:
+                MOTOR_SPEED = 0.8;
+                CUBE_SHOOT_TOP_SPEED = 0.8;
+                  break;
+            }
+        }
     }
 
     public static class kAutoBalance {
@@ -186,7 +203,17 @@ public final class Constants {
         public static final double DRIVE_F = 0.046;
 
         /* Swerve Profiling Values */
-        public static final double MAX_SPEED = 10; // 4.5 meters per second
+        public static final double MAX_SPEED; // 4.5 meters per second
+        static {
+            switch(ROBOT_NAME) {
+                case OUTREACH:
+                    MAX_SPEED = 2.2;
+                break;
+                default:
+                    MAX_SPEED = 10;
+                break;
+            }
+        }
         public static final double MAX_ACCELERATION = 4; // 2
         public static final double MAX_ANGULAR_VELOCITY = 10; // 11.5
         public static final double MAX_ANGULAR_ACCELERATION = 20; // 11.5
