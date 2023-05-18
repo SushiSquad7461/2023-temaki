@@ -194,16 +194,36 @@ public class AutoCommands {
         autoChooser.addOption("1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(("Charge"), 1.4),
-            //new WaitCommand(autoBalanceWait),
+            makeAuto(("Charge1"), 1.4),
+            new WaitCommand(0.5),
+            makeAuto(("Charge2"), 3),
             new AutoBalance()
         ));
 
         autoChooser.addOption("Red 1 piece + Bal", new SequentialCommandGroup(
             scoreCone(),
             arm.moveArm(ArmPos.LOWERED),
-            makeAuto(("Red_Charge"), 1.4),
-            //new WaitCommand(autoBalanceWait),
+            makeAuto(("Red_Charge1"), 1.4),
+            new WaitCommand(0.5),
+            makeAuto(("Red_Charge2"), 3),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Burm 1 piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            arm.moveArm(ArmPos.LOWERED),
+            makeAuto(("Charge1_burm"), 1.4),
+            new WaitCommand(0.5),
+            makeAuto(("Charge2_burm"), 3),
+            new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red Burm 1 piece + Bal", new SequentialCommandGroup(
+            scoreCone(),
+            arm.moveArm(ArmPos.LOWERED),
+            makeAuto(("Red_Charge1_burm"), 1.4),
+            new WaitCommand(0.5),
+            makeAuto(("Red_Charge2_burm"), 3),
             new AutoBalance()
         ));
 
@@ -284,7 +304,7 @@ public class AutoCommands {
             makeAuto(("Red_2_Piece_Loading_Zone")),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Red_Get_Piece"), 2.2),
+            makeAuto(("Red_Get_Piece")),
             makeAuto(("Red_Reverse_Charge"), 2.2),
             new AutoBalance()
         ));
@@ -294,9 +314,35 @@ public class AutoCommands {
             makeAuto(("2_Piece_Loading_Zone")),
             new WaitCommand(0.3),
             scoreCube(),
-            makeAuto(("Get_Piece"), 2.2),
+            makeAuto(("Get_Piece")),
             makeAuto(("Reverse_Charge"), 2.2),
             new AutoBalance()
+        ));
+
+        autoChooser.addOption("Red 3 Piece Burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("Red_3_Piece_Burm1"), 2.2),
+            new SequentialCommandGroup(
+                arm.moveArm(ArmPos.AUTO_DROP),
+                manipulator.cubeReverse(),
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
+            ),
+            makeAuto("Red_3_Piece_Burm2", 2.2),
+            new WaitCommand(0.5),
+            scoreCube()
+        ));
+
+        autoChooser.addOption("3 Piece Burm", new SequentialCommandGroup(
+            scoreCone(),
+            makeAuto(("3_Piece_Burm1"), 2.2),
+            new SequentialCommandGroup(
+                arm.moveArm(ArmPos.AUTO_DROP),
+                manipulator.cubeReverse(),
+                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME)
+            ),
+            makeAuto("3_Piece_Burm2", 2.2),
+            new WaitCommand(0.5),
+            scoreCube()
         ));
 
         // autoChooser.addOption("Red 3 Piece Loading Zone + Bal", new SequentialCommandGroup(

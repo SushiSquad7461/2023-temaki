@@ -36,7 +36,7 @@ import java.io.IOException;
  */
 public final class Constants {
     public static final boolean TUNING_MODE = false;
-    public static final double STICK_DEADBAND = 0.1;
+    public static final double STICK_DEADBAND = 0.01; // was 0.1
     public static final double MIN_PRESSURE = 115;
     public static final double MAX_PRESSURE = 120;
 
@@ -503,12 +503,14 @@ public final class Constants {
          * Enum for arm angles.
          */
         public enum ArmPos {
+            AUTO_DROP(65),
             L1_SCORING(47),
             LOWERED(0),
             CONE_PICKUP_ALLIGMENT(ROBOT_NAME == RobotNames.ALPHA ? 91.5 : 93.0),
             CONE_PICKUP_LOWERED(75),
             L2_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 79),
-            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95);
+            L3_SCORING(ROBOT_NAME == RobotNames.ALPHA ? 81 : 95),
+            CUBE_SHOOT(105);
 
             private double angle;
 
