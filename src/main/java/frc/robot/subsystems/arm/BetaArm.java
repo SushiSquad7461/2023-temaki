@@ -27,6 +27,7 @@ public class BetaArm extends Arm {
     private static BetaArm instance;
     private static DigitalInput limitSwitch;
     private boolean override;
+    private boolean disable;
 
     /**
      * Gets current instance of arm implements singelton.
@@ -40,6 +41,7 @@ public class BetaArm extends Arm {
 
     private BetaArm() {
         override = false;
+        disable = true;
         armFeedforwardRetracted = new ArmFeedforward(
             Constants.kArm.KS, 
             Constants.kArm.KGR, 
@@ -87,7 +89,7 @@ public class BetaArm extends Arm {
                 0
             );
 
-        setPosition(target, armFF);
+        if (!disable) setPosition(target, armFF);
     }
 
     @Override
@@ -115,13 +117,13 @@ public class BetaArm extends Arm {
     }
 
     private void extendArm() {
-        if (solenoidLeft.get() != Value.kForward) {
+        if (solenoidLeft.get() != Value.kForward && !disable) {
             toggleSolenoid();
         }
     }
 
     private void retractArm() {
-        if (solenoidLeft.get() != Value.kReverse) {
+        if (solenoidLeft.get() != Value.kReverse && !disable) {
             toggleSolenoid();
         }
     }
@@ -132,6 +134,10 @@ public class BetaArm extends Arm {
 
     public void cancelOverride(){
         override = false;
+    }
+
+    public void toggleDisable() {
+        disable = !disable;
     }
 
     private boolean armClosed() {
@@ -145,8 +151,10 @@ public class BetaArm extends Arm {
      * Toggles solenoids on the arm.
      */
     public void toggleSolenoid() {
+        if (!disable) {
         solenoidLeft.toggle();
         solenoidRight.toggle(); 
+        }
     }
 
     @Override

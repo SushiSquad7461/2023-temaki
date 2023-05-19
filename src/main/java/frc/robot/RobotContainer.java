@@ -199,6 +199,10 @@ public class RobotContainer {
             new InstantCommand(() -> ((BetaArm) arm).cancelOverride())  
         );
 
+        oi.getOperatorController().y().onTrue(
+            new InstantCommand(() -> ((BetaArm) arm).toggleDisable())
+        );
+
         // raise arm for cone
         oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
             arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
