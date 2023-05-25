@@ -51,6 +51,7 @@ public class TeleopSwerveDrive extends CommandBase {
 
     @Override
     public void execute() {
+        // TODO: move to util in lib
         isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
         double forwardBack = yaxisSupplier.get() * (isRedAlliance ? -1 : 1);
         double leftRight = xaxisSupplier.get() * (isRedAlliance ? -1 : 1);

@@ -8,12 +8,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.kAutoBalance;
 import frc.robot.subsystems.Swerve;
 
+/**
+ * Auto balances the robot using Sushi Squad panteted bang bang.
+ */
 public class AutoBalance extends CommandBase {
     Swerve swerve;
     Translation2d tilt;
-    boolean changeDir = false;
     Translation2d initialTilt;
 
     public AutoBalance() {
@@ -36,7 +39,10 @@ public class AutoBalance extends CommandBase {
         SmartDashboard.putNumber("pitch", getPitch());
         SmartDashboard.putNumber("autobalance norm", tilt.getNorm());
 
-        if(!(initialTilt.getNorm() - tilt.getNorm() > initialTilt.getNorm()/10.0) || changeDir){
+        if (!(
+            (initialTilt.getNorm() - tilt.getNorm())
+            > (initialTilt.getNorm() / kAutoBalance.MAX_TILT_CHANGE_DIVIDER))) {
+
             swerve.drive(tilt.times(Constants.kAutoBalance.MAX_SPEED), 0, false, false);
         } else {
             swerve.drive(new Translation2d(0, 0), 0.1, false, false);
@@ -52,7 +58,7 @@ public class AutoBalance extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return tilt.getNorm() < 0.15;
+        return tilt.getNorm() < kAutoBalance.FLATNESS_THRESHOLD_DEGREES;
     }
 
     private double getRoll() {

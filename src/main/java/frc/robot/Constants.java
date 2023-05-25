@@ -135,8 +135,12 @@ public final class Constants {
         public static final int CURRENT_LIMIT = 50;
     }
 
+    /**
+     * Auto Balance constants.
+     */
     public static class kAutoBalance {
-        public static final double FLATNESS_THRESHOLD_DEGREES = 2;
+        public static final double FLATNESS_THRESHOLD_DEGREES = 0.15;
+        public static final double MAX_TILT_CHANGE_DIVIDER = 10; // TODO: Name better
         public static final double MAX_SPEED = Constants.kSwerve.MAX_SPEED * 0.0035;
     }
     
