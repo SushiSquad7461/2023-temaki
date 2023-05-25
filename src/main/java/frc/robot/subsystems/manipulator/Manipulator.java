@@ -11,11 +11,25 @@ import frc.robot.Constants.kPorts;
 /**
  * Controls the manipulator subsytem.
  */
-public abstract class Manipulator extends SubsystemBase {
-    protected CANSparkMax motor;
-    public int currentSpikes = 0;
+public class Manipulator extends SubsystemBase {
+    private CANSparkMax motor;
 
-    protected Manipulator() {
+    private static Manipulator instance;
+
+    /**
+     * singleton get instance method.
+     */
+    public static Manipulator getInstance() {
+        if (instance == null) {
+            instance = new Manipulator();
+        }
+        return instance;
+    }
+
+    /**
+     * Instaniate manipulator class.
+     */
+    private Manipulator() {
         motor = MotorHelper.createSparkMax(kPorts.MANIPULATOR_MOTOR_ID, MotorType.kBrushless);
         motor.setSmartCurrentLimit(kManipulator.CURRENT_LIMITING);
         motor.setInverted(true);
@@ -40,14 +54,6 @@ public abstract class Manipulator extends SubsystemBase {
         });
     }
 
-    public boolean currentSpike() {
-        if(currentSpikes>=3) {
-            currentSpikes = 0;
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Reverse the indexer.
      */
@@ -66,9 +72,12 @@ public abstract class Manipulator extends SubsystemBase {
         });
     }
 
+    /**
+     * Cube shoot.
+     */
     public Command cubeShoot() {
         return runOnce(() -> {
-            motor.set(-1.0);
+            motor.set(kManipulator.CUBE_SHOOT_SPEEED);
         });
     }
 
@@ -86,12 +95,10 @@ public abstract class Manipulator extends SubsystemBase {
      */
     public Command holdCube() {
         return runOnce(() -> {
-            motor.set(kManipulator.SPEED * 0.06);
+            motor.set(kManipulator.SPEED * kManipulator.CUBE_HOLD_MULTIPLIER);
         });
     }
 
     @Override
-    public void periodic() {
-        currentSpikes += motor.getOutputCurrent() > 25?1:0;
-    }
+    public void periodic() {}
 }

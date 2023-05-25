@@ -34,6 +34,7 @@ public abstract class Arm extends SubsystemBase {
         armI = new TunableNumber("Arm I", kArm.KI, Constants.TUNING_MODE);
         armD = new TunableNumber("Arm D", kArm.KD, Constants.TUNING_MODE);
         armF = new TunableNumber("Arm F", kArm.KF, Constants.TUNING_MODE);
+
         targetPos = new TunableNumber(
             "Target Pos",
             kArm.ArmPos.LOWERED.getAngle(), 

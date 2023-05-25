@@ -131,7 +131,7 @@ public final class Constants {
      */
     public static class kIntake {
         public static final double MOTOR_SPEED = 0.8;
-        public static final double CUBE_SHOOT_TOP_SPEED = 0.8;
+        public static final double CUBE_SHOOT_TOP_SPEED = -0.8;
         public static final int CURRENT_LIMIT = 50;
     }
 
@@ -151,6 +151,11 @@ public final class Constants {
         public static final double SPEED_MULTIPLER = 1.0;
 
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
+
+        // Rotation Lock PID Values
+        public static final double rotationP = 0.1;
+        public static final double rotationI = 0.0;
+        public static final double rotationD = 0.0;
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(21.73);
@@ -542,6 +547,9 @@ public final class Constants {
         public static final double CONE_REVERSE_SPEED = 0.5;
         public static final int CURRENT_LIMITING = 30;
         public static final int MAX_CURRENT = 30;
+
+        public static final double CUBE_SHOOT_SPEEED = -1.0;
+        public static final double CUBE_HOLD_MULTIPLIER = 0.06;
     }
 
     /** Vision constants. */

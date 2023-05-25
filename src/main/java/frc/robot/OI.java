@@ -9,6 +9,7 @@ import frc.robot.Constants.kOI;
 public class OI {
     private CommandXboxController driverController;
     private CommandXboxController operatorController;
+
     private static OI instance;
 
     /**

@@ -42,6 +42,9 @@ public class BetaIndexer extends Indexer {
         });
     }
 
+    /**
+     * Runs cone ramp.
+     */
     public Command runConeRamp() {
         return runOnce(() -> {
             coneRamp.set(kIndexer.CONE_RAMP_SPEED);

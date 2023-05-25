@@ -2,7 +2,6 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kPorts;
@@ -46,7 +45,7 @@ public class BetaIntake extends Intake {
     public Command runIntake() {
         return runOnce(() -> {
             bottom.set(kIntake.MOTOR_SPEED);
-            top.set(kIntake.MOTOR_SPEED/2.0); //half to maintain tangential velocity
+            top.set(kIntake.MOTOR_SPEED / 2.0); //half to maintain tangential velocity
         });
     }
 
@@ -66,7 +65,7 @@ public class BetaIntake extends Intake {
     public Command reverseIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
-            top.set(-kIntake.MOTOR_SPEED/2.0);
+            top.set(-kIntake.MOTOR_SPEED / 2.0);
         });
     }
    
@@ -76,7 +75,7 @@ public class BetaIntake extends Intake {
     public Command coneIntake() {
         return runOnce(() -> {
             bottom.set(-kIntake.MOTOR_SPEED);
-            top.set(kIntake.MOTOR_SPEED/2.0);
+            top.set(kIntake.MOTOR_SPEED / 2.0);
         });
     }
 
@@ -85,15 +84,12 @@ public class BetaIntake extends Intake {
      */
     public Command cubeShoot() {
         return runOnce(() -> {
-            bottom.set(0.8);
-            top.set(-0.8);
+            bottom.set(kIntake.CUBE_SHOOT_TOP_SPEED * -1);
+            top.set(kIntake.CUBE_SHOOT_TOP_SPEED);
         });
     }
 
     @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("Top intake current", top.getOutputCurrent());
-    }
-
+    public void periodic() {}
 }
 
