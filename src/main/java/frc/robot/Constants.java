@@ -334,12 +334,12 @@ public final class Constants {
         
         static {
             switch (ROBOT_NAME) {
-            case ALPHA:
-                DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
-                break;
-            default:
-                DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
-                break;
+              case ALPHA:
+                  DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
+                  break;
+              default:
+                  DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
+                  break;
             }
         }
 
@@ -467,17 +467,19 @@ public final class Constants {
             }
         }
 
-        public static final double PARLLELE_ZERO_ANGLED = 84.602423; // Angle of arm parllele to ground when zeroed at the bottom
+        // Angle of arm parllele to ground when zeroed at the bottom
+        public static final double PARLLELE_ZERO_ANGLED = 84.602423; 
+
         public static final double FEEDFORWARD_ANGLE_OFFSET;
 
         static {
             switch (ROBOT_NAME) {
               case ALPHA:
-                FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
-                break;
+                  FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+                  break;
               default:
-                FEEDFORWARD_ANGLE_OFFSET = PARLLELE_ZERO_ANGLED;
-                break;
+                  FEEDFORWARD_ANGLE_OFFSET = PARLLELE_ZERO_ANGLED;
+                  break;
             }
         }
 
