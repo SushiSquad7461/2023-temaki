@@ -143,6 +143,17 @@ public final class Constants {
         public static final double MAX_TILT_CHANGE_DIVIDER = 10; // TODO: Name better
         public static final double MAX_SPEED = Constants.kSwerve.MAX_SPEED * 0.0035;
     }
+
+    /**
+     * Auto constants.
+     */
+    public static class kAuto {
+        public static final double CHARGE_SPEED = 2.0; // meters per second
+        public static final double AUTO_BALANCE_WAIT = 0.5;
+
+        public static final double BURM_SIDE_SPEED = 2.0; //mps
+        public static final double CUBE_SCORE_WAIT = 0.3; // sec
+    }
     
     /**
      * Constants for swerve drive.
