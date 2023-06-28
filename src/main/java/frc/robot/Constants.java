@@ -491,7 +491,7 @@ public final class Constants {
                   KP = 0.020000; //0.01
                   KS = 0.0;
                   KG = 0.0;
-                  KGR = 0.58; //0.6, 2.5
+                  KGR = 0.5; //0.6, 2.5
                   KGE = 1.5;
                   KV = 0.0;
                   KA = 0.0;
