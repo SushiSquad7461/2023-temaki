@@ -28,6 +28,8 @@ public class BetaArm extends Arm {
     private static DigitalInput limitSwitch;
     private boolean override;
 
+    private double target;
+
     /**
      * Gets current instance of arm implements singelton.
      */
@@ -74,16 +76,19 @@ public class BetaArm extends Arm {
 
     @Override
     public void moveArm(double target) {
-        target = normalizeAngle(target);
+        this.target = normalizeAngle(target);
+        updateArmPID(target);
+    }
 
+    public void updateArmPID(double target) {
         double armFF = solenoidLeft.get() == Value.kForward 
             ? armFeedforwardExtended.calculate(
-                Units.degreesToRadians(target - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                Units.degreesToRadians(getEncoderPosition() - kArm.FEEDFORWARD_ANGLE_OFFSET),
                 0
             ) 
             :
             armFeedforwardRetracted.calculate(
-                Units.degreesToRadians(target - kArm.FEEDFORWARD_ANGLE_OFFSET),
+                Units.degreesToRadians(getEncoderPosition() - kArm.FEEDFORWARD_ANGLE_OFFSET),
                 0
             );
 
@@ -155,6 +160,7 @@ public class BetaArm extends Arm {
             resetArm();
         }
 
+        updateArmPID(target);
         update();
         SmartDashboard.putBoolean("Arm limit switch", limitSwitch.get());
         SmartDashboard.putNumber("Arm Relative Encoder", leftMotor.getEncoder().getPosition());

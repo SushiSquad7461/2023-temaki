@@ -108,6 +108,10 @@ public abstract class Arm extends SubsystemBase {
         return target - getAbsolutePosition();
     }
 
+    protected double getEncoderPosition() {
+        return leftMotor.getEncoder().getPosition();
+    }
+
     protected boolean isAtPos(double angle) {
         return Math.abs(getError(angle)) < kArm.ERROR;
     }
