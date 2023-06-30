@@ -1,24 +1,24 @@
 package frc.robot.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
+/**
+ * Encapsulates photonvision.
+ */
 public class Vision {
     private static Vision instance;
     
@@ -51,6 +51,9 @@ public class Vision {
             .getEntry("rawBytes");
     }
 
+    /**
+     * Singelton.
+     */
     public static Vision getVision() {
         if (instance == null) {
             instance = new Vision();
@@ -131,6 +134,9 @@ public class Vision {
         }
     }
 
+    /**
+     * Using an april tag location locate the relative position of the robot.
+     */
     public static Pose3d getRobotPoseFromTarget(PhotonTrackedTarget target) {
         // Get transform that converts from camera pose to target pose
         Transform3d cameraToTarget = target.getBestCameraToTarget();

@@ -130,12 +130,12 @@ public class BetaArm extends Arm {
         override = true;
     }
 
-    public void cancelOverride(){
+    public void cancelOverride() {
         override = false;
     }
 
     private boolean armClosed() {
-        if(override) {
+        if (override) {
             return true;
         }
         return !limitSwitch.get();
@@ -157,8 +157,6 @@ public class BetaArm extends Arm {
 
         update();
         SmartDashboard.putBoolean("Arm limit switch", limitSwitch.get());
-        SmartDashboard.putNumber("Arm Absolute Encoder", getAbsolutePosition());
-        // SmartDashboard.putNumber("Arm Absolute Encoder Feedforawrd angle", getAbsolutePosition() - kArm.FEEDFORWARD_ANGLE_OFFSET);
-        SmartDashboard.putNumber("Arm Relativ Encoder", leftMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Arm Relative Encoder", leftMotor.getEncoder().getPosition());
     }
 }

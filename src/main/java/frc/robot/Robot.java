@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,7 +16,6 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.BetaArm;
-import frc.robot.util.LED;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -36,6 +34,7 @@ public class Robot extends TimedRobot {
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
+
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
@@ -51,7 +50,7 @@ public class Robot extends TimedRobot {
 
         swerve = Swerve.getInstance();
         compressor = new Compressor(1, PneumaticsModuleType.REVPH);
-        compressor.enableDigital();
+        compressor.enableAnalog(Constants.MIN_PRESSURE, Constants.MAX_PRESSURE);
 
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
@@ -67,7 +66,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        compressor.enableAnalog(Constants.MIN_PRESSURE, Constants.MAX_PRESSURE);
+
         SmartDashboard.putNumber("Compressor Pressure", compressor.getPressure());
         SmartDashboard.putBoolean("Compress Full", compressor.getPressureSwitchValue());
     }
@@ -88,7 +87,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
 
-        // schedule the autonomous command (example)
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }

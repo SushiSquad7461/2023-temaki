@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArm.ArmPos;
 import frc.robot.Constants.kCommandTimmings;
-import frc.robot.commands.AutoBalance;
-import frc.robot.commands.AutoBalancePID;
 import frc.robot.commands.TeleopSwerveDrive;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.AlphaArm;
@@ -27,8 +23,6 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.AlphaIntake;
 import frc.robot.subsystems.intake.BetaIntake;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.manipulator.AlphaManipulator;
-import frc.robot.subsystems.manipulator.BetaManipulator;
 import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.util.CommandFactories;
 
@@ -58,14 +52,14 @@ public class RobotContainer {
               arm = AlphaArm.getInstance();
               indexer = AlphaIndexer.getInstance();
               intake = AlphaIntake.getInstance();
-              manipulator = AlphaManipulator.getInstance();
+              manipulator = Manipulator.getInstance();
               configureAlphaButtonBindings();
               break;
           default:
               arm = BetaArm.getInstance();
               indexer = BetaIndexer.getInstance();
               intake = BetaIntake.getInstance();
-              manipulator = BetaManipulator.getInstance();
+              manipulator = Manipulator.getInstance();
               configureBetaButtonBindings();
               break;
         }
@@ -131,11 +125,6 @@ public class RobotContainer {
             )
         ));
         
-        // Score item to relese cube
-        // oi.getOperatorController().x().onTrue(
-        //     new InstantCommand(() -> ((BetaManipulator) manipulator).release())
-        // );
-
         oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
             manipulator.cubeReverse(),
             new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
@@ -196,7 +185,9 @@ public class RobotContainer {
         ));
 
         oi.getOperatorController().start().onTrue(
-          new InstantCommand(()->swerve.getGyro().zeroGyro())
+            new InstantCommand(
+                () -> swerve.getGyro().zeroGyro()
+            )
         );
 
         // Lower arm
@@ -211,8 +202,12 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        oi.getDriverController().back().onTrue(CommandFactories.resetRobot(intake, indexer, arm, manipulator));
-        oi.getOperatorController().back().onTrue(CommandFactories.resetRobot(intake, indexer, arm, manipulator));
+        oi.getDriverController().back().onTrue(
+            CommandFactories.resetRobot(intake, indexer, arm, manipulator)
+        );
+        oi.getOperatorController().back().onTrue(
+            CommandFactories.resetRobot(intake, indexer, arm, manipulator)
+        );
 
         swerve.setDefaultCommand(
             new TeleopSwerveDrive(
@@ -224,8 +219,6 @@ public class RobotContainer {
                 false
             )
         );
-
-        // oi.getDriverController().rightTrigger().onTrue(new AutoBalance());
 
         oi.getDriverController().b().onTrue(new InstantCommand(() -> {
             swerve.turnOnLocationLock(180);
@@ -303,33 +296,16 @@ public class RobotContainer {
             swerve.moveToNearestScoringPos(null)
         );
 
-        // oi.getDriverController().povUp().onTrue(
-        //     new AutoBalance()
-        // );
-
-        // // Reset odo
+        // Reset odo
         oi.getDriverController().povDown().onTrue(
             swerve.resetOdometryToBestAprilTag()
         );
 
-        // oi.getDriverController().rightStick().onTrue(new InstantCommand(() -> {
-        //     kSwerve.SPEED_MULTIPLER = 0.15;
-        // })).onFalse(new InstantCommand(() -> {
-        //     kSwerve.SPEED_MULTIPLER = 1.0;
-        // }));
-
-        // TODO: add alliance based substation selection
-    //     oi.getDriverController().povUp().whileTrue(
-    //         swerve.moveToDoubleSuby(new Translation2d(1.0, -0.61))
-    //     );
-
         oi.getDriverController().povLeft().whileTrue(
-            // swerve.moveToNearestAprilTag(new Translation2d(0.9, 0.6)),
             swerve.moveToNearestScoringPosLeft(null)
         );
 
         oi.getDriverController().povRight().whileTrue(
-            // swerve.moveToNearestAprilTag(new Translation2d(0.9, -0.6))
             swerve.moveToNearestScoringPosRight(null)
         );
     }

@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import SushiFrcLib.Sensors.gyro.Pigeon;
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -86,7 +85,11 @@ public class Swerve extends SubsystemBase {
         );
 
         locationLock = false;
-        locationLockPID = new PIDController(0.1, 0.0, 0.0);
+        locationLockPID = new PIDController(
+            kSwerve.rotationP, 
+            kSwerve.rotationI, 
+            kSwerve.rotationD
+        );
 
         SmartDashboard.putData("Field", field);
 
@@ -98,6 +101,9 @@ public class Swerve extends SubsystemBase {
         return gyro;
     }
 
+    /**
+     * Lock swerve drive to be at one angle.
+     */
     public void turnOnLocationLock(double angle) {
         locationLock = true;
 
@@ -119,7 +125,7 @@ public class Swerve extends SubsystemBase {
      *
      * @param poseSupplier A Supplier that returns the field relative pose to 
      *      drive to.
-     * @param offset The offset of the tag in tag space (x+ away from
+     * @param newOffest The offset of the tag in tag space (x+ away from
      *      tag, y+ left from tag). A null value will default to 1 meter in front of
      *      the target.
      */
@@ -155,8 +161,8 @@ public class Swerve extends SubsystemBase {
                         swerveOdometry.getEstimatedPosition().getRotation().getRadians()
             );
 
-            // SmartDashboard.putNumber("In Auto Align", 1);
             Translation2d offset = newOffset;
+
             // Give offset a default value
             if (offset == null) {
                 offset = kAutoAlign.DEFAULT_OFFSET;
@@ -178,10 +184,6 @@ public class Swerve extends SubsystemBase {
             thetaPid.setSetpoint(targetRot.minus(kAutoAlign.DEFAULT_ROTATION).getRadians());
         }).andThen(run(
             () -> {
-                // SmartDashboard.putNumber("x tolerance", xaxisPid.getPositionError());
-                // SmartDashboard.putNumber("y tolerance", yaxisPid.getPositionError());
-                // SmartDashboard.putNumber("theta tolerance", thetaPid.getPositionError());
-
                 drive(
                     new Translation2d(
                         xaxisPid.calculate(swerveOdometry.getEstimatedPosition().getX()),
@@ -198,8 +200,6 @@ public class Swerve extends SubsystemBase {
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
         ).andThen(
             () -> { 
-                // SmartDashboard.putNumber("In Auto Align", 0);
-
                 xaxisPid.close(); 
                 yaxisPid.close(); 
                 thetaPid.close(); 
@@ -212,17 +212,12 @@ public class Swerve extends SubsystemBase {
             .getEstimatedPosition()
             .getTranslation(); 
 
-        // SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        // SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
-
         double minDistance = Double.MAX_VALUE;
         Pose2d closestScoringPos = null;
 
         for (Pose2d pos : Constants.kAutoAlign.SCORING_POSES) {
             Translation2d translation = pos.getTranslation();
             double distance = currentTranslation.getDistance(translation);
-
-            // SmartDashboard.putNumber("Scoring Pos Distance", distance);
 
             if (distance < minDistance) {
                 minDistance = distance;
@@ -233,13 +228,11 @@ public class Swerve extends SubsystemBase {
         return closestScoringPos; 
     }
 
+    // TODO: REFACTOR
     private Pose2d getClosestRightScoringPos() {
         Translation2d currentTranslation = swerveOdometry
             .getEstimatedPosition()
             .getTranslation(); 
-
-        // SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        // SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
 
         double minDistance = Double.MAX_VALUE;
         Pose2d closestScoringPos = null;
@@ -248,9 +241,10 @@ public class Swerve extends SubsystemBase {
             Translation2d translation = pos.getTranslation();
             double distance = currentTranslation.getDistance(translation);
 
-            // SmartDashboard.putNumber("Scoring Pos Distance", distance);
-
-            if (distance < minDistance && (currentTranslation.getY() - pos.getY()) > kAutoAlign.ERROR) {
+            if (
+                distance < minDistance 
+                    && (currentTranslation.getY() - pos.getY()) > kAutoAlign.ERROR
+            ) {
                 minDistance = distance;
                 closestScoringPos = pos;
             }
@@ -259,14 +253,12 @@ public class Swerve extends SubsystemBase {
         return closestScoringPos; 
     }
 
+    // TODO: REFACTOR
     private Pose2d getClosestLeftScoringPos() {
         Translation2d currentTranslation = swerveOdometry
             .getEstimatedPosition()
 
             .getTranslation(); 
-
-        // SmartDashboard.putNumber("Robot x", currentTranslation.getX());
-        // SmartDashboard.putNumber("Roybot y", currentTranslation.getY());
 
         double minDistance = Double.MAX_VALUE;
         Pose2d closestScoringPos = null;
@@ -275,9 +267,10 @@ public class Swerve extends SubsystemBase {
             Translation2d translation = pos.getTranslation();
             double distance = currentTranslation.getDistance(translation);
 
-            // SmartDashboard.putNumber("Scoring Pos Distance", distance);
-
-            if (distance < minDistance && (pos.getY() - currentTranslation.getY()) > kAutoAlign.ERROR) {
+            if (
+                distance < minDistance 
+                    && (pos.getY() - currentTranslation.getY()) > kAutoAlign.ERROR
+            ) {
                 minDistance = distance;
                 closestScoringPos = pos;
             }
@@ -290,20 +283,35 @@ public class Swerve extends SubsystemBase {
         return moveToPose(() -> getClosestScoringPos(), tagOffset);
     }
 
+    /**
+     * Auto aligns to neerset scoring postion to the left of the neerest position. 
+     */
     public Command moveToNearestScoringPosLeft(Translation2d tagOffset) {
         return moveToPose(() -> {
-            Pose2d target = isRedAlliance ? getClosestRightScoringPos() : getClosestLeftScoringPos();
+            Pose2d target = isRedAlliance 
+                ? getClosestRightScoringPos() : 
+                getClosestLeftScoringPos();
+
             return target == null ? getClosestScoringPos() : target;
         }, tagOffset);
     }
 
+    /**
+     * Auto aligns to neerset scoring postion to the right of the neerest position. 
+     */
     public Command moveToNearestScoringPosRight(Translation2d tagOffset) {
         return moveToPose(() -> {
-            Pose2d target = isRedAlliance ? getClosestLeftScoringPos() : getClosestRightScoringPos();
+            Pose2d target = isRedAlliance 
+                ? getClosestLeftScoringPos() : 
+                getClosestRightScoringPos();
+
             return target == null ? getClosestScoringPos() : target;
         }, tagOffset);
     }
 
+    /**
+     * Auto move to april tag.
+     */
     public Command moveToAprilTag(int tagID, Translation2d tagOffset) {
         return moveToPose(
             () -> kVision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
@@ -311,6 +319,9 @@ public class Swerve extends SubsystemBase {
         );
     }
 
+    /**
+     * Drive with location lock if enabled.
+     */
     public void driveWithRotationLock(Translation2d translation, 
         double rotation, boolean fieldRelative, boolean isOpenLoop
     ) {
@@ -414,6 +425,7 @@ public class Swerve extends SubsystemBase {
 
         for (SwerveModule m : swerveMods) {
             SmartDashboard.putNumber("Module Angle " + m.moduleNumber, m.getDriveSpeed());
+            SmartDashboard.putNumber("Module Current " + m.moduleNumber, m.getDriveCurrentDraw());
         }   
 
         // Loop through all measurements and add it to pose estimator
@@ -426,14 +438,15 @@ public class Swerve extends SubsystemBase {
             )
             .collect(Collectors.toList()));
 
-        if (bestMeasurement != null && bestMeasurement.ambiguity < Constants.kVision.AMBIGUITY_THRESHOLD) {
+        if (bestMeasurement != null 
+            && bestMeasurement.ambiguity < Constants.kVision.AMBIGUITY_THRESHOLD
+        ) {
             swerveOdometry.addVisionMeasurement(
                 bestMeasurement.robotPose,
                 bestMeasurement.timestampSeconds,
                 Constants.kSwerve.VISION_STANDARD_DEVIATION
             );
         }
-        SmartDashboard.putNumber("Drive Current", swerveMods[0].getDriveCurrentDraw());
     }
 
     /**

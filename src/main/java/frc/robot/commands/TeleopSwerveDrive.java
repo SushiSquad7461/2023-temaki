@@ -51,18 +51,15 @@ public class TeleopSwerveDrive extends CommandBase {
 
     @Override
     public void execute() {
+        // TODO: move to util in lib
         isRedAlliance = table.getEntry("IsRedAlliance").getBoolean(true);
         double forwardBack = yaxisSupplier.get() * (isRedAlliance ? -1 : 1);
         double leftRight = xaxisSupplier.get() * (isRedAlliance ? -1 : 1);
         double rot = rotSupplier.get();
 
-        forwardBack = Normalization.cube(
-            Math.abs(forwardBack) < Constants.STICK_DEADBAND ? 0 : ((forwardBack - ((forwardBack < 0 ? -1 : 1) * Constants.STICK_DEADBAND)) / (1 - Constants.STICK_DEADBAND))
-        );
+        forwardBack = Normalization.cube(applyDeadband(forwardBack));
 
-        leftRight = Normalization.cube(
-            Math.abs(leftRight) < Constants.STICK_DEADBAND ? 0 : ((leftRight - ((leftRight < 0 ? -1 : 1) * Constants.STICK_DEADBAND)) / (1 - Constants.STICK_DEADBAND))
-        );
+        leftRight = Normalization.cube(applyDeadband(leftRight));
 
         Translation2d translation = new Translation2d(forwardBack, leftRight)
                 .times(kSwerve.MAX_SPEED).times(kSwerve.SPEED_MULTIPLER);
@@ -71,5 +68,12 @@ public class TeleopSwerveDrive extends CommandBase {
         rot *= kSwerve.MAX_ANGULAR_VELOCITY * kSwerve.SPEED_MULTIPLER;
 
         swerve.driveWithRotationLock(translation, rot, fieldRelative, openLoop);
+    }
+
+    // TODO: Move to lib
+    private double applyDeadband(double initalVal) {
+        return Math.abs(initalVal) <  Constants.STICK_DEADBAND ? 0 : (
+            (initalVal - ((initalVal < 0 ? -1 : 1) * Constants.STICK_DEADBAND)) 
+            / (1 - Constants.STICK_DEADBAND));
     }
 }

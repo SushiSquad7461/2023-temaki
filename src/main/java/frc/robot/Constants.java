@@ -131,13 +131,28 @@ public final class Constants {
      */
     public static class kIntake {
         public static final double MOTOR_SPEED = 0.8;
-        public static final double CUBE_SHOOT_TOP_SPEED = 0.8;
+        public static final double CUBE_SHOOT_TOP_SPEED = -0.8;
         public static final int CURRENT_LIMIT = 50;
     }
 
+    /**
+     * Auto Balance constants.
+     */
     public static class kAutoBalance {
-        public static final double FLATNESS_THRESHOLD_DEGREES = 2;
+        public static final double FLATNESS_THRESHOLD_DEGREES = 0.15;
+        public static final double MAX_TILT_CHANGE_DIVIDER = 10; // TODO: Name better
         public static final double MAX_SPEED = Constants.kSwerve.MAX_SPEED * 0.0035;
+    }
+
+    /**
+     * Auto constants.
+     */
+    public static class kAuto {
+        public static final double CHARGE_SPEED = 2.0; // meters per second
+        public static final double AUTO_BALANCE_WAIT = 0.5;
+
+        public static final double BURM_SIDE_SPEED = 2.0; //mps
+        public static final double CUBE_SCORE_WAIT = 0.3; // sec
     }
     
     /**
@@ -151,6 +166,11 @@ public final class Constants {
         public static final double SPEED_MULTIPLER = 1.0;
 
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
+
+        // Rotation Lock PID Values
+        public static final double rotationP = 0.1;
+        public static final double rotationI = 0.0;
+        public static final double rotationD = 0.0;
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(21.73);
@@ -314,12 +334,12 @@ public final class Constants {
         
         static {
             switch (ROBOT_NAME) {
-            case ALPHA:
-                DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
-                break;
-            default:
-                DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
-                break;
+              case ALPHA:
+                  DEFAULT_ROTATION = Rotation2d.fromDegrees(180);
+                  break;
+              default:
+                  DEFAULT_ROTATION = Rotation2d.fromDegrees(0); 
+                  break;
             }
         }
 
@@ -447,17 +467,19 @@ public final class Constants {
             }
         }
 
-        public static final double PARLLELE_ZERO_ANGLED = 84.602423; // Angle of arm parllele to ground when zeroed at the bottom
+        // Angle of arm parllele to ground when zeroed at the bottom
+        public static final double PARLLELE_ZERO_ANGLED = 84.602423; 
+
         public static final double FEEDFORWARD_ANGLE_OFFSET;
 
         static {
             switch (ROBOT_NAME) {
               case ALPHA:
-                FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
-                break;
+                  FEEDFORWARD_ANGLE_OFFSET = 313 - ENCODER_ANGLE_OFFSET;
+                  break;
               default:
-                FEEDFORWARD_ANGLE_OFFSET = PARLLELE_ZERO_ANGLED;
-                break;
+                  FEEDFORWARD_ANGLE_OFFSET = PARLLELE_ZERO_ANGLED;
+                  break;
             }
         }
 
@@ -542,6 +564,9 @@ public final class Constants {
         public static final double CONE_REVERSE_SPEED = 0.5;
         public static final int CURRENT_LIMITING = 30;
         public static final int MAX_CURRENT = 30;
+
+        public static final double CUBE_SHOOT_SPEEED = -1.0;
+        public static final double CUBE_HOLD_MULTIPLIER = 0.06;
     }
 
     /** Vision constants. */
