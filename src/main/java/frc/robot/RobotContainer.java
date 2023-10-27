@@ -74,33 +74,33 @@ public class RobotContainer {
      */
     public void configureAlphaButtonBindings() {
         // raise arm for cone
-        oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            manipulator.cone()
-        ));
+        // oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
+        //     intake.extendIntake(),
+        //     arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+        //     manipulator.cone()
+        // ));
 
         // Lower arm
-        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.LOWERED),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            intake.retractIntake()
-        ));
+        // oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.LOWERED),
+        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+        //     intake.retractIntake()
+        // ));
 
         // Raise arm to score at L2
-        oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
-            intake.extendIntake(),
-            new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
-            arm.moveArm(ArmPos.L2_SCORING)
-        ));
+        // oi.getOperatorController().y().onTrue(new SequentialCommandGroup(
+        //     intake.extendIntake(),
+        //     new WaitCommand(kCommandTimmings.PNEUMATIC_WAIT_TIME),
+        //     arm.moveArm(ArmPos.L2_SCORING)
+        // ));
 
         
         // Score item to relese cube
-        oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
-            manipulator.cubeReverse(),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            manipulator.stop()
-        ));
+        // oi.getOperatorController().x().onTrue(new SequentialCommandGroup(
+        //     manipulator.cubeReverse(),
+        //     new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+        //     manipulator.stop()
+        // ));
 
         oi.getOperatorController().b().onTrue(new SequentialCommandGroup(
             manipulator.coneReverse(),
@@ -137,6 +137,7 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
+        // cube shoot
         oi.getDriverController().x().onTrue(
             new SequentialCommandGroup(
                 new SequentialCommandGroup(
@@ -156,33 +157,34 @@ public class RobotContainer {
             )
         );
 
-        oi.getDriverController().y().onTrue(
-            new SequentialCommandGroup(
-                arm.moveArm(ArmPos.L1_SCORING),
-                new WaitCommand(0.3),
-                manipulator.cubeReverse(),
-                new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-                manipulator.stop(),
-                arm.moveArm(ArmPos.LOWERED)
-        ));
+        // scoring L1
+        // oi.getDriverController().y().onTrue(
+        //     new SequentialCommandGroup(
+        //         arm.moveArm(ArmPos.L1_SCORING),
+        //         new WaitCommand(0.3),
+        //         manipulator.cubeReverse(),
+        //         new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+        //         manipulator.stop(),
+        //         arm.moveArm(ArmPos.LOWERED)
+        // ));
 
-        oi.getOperatorController().leftTrigger().onTrue(
-            new InstantCommand(
-                () -> ((BetaArm) arm).toggleSolenoid()
-            )
-        );
+        // oi.getOperatorController().leftTrigger().onTrue(
+        //     new InstantCommand(
+        //         () -> ((BetaArm) arm).toggleSolenoid()
+        //     )
+        // );
         
-        oi.getOperatorController().leftBumper().onTrue(
-            new InstantCommand(() -> ((BetaArm) arm).override())
-        ).onFalse(
-            new InstantCommand(() -> ((BetaArm) arm).cancelOverride())  
-        );
+        // oi.getOperatorController().leftBumper().onTrue(
+        //     new InstantCommand(() -> ((BetaArm) arm).override())
+        // ).onFalse(
+        //     new InstantCommand(() -> ((BetaArm) arm).cancelOverride())  
+        // );
 
         // raise arm for cone
-        oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            manipulator.cone()
-        ));
+        // oi.getDriverController().rightStick().onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+        //     manipulator.cone()
+        // ));
 
         oi.getOperatorController().start().onTrue(
             new InstantCommand(
@@ -191,14 +193,14 @@ public class RobotContainer {
         );
 
         // Lower arm
-        oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.LOWERED)
-        ));
+        // oi.getOperatorController().a().onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.LOWERED)
+        // ));
 
         // Raise arm to score at L2
-        oi.getDriverController().leftStick().onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.L3_SCORING)
-        ));
+        // oi.getDriverController().leftStick().onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.L3_SCORING)
+        // ));
     }
 
     private void configureButtonBindings() {
@@ -278,19 +280,19 @@ public class RobotContainer {
             )
         );
 
-        oi.getDriverController().button(8).onTrue(new SequentialCommandGroup(
-            arm.moveArm(ArmPos.L2_SCORING)
-        ));
+        // oi.getDriverController().button(8).onTrue(new SequentialCommandGroup(
+        //     arm.moveArm(ArmPos.L2_SCORING)
+        // ));
 
 
         // pickup cone
-        oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
-            manipulator.cone(),
-            arm.moveArm(ArmPos.CONE_PICKUP_LOWERED),
-            new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
-            arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
-            manipulator.stop()
-        ));
+        // oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
+        //     manipulator.cone(),
+        //     arm.moveArm(ArmPos.CONE_PICKUP_LOWERED),
+        //     new WaitCommand(kCommandTimmings.MANIPULATOR_WAIT_TIME),
+        //     arm.moveArm(ArmPos.CONE_PICKUP_ALLIGMENT),
+        //     manipulator.stop()
+        // ));
 
         oi.getDriverController().rightBumper().whileTrue(
             swerve.moveToNearestScoringPos(null)
